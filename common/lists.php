@@ -69,10 +69,7 @@ List URLS:
 	lists/$user/$list/edit -- rename a list (no member editting)
 */
 
-function lists_controller() {
- theme('page', '频道', "本功能正在建设，请期待下一个版本的出现。");
-}
-/*function lists_controller($query) {
+function lists_controller($query) {
 	// Pick off $user from $query or default to the current user
 	$user = $query[1];
 	if (!$user) $user = user_current_username();
@@ -114,7 +111,7 @@ function lists_controller() {
 	// Error to be shown for any incomplete pages (breaks above)
 	return theme('error', 'List page not found');
 }
-*/
+
 
 
 /* Pages */

@@ -1,34 +1,72 @@
 <?php
+
 require 'desktop.php';
+
+function touch_theme_action_icon($url, $image_url, $text) {
+	if ($text == 'MAP')	{
+		return "<a href='$url' alt='$text' target='_blank'><img src='$image_url' width='12' height='12' /></a>";
+	}
+	else if ($text == 'DM')	{
+		return "<a href='$url'><img src='$image_url' alt='$text' width='16' height='11' /></a>";
+	}
+	else	{
+		return "<a href='$url'><img src='$image_url' alt='$text' width='12' height='12' /></a>";
+	}
+}
+
+
 function touch_theme_status_form($text = '', $in_reply_to_id = NULL) {
 	return desktop_theme_status_form($text, $in_reply_to_id);
 }
 function touch_theme_search_form($query) {
 	return desktop_theme_search_form($query);
 }
+
 function touch_theme_avatar($url, $force_large = false) {
-	return "<img class='shead' src='$url' width='48' height='48' />";
+	return "<img src='$url' width='48' height='48' />";
 }
+
 function touch_theme_page($title, $content) {
 	$body = theme('menu_top');
 	$body .= $content;
-	$page = ($_GET['page'] == 0 ? null : " - Page ".$_GET['page'])." - ";
-	echo '<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=320"/><link href="'.BASE_URF.'favicon.ico" rel="shortcut icon" type="image/x-icon" /><title>'.$title.$page.NETPUTWEETS_TITLE.'</title><base href="'.BASE_URF.'" />'.theme('css').'</head><body id="thepage">'.$body.'</body></html>';
-	exit();
+	$body .= theme('google_analytics');
+	ob_start('ob_gzhandler');
+	header('Content-Type: text/html; charset=utf-8');
+	echo 	'<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+		<html xmlns="http://www.w3.org/1999/xhtml">
+			<head>
+				<meta name="viewport" content="width=device-width; initial-scale=1.0;" />
+				<title>',$title,'</title>
+				<base href="',BASE_URL,'" />
+				'.theme('css').'
+			</head>
+			<body id="thepage">';
+
+        if (file_exists("common/admob.php"))
+        {
+		                echo '<div class="advert">';
+                		require_once("common/admob.php");
+		                echo '</div>';
+        }
+        echo			$body,
+			'</body>
+		</html>';
+        exit();
 }
+
 function touch_theme_menu_top() {
 	$links = array();
-	$main_menu_titles = array(("首页"), ("@我的"), ("评论"), ("私信"), ("搜索"));
+	$main_menu_titles = array('home', 'mentions', 'cmts', 'replies', 'search');
 	foreach (menu_visible_items() as $url => $page) {
-		$title = $url ? $page['title'] : ("首页");
+		$title = $url ? $url : 'home';
 		$type = in_array($title, $main_menu_titles) ? 'main' : 'extras';
-		$links[$type][] = "<a href='".BASE_URL."$url'>$title</a>";
+		$links[$type][] = "<a href='$url'>$title</a>";
 	}
 	if (user_is_authenticated()) {
-		$user = user_current_username();
-		array_unshift($links['extras'], "<b><a href='".BASE_URL."user/$user'>$user</a></b>");
+		$user = $GLOBALS['user']['screen_name'];
+		array_unshift($links['extras'], "<b><a href='user/$user'>$user</a></b>");
 	}
-	array_push($links['main'], '<a href="#" onclick="return toggleMenu()">'.('更多').'</a>');
+	array_push($links['main'], '<a href="#" onclick="return toggleMenu()">more</a>');
 	$html = '<div id="menu" class="menu">';
 	$html .= theme('list', $links['main'], array('id' => 'menu-main'));
 	$html .= theme('list', $links['extras'], array('id' => 'menu-extras'));
@@ -40,9 +78,18 @@ function touch_theme_menu_bottom() {
 	return '';
 }
 
+function touch_theme_status_time_link($status, $is_link = true) {
+	$out = theme_status_time_link($status, $is_link);
+	//old method didn't work with conversation view (and no longer with correct pluralisation)
+	$out = str_replace(array(' years ago', ' year ago', ' days ago', ' day ago', ' hours ago', ' hour ago', ' mins ago', ' min ago', ' secs ago', ' sec ago'),
+	                   array('y', 'y', 'd', 'd', 'h', 'h', 'm', 'm', 's', 's'), $out);
+	return $out;
+}
+
 function touch_theme_css() {
-	$out = '<link rel="stylesheet" href="'.BASE_URF.'browsers/touch.css" />'.theme_css().'<script type="text/javascript">'.file_get_contents('browsers/touch.js').'</script>';
-	//~ $out .= '<style type="text/css">body { word-wrap: break-word; text-overflow: ellipsis; } table {width: 320px;}</style>';
+	$out = theme_css();
+	$out .= '<link rel="stylesheet" href="browsers/touch.css" />';
+	$out .= '<script type="text/javascript">'.file_get_contents('browsers/touch.js').'</script>';
 	return $out;
 }
 ?>

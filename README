@@ -1,0 +1,34 @@
+Try it here: http://dawbr.liruqi.info/
+
+This code was originally hacked by Tim Yang (http://timyang.net/), and once published in http://open.t.sina.com.cn. It was removed afterward.
+
+Sample nginx configure:
+
+156 server {
+157     listen   80;
+158     server_name  asuwish.cc;
+159     index index.php;
+160     error_log  /var/log/nginx/asuwish.error.log;
+161     access_log  /var/log/nginx/asuwish.access.log;
+162     index  index.php;
+163     if (!-f $request_filename) {
+164         rewrite ^/(.*)$ /index.php?q=$1 last;
+165     }
+166     root   /data/www/liruqi/liruqi.info;
+167     location ~ \.php$ {
+168         fastcgi_pass   127.0.0.1:9000;
+169         fastcgi_index  index.php;
+170         fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+171         include fastcgi_params;
+172     }
+173 }
+
+For sina app engine:
+handle:
+  - rewrite: if(!is_dir() && !is_file() && path ~ "/(.*)") goto "/index.php?q=$1"
+
+TODO: 
+1. Fix bug
+2. Block app
+3. Hide retweet from someone you have blocked
+4. Aggregate the tweets
