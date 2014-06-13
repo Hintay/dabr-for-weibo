@@ -1,27 +1,34 @@
 <?php
 
-// Weibo's API URL.
-define('API_URL','http://api.t.sina.com.cn/');
+//网站名称
+define('SINA_TITLE', 'Dabr for Weibo');
 
-// Cookie encryption key. Max 52 characters
+//网站主的UID，用于注册链接邀请
+define('REGUID', '');
+
+// Weibo API地址
+define('API_URL','http://api.weibo.com');
+
+// Cookie加密密匙，最大52字符
 define('ENCRYPTION_KEY', 'Example Key - Change Me!');
 
-// OAuth consumer and secret keys. Available from http://twitter.com/oauth_clients
+// OAuth授权使用的App Key和App Secret
+// 注意您的授权回调页要设置为http://dabr路径/oauth，否则会出现绑定错误
 define('OAUTH_CONSUMER_KEY', '');
 define('OAUTH_CONSUMER_SECRET', '');
 
-// bit.ly login and API key for URL shortening
+// bit.ly LOGIN及API key，用于url缩短
 define('BITLY_LOGIN', '');
 define('BITLY_API_KEY', '');
 
-// Optional API keys for retrieving thumbnails
+// 可选：缩略图生成API keys
 define('FLICKR_API_KEY', '');
 
 // Optional: Allows you to turn shortened URLs into long URLs http://www.longurlplease.com/docs
 // Uncomment to enable.
 // define('LONGURL_KEY', 'true');
 
-// Optional: Enable to view page processing and API time
+// 可选：启用可查看页面载入进程和API响应时间
 define('DEBUG_MODE', 'OFF');
 
 // Base URL, should point to your website, including a trailing slash
