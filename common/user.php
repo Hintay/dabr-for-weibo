@@ -5,6 +5,10 @@ menu_register(array(
     'callback' => 'user_oauth',
     'hidden' => 'true',
   ),
+	'reg' => array(
+		'callback' => 'user_reg',
+		'hidden' => 'true',
+	),
 ));
 
 function user_oauth() {
@@ -60,6 +64,11 @@ function user_logout() {
 	unset($GLOBALS['user']);
     $_SESSION = array();
 	setcookie('USER_AUTH', '', time() - 3600, '/');
+}
+
+function user_reg() {
+	$content = '<p>[1] <b><a href="http://3g.sina.com.cn/prog/wapsite/sso/register.php?backURL='.BASE_URL.'&backTitle='.$newurl.'&type=m"}&type=m">手机用户注册</a></b></p><p>[2] <b><a href="http://weibo.com/i/'.REGUID.'"  target="blank">电脑用户注册</a></b>  请在注册后关闭窗口</p><p><small><a href="'.BASE_URL.'">返回登陆</a></small></p>';
+	theme('page', '注册', $content);
 }
 
 function user_is_authenticated() {
@@ -130,11 +139,11 @@ function theme_login() {
 
     $_SESSION['keys'] = $token;
     // file_put_contents("/tmp/dabrlog", "token:" . json_encode($token)." $authorise_url \n", FILE_APPEND);
-    return '
-<p><strong><a href="' . $authorise_url . '">Sign in with Sina/OAuth</a></strong><br />
-</p>
-  
-';
+	$url = "".SINA_TITLE."";
+	$newurl = urlencode(mb_convert_encoding($url, 'gb2312', 'utf8'));
+
+	$content = '<p>[1] <b><a href="' . $authorise_url . '">使用 OAuth 方式登录</a></b><br><small>未激活用户请点击下方"注册"进行激活</small></p><p><b>[2] <a href="'.BASE_URL.'reg">'.("注册").'</a></b></p>';
+	return $content;
 }
 
 function theme_logged_out() {
