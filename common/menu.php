@@ -46,12 +46,130 @@ function menu_visible_items() {
   return $items;
 }
 
-function theme_menu_top() {
+/*function theme_menu_top() {
   return theme('menu_both', 'top');
 }
 
 function theme_menu_bottom() {
   return theme('menu_both', 'bottom');
+}*/
+
+function theme_menu_top() {
+  return theme('menu_toptop', 'top');
+}
+
+function theme_menu_bottom() {
+  return theme('menu_bottomtom', 'bottom');
+}
+
+function theme_menu_toptop($menu) {
+	$links = array();
+	if (user_is_authenticated()){
+		if (setting_fetch('topuser') == 'yes') {
+			$user = user_current_username();
+			$links[] = "<a href='".BASE_URL."user/$user'>$user</a>";
+		}
+		if (setting_fetch('tophome', 'yes') == 'yes') {
+			$links[] = "<a href='".BASE_URL."'>".("首页")."</a>";
+		}
+		if (setting_fetch('topreplies', 'yes') == 'yes') {
+			$links[] = "<a href='".BASE_URL."mentions'>".("提到")."</a>";
+		}
+		if (setting_fetch('topcomments', 'yes') == 'yes') {
+			$links[] = "<a href='".BASE_URL."cmts'>".("评论")."</a>";
+		}
+		if (setting_fetch('topdirects') == 'yes') {
+			$links[] = "<a href='".BASE_URL."directs'>".("私信")."</a>";
+		}
+		if (setting_fetch('topsearch') == 'yes') {
+			$links[] = "<a href='".BASE_URL."search'>".("搜索")."</a>";
+		}
+		if (setting_fetch('toppublic') == 'yes') {
+			$links[] = "<a href='".BASE_URL."public'>".("随便看看")."</a>";
+		}
+		if (setting_fetch('topfavourites', 'yes') == 'yes') {
+			$links[] = "<a href='".BASE_URL."favourites'>".("收藏")."</a>";
+		}
+		if (setting_fetch('topfollowers', 'yes') == 'yes') {
+			$links[] = "<a href='".BASE_URL."followers'>".("粉丝")."</a>";
+		}
+		if (setting_fetch('topfriends', 'yes') == 'yes') {
+			$links[] = "<a href='".BASE_URL."friends'>".("关注")."</a>";
+		}
+		if (setting_fetch('toptwitpic') == 'yes') {
+			$links[] = "<a href='".BASE_URL."twitpic'>".("Twitpic")."</a>";
+		}
+		if (setting_fetch('topsettings', 'yes') == 'yes') {
+			$links[] = "<a href='".BASE_URL."settings'>".("设置")."</a>";
+		}
+		if (setting_fetch('toplogout', 'yes') == 'yes') {
+			$links[] = "<a href='".BASE_URL."logout'>".("登出")."</a>";
+		}
+	} else {
+		$links[] = "<span style=font-weight:bold;color:#FFF;>".SINA_TITLE."</span>";
+	}
+	return "<div class='menu menu-$menu'>".implode(' | ', $links).'</div>';
+}
+
+function theme_menu_bottomtom($menu) {
+	$links = array();
+	$links[] = "<a href='".BASE_URL."'>".("首页")."</a>";
+	if (user_is_authenticated()) {
+		if (setting_fetch('replies') == 'yes') {
+			$links[] = "<a href='".BASE_URL."mentions'>".("提到")."</a>";
+		}
+		if (setting_fetch('comments') == 'yes') {
+			$links[] = "<a href='".BASE_URL."cmts'>".("评论")."</a>";
+		}
+		if (setting_fetch('directs') == 'yes') {
+			$links[] = "<a href='".BASE_URL."directs'>".("私信")."</a>";
+		}
+		if (setting_fetch('search') == 'yes') {
+			$links[] = "<a href='".BASE_URL."search'>".("搜索")."</a>";
+		}
+		if (setting_fetch('twitpic') == 'yes') {
+			$links[] = "<a href='".BASE_URL."twitpic'>".("Twitpic")."</a>";
+		}
+		if (setting_fetch('favourites') == 'yes') {
+			$links[] = "<a href='".BASE_URL."favourites'>".("收藏")."</a>";
+		}
+		if (setting_fetch('lists') == 'yes') {
+			$links[] = "<a href='".BASE_URL."lists'>".("频道")."</a>";
+		}
+		if (setting_fetch('followers') == 'yes') {
+			$links[] = "<a href='".BASE_URL."followers'>".("粉丝")."</a>";
+		}
+		if (setting_fetch('friends') == 'yes') {
+			$links[] = "<a href='".BASE_URL."friends'>".("关注")."</a>";
+		}
+		if (setting_fetch('blockings') == 'yes') {
+			$links[] = "<a href='".BASE_URL."blockings'>".("黑名单")."</a>";
+		}
+		if (setting_fetch('public') == 'yes') {
+			$links[] = "<a href='".BASE_URL."public'>".("随便看看")."</a>";
+		}
+		if (setting_fetch('trends') == 'yes') {
+			$links[] = "<a href='".BASE_URL."trends'>".("话题")."</a>";
+		}
+	}
+
+	if (user_is_authenticated()) {
+		$user = user_current_username();
+		array_unshift($links, "<b><a href='".BASE_URL."user/$user'>$user</a></b>");
+		if (setting_fetch('about') == 'yes') {
+			$links[] = "<a href='".BASE_URL."about'>".("关于")."</a>";
+		}
+		if (setting_fetch('ssettings', 'yes') == 'yes') {
+			$links[] = "<a href='".BASE_URL."settings'>".("设置")."</a>";
+		}
+		if (setting_fetch('slogout', 'yes') == 'yes') {
+			$links[] = "<a href='".BASE_URL."logout'>".("登出")."</a>";
+		}
+	}
+	if (setting_fetch('srefresh', 'yes') == 'yes') {
+		$links[] = "<a href='".BASE_URL."{$_GET['q']}' accesskey='5'>".("刷新")."</a> 5";
+	}
+	return '<img src="#" style="display:none;" /><div class="menu menu-$menu">'.implode(' | ', $links).'</div>';
 }
 
 function theme_menu_both($menu) {
