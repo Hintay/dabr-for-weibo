@@ -303,9 +303,6 @@ function twitter_process($url, $post_data = false, $method = "get") {
 			theme('error', '<h2>连接超时</h2><p>请稍等几分钟后刷新重新连接。</p>'."<p>$url</p><pre>".var_export(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), true).'</pre>');
 		case 400:
 			$_SESSION = array();
-		case 403:
-			user_logout();
-			theme('error', '<p>账号或者密码不正确。<a href="'.BASE_URL.'">重新登录</a></p>');
 		default:
 			$result = json_decode($response);
 			$result = $result->error ? $result->error : $response;
