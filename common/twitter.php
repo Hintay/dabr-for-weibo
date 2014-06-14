@@ -1138,7 +1138,7 @@ function theme_user_header($user) {
 
 function theme_avatar($url, $force_large = false) {
 	$size = $force_large ? 48 : 24;
-	if (setting_fetch('avataro', 'yes') !== 'yes') {
+	if (setting_fetch('avataro') !== 'yes') {
 		return "<img class='shead' src='$url' height='$size' width='$size' />";
 	} else {
 		return '';

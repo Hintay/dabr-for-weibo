@@ -35,7 +35,7 @@ function cookie_monster() {
 		setcookie($cookie, NULL, $duration, '/');
 		setcookie($cookie, NULL, $duration);
 	}
-	return theme('page', '清除Cookies', "<p>".("您已经退出,同时清空了所有设置.请重新登录!")."</p>");
+	return theme('page', '清除Cookies', "<p>".("您清空了所有设置，可能需要重新登录。")."</p>");
 }
 
 function setting_fetch($setting, $default = NULL) {
@@ -225,7 +225,7 @@ function settings_page($args) {
 	$content .= '<label><input type="checkbox" name="buttonrt" value="yes" '. (setting_fetch('buttonrt', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("转发").'</label>';
 	$content .= '<label><input type="checkbox" name="buttonco" value="yes" '. (setting_fetch('buttonco', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("评论").'</label>';
 	//$content .= '<label><input type="checkbox" name="buttonre" value="yes" '. (setting_fetch('buttonre', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("转发").'</label>';
-	$content .= '<label><input type="checkbox" name="buttondm" value="yes" '. (setting_fetch('buttondm') == 'yes' ? ' checked="checked" ' : '') .' /> '.("私信").'</label>';
+	//$content .= '<label><input type="checkbox" name="buttondm" value="yes" '. (setting_fetch('buttondm') == 'yes' ? ' checked="checked" ' : '') .' /> '.("私信").'</label>';
 	$content .= '<label><input type="checkbox" name="buttonfav" value="yes" '. (setting_fetch('buttonfav', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("收藏").'</label>';
 	$content .= '<label><input type="checkbox" name="buttondel" value="yes" '. (setting_fetch('buttondel', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("删除").'</label><br />';
 	$content .= '<label><input type="checkbox" name="buttontime" value="yes" '. (setting_fetch('buttontime', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("时间").'</label>';
@@ -233,7 +233,7 @@ function settings_page($args) {
 	//$content .= '<p><label><input type="checkbox" name="buttonend" value="yes" '. (setting_fetch('buttonend') == 'yes' ? ' checked="checked" ' : '') .' /> '.("把按钮放在每条消息的最后").'</label></p><hr>';
 	//$content .= '<p><label><input type="checkbox" name="moreinreply" value="yes" '. (setting_fetch('moreinreply') == 'yes' ? ' checked="checked" ' : '') .' /> '.("回复时显示对方的消息").'</label></p><hr>';
 	
-	$content .= '<p><label><input type="checkbox" name="avataro" value="yes" '. (setting_fetch('avataro', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("不显示头像").'</label></p><hr>';
+	$content .= '<p><label><input type="checkbox" name="avataro" '. (setting_fetch('avataro') == 'yes' ? ' checked="checked" ' : '') .' /> '.("不显示头像").'</label></p><hr>';
 	
 	$content .= '<p>'.("每页消息数").' (15-200): <input type="text" id="tpp" name="tpp" value="'.setting_fetch('tpp', 20).'" maxlength="3" style="width:20px;"/><br><small><b>注意：</b>如果超出这个范围将会出现不可预料的后果！</small></p><hr />';
 	
