@@ -1,7 +1,7 @@
 ##这是什么？
 
 * 这是一个开源的中文的新浪微博网页客户端
-* 本代码最先由Tim Yang (http://timyang.net/)修改，后来由 <a href="http://www.weibo.com/liruqi">@liruqi</a> 修改。
+* 本代码最先由Tim Yang [http://timyang.net/](http://timyang.net/))修改，后来由 <a href="http://www.weibo.com/liruqi">@liruqi</a> 修改。
 * 感谢Dabr的作者 @davidcarrington 和给他灵感的 @whatleydude ，以及奶瓶腿的作者<a href="http://weibo.com/NetPuter">@NetPuter</a>!
 
 ##安装
@@ -33,5 +33,5 @@
 	}
 
 ###新浪app engine伪静态示例
-handle:
-  `- rewrite: if(!is_dir() && !is_file() && path ~ "/(.*)") goto "/index.php?q=$1"`
+	handle:
+	  - rewrite: if(!is_dir() && !is_file() && path ~ "/(.*)") goto "/index.php?q=$1"
