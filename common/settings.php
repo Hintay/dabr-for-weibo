@@ -222,7 +222,7 @@ function settings_page($args) {
 	$content .= '<p>'.("模式").':<br /><select name="browser">'.theme('options', $modes, $GLOBALS['current_theme']).'</select></p><hr />';
 	
 	$content .= '<p><label><input type="checkbox" name="buttonintext" value="yes" '. (setting_fetch('buttonintext', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("显示按钮为纯文本").'</label><br />';
-	$content .= '<small>'.("选择你想放置在消息上的按钮").'</small><br />';
+	$content .= '<small>'.("选择你想放置在消息上的元素").'</small><br />';
 	$content .= '<label><input type="checkbox" name="buttonrt" value="yes" '. (setting_fetch('buttonrt', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("转发").'</label>';
 	$content .= '<label><input type="checkbox" name="buttonco" value="yes" '. (setting_fetch('buttonco', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("评论").'</label>';
 	//$content .= '<label><input type="checkbox" name="buttonre" value="yes" '. (setting_fetch('buttonre', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("转发").'</label>';

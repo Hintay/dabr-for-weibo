@@ -1132,8 +1132,8 @@ function theme_user_header($user) {
 	}
 	
 	//We need to pass the User Name and the User ID.	The Name is presented in the UI, the ID is used in checking
-	$out.= " | <a href='confirm/block/{$user->screen_name}/{$user->id}'>屏蔽 | 取消屏蔽</a>";
-	$out .= " | <a href='confirm/spam/{$user->screen_name}/{$user->id}'>举报</a>";
+	//$out.= " | <a href='confirm/block/{$user->screen_name}/{$user->id}'>屏蔽 | 取消屏蔽</a>";
+	//$out .= " | <a href='confirm/spam/{$user->screen_name}/{$user->id}'>举报</a>";
 	$out.= " | <a href='friends/{$user->screen_name}'>{$user->friends_count} 关注</a>
 | <a href='favourites/{$user->screen_name}'>{$user->favourites_count} 收藏</a>
 </td></table>";
@@ -1497,8 +1497,9 @@ function twitter_is_reply($status) {
 function theme_followers($feed, $hide_pagination = false) {
 	$rows = array();
 	if (count($feed) == 0 || $feed == '[]') return '<p>No users to display.</p>';
-	foreach ($feed->users as $user) {
-		$test = "";
+	if(is_array($feed->users)){
+		foreach ($feed->users as $user) {
+			$test = "";
 		/*
 		foreach ($user as $usera) {
 			foreach ($usera as $uk => $uv) {
@@ -1516,6 +1517,9 @@ function theme_followers($feed, $hide_pagination = false) {
 			"<small>{$user->description}<br />" .
 			"{$user->statuses_count} 条微博 | 关注 {$user->friends_count} 人 | 粉丝 {$user->followers_count} 人 | 每天约 {$tweets_per_day} 条微博</small>"
 		);
+		}
+	}else{
+		return '<p>因为微博接口限制，无法显示的内容</p>';
 	}
 	$content = theme('table', array(), $rows, array('class' => 'followers'));
 	#if(FILE_IO) file_put_contents('/tmp/urls', $feed->previous_cursor.":". $feed->next_cursor."\n", FILE_APPEND);
@@ -1533,7 +1537,7 @@ function theme_full_name($user) {
 }
 
 function theme_no_tweets() {
-	return '<p>No tweets to display.</p>';
+	return '<p>因为微博接口限制，没有可显示的微博</p>';
 }
 
 function theme_search_results($feed) {
