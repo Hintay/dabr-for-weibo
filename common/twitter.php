@@ -494,7 +494,7 @@ function format_interval($timestamp, $granularity = 2) {
 	$output = '';
 	foreach ($units as $key => $value) {
 		if ($timestamp >= $value) {
-			$output .= ($output ? ' ' : '').floor($timestamp / $value).' '.$key;
+			$output .= ($output ? ' ' : '').floor($timestamp / $value).''.$key;//时间空格
 			$timestamp %= $value;
 			$granularity--;
 		}
@@ -1607,20 +1607,29 @@ function theme_action_icons($status) {
 	if (!$status->is_direct) {
 		
 	if (!$status->status) {
-        if ($status->favorited == '1') {
-			$actions[] = theme('action_icon', "unfavourite/{$status->id}", 'images/star.png', 'UNFAV');
-		} else {
-			$actions[] = theme('action_icon', "favourite/{$status->id}", 'images/star_grey.png', 'FAV');
+		if (setting_fetch('buttonfav', 'yes') == 'yes') {
+			if ($status->favorited == '1') {
+				$actions[] = theme('action_icon', "unfavourite/{$status->id}", 'images/star.png', '取消收藏');
+			} else {
+				$actions[] = theme('action_icon', "favourite/{$status->id}", 'images/star_grey.png', '收藏');
+			}
 		}
-		$actions[] = theme('action_icon', "retweet/{$status->id}", 'images/retweet.png', 'RT');
-        $actions[] = theme('action_icon', "cmts/{$status->id}/{$status->comments_count}", 'images/list.png', 'CMS')."<span class='time'>{$status->comments_count}</span> ";
+		if (setting_fetch('buttonrt', 'yes') == 'yes') {
+			$actions[] = theme('action_icon', "retweet/{$status->id}", 'images/retweet.png', '转发');
+		}
+		if (setting_fetch('buttonco', 'yes') == 'yes') {
+			$actions[] = theme('action_icon', "cmts/{$status->id}/{$status->comments_count}", 'images/list.png', '评论')."<span class='time'>{$status->comments_count}</span> ";
+		}
 	} else {
 		//$actions[] = theme('action_icon', "recomment/{$status->id}", 'images/comments.gif', 'CMS');
 	}
-
+	
+	if (setting_fetch('buttondel', 'yes') == 'yes') {
 		if (user_is_current_user($from)) {
 			$actions[] = theme('action_icon', "confirm/delete/{$status->id}", 'images/trash.gif', 'DEL');
 		}
+	}
+
 	} else {
 		$actions[] = theme('action_icon', "directs/delete/{$status->id}", 'images/trash.gif', 'DEL');
 	}
