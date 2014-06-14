@@ -149,9 +149,14 @@ menu_register(array(
 	),
 	'trends' => array(
 		'security' => true,
-		'hidden' => true,
 		'callback' => 'twitter_trends_page',
-	)
+		'hidden' => true,
+	),
+	'blockings' => array(
+		'security' => true,
+		'hidden' => true,
+		'callback' => 'twitter_blockings_page',
+	),
 ));
 
 function long_url($shortURL)
@@ -206,8 +211,8 @@ function twitter_block_exists($query)
 function twitter_trends_page($query) 
 {
 	$trend_type = $query[1];
-	if($trend_type == '') $trend_type = 'current';
-	$request = 'http://search.twitter.com/trends/' . $trend_type . '.json';
+	if($trend_type == '') $trend_type = 'hourly';
+	$request = API_URL.'/2/trends/'.$trend_type.'.json';
 	$trends = twitter_process($request);
 	$search_url = 'search?query=';
 	foreach($trends->trends as $temp) {
@@ -219,7 +224,7 @@ function twitter_trends_page($query)
 	//$headers = array('<p><a href="trends">Current</a> | <a href="trends/daily">Daily</a> | <a href="trends/weekly">Weekly</a></p>'); //output for daily and weekly not great at the moment
 	$headers = array();
 	$content = theme('table', $headers, $rows, array('class' => 'timeline'));
-	theme('page', 'Trends', $content);
+	theme('page', '话题', $content);
 }
 
 function js_counter($name, $length='140')
@@ -641,31 +646,31 @@ function twitter_confirmation_page($query)
 			if (twitter_block_exists($target_id)) //Is the target blocked by the user?
 			{
 				$action = 'unblock';
-				$content	= "<p>Are you really sure you want to <strong>Unblock $target</strong>?</p>";
-				$content .= '<ul><li>They will see your updates on their home page if they follow you again.</li><li>You <em>can</em> block them again if you want.</li></ul>';
+				$content	= "<p>您确定你要 <strong>取消屏蔽 $target</strong>?</p>";
+				$content .= '<ul><li>如果对方重新关注你,那么你的消息会显示在他们的首页上。</li><li>您<em>可以</em>随时重新屏蔽对方。</li></ul>';
 			}
 			else
 			{
-				$content = "<p>Are you really sure you want to <strong>$action $target</strong>?</p>";
-				$content .= "<ul><li>You won't show up in their list of friends</li><li>They won't see your updates on their home page</li><li>They won't be able to follow you</li><li>You <em>can</em> unblock them but you will need to follow them again afterwards</li></ul>";
+				$content = "<p>您确定你要 <strong>$action $target</strong>?</p>";
+				$content .= "<ul><li>您将不会出现在他们的好友列表中</li><li>他们将无法看到您的消息</li><li>他们将无法关注您</li><li>您<em>可以</em>取消屏蔽他们但您需要重新关注他们。</li></ul>";
 			}
 			break;
 
 		case 'delete':
-			$content = '<p>Are you really sure you want to delete your tweet?</p>';
-			$content .= "<ul><li>Tweet ID: <strong>$target</strong></li><li>There is no way to undo this action.</li></ul>";
+			$content = '<p>你确定要删除这条微博？</p>';
+			$content .= "<ul><li>微博ID: <strong>$target</strong></li><li>删除后将无法恢复。</li></ul>";
 			break;
 
 		case 'spam':
-			$content	= "<p>Are you really sure you want to report <strong>$target</strong> as a spammer?</p>";
-			$content .= "<p>They will also be blocked from following you.</p>";
+			$content	= "<p>您真的想要举报 <strong>$target</strong> 吗？</p>";
+			$content .= "<p>他们将不能关注您。</p>";
 			break;
 
 	}
 	$content .= "<form action='$action/$target' method='post'>
-						<input type='submit' value='Yes please' />
+						<input type='submit' value='确定' />
 					</form>";
-	theme('Page', 'Confirm', $content);
+	theme('Page', '您确定吗', $content);
 }
 
 function twitter_friends_page($query) {
@@ -692,6 +697,19 @@ function twitter_followers_page($query) {
 	$tl = twitter_process($request, array('cursor'=>$cursor, 'screen_name'=>$user));
 	$content = theme('followers', $tl);
 	theme('page', 'Followers', $content);
+}
+
+function twitter_blockings_page($query) {
+  $user = $query[1];
+  if (!$user) {
+    user_ensure_authenticated();
+    $user = $GLOBALS['user']['screen_name'];
+  }
+  $request = API_URL."/blocks/blocking.json?&page=".intval($_GET['page']);
+  //$request ="http://twitter.com/statuses/followers/{$user}.json?page=".intval($_GET['page']);
+  $tl = twitter_process($request);
+  $content = theme('followers', $tl);
+  theme('page', '黑名单', $content);
 }
 
 function twitter_update() {
@@ -742,7 +760,7 @@ function twitter_comment($query) {
 }
 
 function twitter_public_page() {
-	$request = 'http://twitter.com/statuses/public_timeline.json?page='.intval($_GET['page']);
+	$request = 'http://twitter.com/statuses/public_timeline.json?page=';
 	$content = theme('status_form');
 	$tl = twitter_standard_timeline(twitter_process($request), 'public');
 	$content .= theme('timeline', $tl);
@@ -755,7 +773,7 @@ function twitter_replies_page() {
 	$tl = twitter_standard_timeline($tl->statuses, 'mentions');
 	$content = theme('status_form');
 	$content .= theme('timeline', $tl);
-	theme('page', 'Replies', $content);
+	theme('page', '提到我的', $content);
 }
 
 function twitter_cmts_page($query) {
@@ -767,7 +785,7 @@ function twitter_cmts_page($query) {
         $tl = twitter_standard_timeline($tl->comments, 'cmts');
         $content = theme_cmts_menu();
         $content .= theme('timeline', $tl);
-        theme('page', 'Comments', $content);
+        theme('page', '评论', $content);
 
 	case '':
 	case 'to_me':
@@ -776,7 +794,7 @@ function twitter_cmts_page($query) {
         $tl = twitter_standard_timeline($tl->comments, 'cmts');
         $content = theme_cmts_menu();
         $content .= theme('timeline', $tl);
-        theme('page', 'Comments', $content);
+        theme('page', '评论', $content);
 
     case 'reply': // reply comment
         $rid = strtolower(trim($query[2]));
@@ -785,7 +803,7 @@ function twitter_cmts_page($query) {
         $tl = twitter_standard_timeline($tl, 'cmts');
         $content = theme_cmts_menu();
         $content .= theme('timeline', $tl);
-        theme('page', 'Comments', $content);
+        theme('page', '评论', $content);
 
     default:
 	$request = "comments/show";
@@ -801,7 +819,7 @@ function twitter_cmts_page($query) {
         $tl = twitter_standard_timeline($tl->comments, 'cmts');
         $content .= theme('weibocomments', $tl);
     }
-	theme('page', 'Comments', $content);
+	theme('page', '评论', $content);
 	}
 }
 
