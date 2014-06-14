@@ -139,7 +139,7 @@ function settings_page($args) {
 		//'blackberry' => ("黑莓模式(翻页置最底)"),
 		'worksafe' => ("Work Safe"),
 		'bigtouch' => 'Big Touch',
-		'naiping' => ("奶瓶模式(更适用于PC)"),
+		//'naiping' => ("奶瓶模式(更适用于PC)"),
 	);
 
 	$gwt = array(
@@ -185,6 +185,11 @@ function settings_page($args) {
 
 	$content .= '<form action="settings/save" method="post">';
 	$content .= '<p>'.("个性化菜单选项").'<br />';
+	if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'mobile') || (setting_fetch('browser') == 'worksafe') || (setting_fetch('browser') == 'text') || (setting_fetch('browser') == 'naiping')) {
+		$content .= '<span>';
+	}else{
+		$content .= '<span style="display:none;">';
+	}
 	$content .= '<small>'.("选择你想放置在页首菜单的按钮").'</small><br />';
 	$content .= '<label><input type="checkbox" name="topuser" value="yes" '. (setting_fetch('topuser') == 'yes' ? ' checked="checked" ' : '') .' /> '.("用户").'</label><br />';
 	$content .= '<label><input type="checkbox" name="tophome" value="yes" '. (setting_fetch('tophome', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("首页").'</label><br />';
@@ -198,7 +203,13 @@ function settings_page($args) {
 	$content .= '<label><input type="checkbox" name="topfriends" value="yes" '. (setting_fetch('topfriends', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("关注").'</label><br />';
 	//$content .= '<label><input type="checkbox" name="toptwitpic" value="yes" '. (setting_fetch('toptwitpic') == 'yes' ? ' checked="checked" ' : '') .' /> '.("Twitpic").'</label><br />';
 	$content .= '<label><input type="checkbox" name="toplogout" value="yes" '. (setting_fetch('toplogout', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("登出").'</label><br />';
+	$content .= '</span>';
 	
+	if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'mobile') || (setting_fetch('browser') == 'text') || (setting_fetch('browser') == 'naiping')) {
+		$content .= '<span>';
+	}else{
+		$content .= '<span style="display:none;">';
+	}
 	$content .= '<small>'.("选择你想放置在页尾菜单的按钮").'</small><br />';
 	$content .= '<label><input type="checkbox" name="replies" value="yes" '. (setting_fetch('replies') == 'yes' ? ' checked="checked" ' : '') .' /> '.("提到").'</label><br />';
 	$content .= '<label><input type="checkbox" name="comments" value="yes" '. (setting_fetch('comments') == 'yes' ? ' checked="checked" ' : '') .' /> '.("评论").'</label><br />';
@@ -216,6 +227,7 @@ function settings_page($args) {
 	$content .= '<label><input type="checkbox" name="ssettings" value="yes" '. (setting_fetch('ssettings', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("设置").'</label><br />';
 	$content .= '<label><input type="checkbox" name="slogout" value="yes" '. (setting_fetch('slogout', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("登出").'</label><br />';
 	$content .= '<label><input type="checkbox" name="srefresh" value="yes" '. (setting_fetch('srefresh', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("刷新").'</label></p><hr />';
+	$content .= '</span>';
 	
 	$content .= '<p>'.("主题").':<br /><select name="colours">'.theme('options', $colour_schemes, setting_fetch('colours', 1)).'</select></p><hr />';
 	
@@ -264,5 +276,5 @@ function settings_page($args) {
 
 	$content .= '<hr /><p>如果设置出错，请 <a href="reset">重置</a> 所有设置，但您需要重新登陆。</p>';
 
-	return theme('page', 'Settings', $content);
+	return theme('page', '设置', $content);
 }
