@@ -1418,6 +1418,7 @@ function theme_timeline($feed)
 		}elseif($status->retweeted_status){
 			//$avatar = theme('avatar',$status->retweeted_status->user->profile_image_url);
 			$avatar = theme('avatar', $status->from->profile_image_url);
+			$avatar_retweeted = theme('avatar', $status->retweeted_status->user->profile_image_url);
 			if (setting_fetch('buttontime', 'yes') == 'yes') {//时间
 				$link = theme('status_time_link', $status, !$status->is_direct);
 			}
@@ -1440,7 +1441,7 @@ function theme_timeline($feed)
 				}
 			}
 			$row = array(
-				"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link <br /> $reason <small>$source</small> <br/><small>原文</small><br/> <b> <a href='user/{$status->retweeted_status->user->screen_name}'>{$status->retweeted_status->user->screen_name}</a></b> <br />{$text} <small>$source2</small>",
+				"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link <br /> $reason <small>$source</small> <br/> <blockquote style='margin: 10px 20px;'>$avatar_retweeted<b> <a href='user/{$status->retweeted_status->user->screen_name}'>{$status->retweeted_status->user->screen_name}</a></b> <br />{$text} <small>$source2</small></blockquote>",
 			);
 		}
 		else{
