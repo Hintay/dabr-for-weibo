@@ -768,8 +768,9 @@ function twitter_public_page() {
 }
 
 function twitter_replies_page() {
+	$count = setting_fetch('tpp', 20);
 	$request = 'statuses/mentions';
-	$tl = twitter_process($request, array("max_id"=>$_GET['max_id']));
+	$tl = twitter_process($request, array('count'=>$count,"max_id"=>$_GET['max_id']));
 	$tl = twitter_standard_timeline($tl->statuses, 'mentions');
 	$content = theme('status_form');
 	$content .= theme('timeline', $tl);
@@ -780,8 +781,9 @@ function twitter_cmts_page($query) {
 	$action = strtolower(trim($query[1]));
 	switch ($action) {
 	case 'by_me':
+		$count = setting_fetch('tpp', 20);
 	    $request = 'comments/by_me';
-        $tl = twitter_process($request, array('max_id'=>$_GET['max_id']));
+        $tl = twitter_process($request, array('count'=>$count,'max_id'=>$_GET['max_id']));
         $tl = twitter_standard_timeline($tl->comments, 'cmts');
         $content = theme_cmts_menu();
         $content .= theme('timeline', $tl);
@@ -789,17 +791,19 @@ function twitter_cmts_page($query) {
 
 	case '':
 	case 'to_me':
+		$count = setting_fetch('tpp', 20)+4;
 	    $request = 'comments/to_me';
-        $tl = twitter_process($request, array('max_id'=>$_GET['max_id']));
+        $tl = twitter_process($request, array('count'=>$count,'max_id'=>$_GET['max_id']));
         $tl = twitter_standard_timeline($tl->comments, 'cmts');
         $content = theme_cmts_menu();
         $content .= theme('timeline', $tl);
         theme('page', '评论', $content);
 
     case 'reply': // reply comment
+		$count = setting_fetch('tpp', 20);
         $rid = strtolower(trim($query[2]));
         $request = 'statuses/comments_by_me.json';
-        $tl = twitter_process($request, array('max_id'=>$_GET['max_id']));
+        $tl = twitter_process($request, array('count'=>$count,'max_id'=>$_GET['max_id']));
         $tl = twitter_standard_timeline($tl, 'cmts');
         $content = theme_cmts_menu();
         $content .= theme('timeline', $tl);
@@ -972,8 +976,9 @@ function twitter_mark_favourite_page($query) {
 function twitter_home_page() {
 	user_ensure_authenticated();
 
+	$count = setting_fetch('tpp');
 	$request = 'statuses/home_timeline';
-	$postdata = array('count'=>50,'page'=>1,'base_app'=>0,'feature'=>0);
+	$postdata = array('count'=>$count,'page'=>1,'base_app'=>0,'feature'=>0);
 	if ($_GET['max_id'])
 	{
 		$postdata = array('max_id'=>$_GET['max_id']);

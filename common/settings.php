@@ -112,6 +112,7 @@ function settings_page($args) {
 		$settings['fixedtagspost'] = $_POST['fixedtagspost'];
 		//$settings['rtsyntax'] = $_POST['rtsyntax'];
 		$settings['css'] = $_POST['css'];
+		$settings['tpp'] = $_POST['tpp'];
 		
 		//$settings['linktrans'] = $_POST['linktrans'];
 		$settings['avataro'] = $_POST['avataro'];
