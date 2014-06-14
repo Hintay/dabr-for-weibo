@@ -278,7 +278,7 @@ function endsWith( $str, $sub ) {
 function twitter_process($url, $post_data = false, $method = "get") {
 	$url = str_replace("https://api.twitter.com/", "", $url);
 	$url = str_replace("http://api.twitter.com/", "", $url);
-	if(FILE_IO) file_put_contents('/tmp/session', var_export($_SESSION, true)."\n", FILE_APPEND);
+	if(FILE_IO) file_put_contents('./tmp/session', var_export($_SESSION, true)."\n", FILE_APPEND);
     #$c = new WeiboClient(OAUTH_CONSUMER_KEY , OAUTH_CONSUMER_SECRET , $_SESSION['last_key']['oauth_token'] , $_SESSION['last_key']['oauth_token_secret']);
     $c = new SaeTClientV2(OAUTH_CONSUMER_KEY , OAUTH_CONSUMER_SECRET , $_SESSION['token']['access_token']) ;
 
@@ -291,9 +291,9 @@ function twitter_process($url, $post_data = false, $method = "get") {
     }
 	//if(FILE_IO) file_put_contents('/tmp/session', var_export($c->oauth->http_info, true)."\n", FILE_APPEND);
 	
-	if(FILE_IO) file_put_contents('/tmp/urls', $url." ".user_type(). " ".json_encode($post_data)."\n", FILE_APPEND);
+	if(FILE_IO) file_put_contents('./tmp/urls', $url." ".user_type(). " ".json_encode($post_data)."\n", FILE_APPEND);
 
-	if(FILE_IO) file_put_contents("/tmp/api_response.dump",  "$response <==== $url\n", FILE_APPEND);
+	if(FILE_IO) file_put_contents("./tmp/api_response.dump",  "$response <==== $url\n", FILE_APPEND);
 	switch( intval( $c->oauth->http_info['http_code'] ) ) {
 		case 200:
 			$json = json_decode($response);
