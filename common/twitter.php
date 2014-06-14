@@ -1609,16 +1609,16 @@ function theme_action_icons($status) {
 	if (!$status->status) {
 		if (setting_fetch('buttonfav', 'yes') == 'yes') {
 			if ($status->favorited == '1') {
-				$actions[] = theme('action_icon', "unfavourite/{$status->id}", 'images/star.png', '取消收藏');
+				$actions[] = theme('action_icon', "unfavourite/".number_format($status->id,0,'',''), 'images/star.png', '取消收藏');
 			} else {
-				$actions[] = theme('action_icon', "favourite/{$status->id}", 'images/star_grey.png', '收藏');
+				$actions[] = theme('action_icon', "favourite/".number_format($status->id,0,'',''), 'images/star_grey.png', '收藏');
 			}
 		}
 		if (setting_fetch('buttonrt', 'yes') == 'yes') {
-			$actions[] = theme('action_icon', "retweet/{$status->id}", 'images/retweet.png', '转发');
+			$actions[] = theme('action_icon', "retweet/".number_format($status->id,0,'',''), 'images/retweet.png', '转发');
 		}
 		if (setting_fetch('buttonco', 'yes') == 'yes') {
-			$actions[] = theme('action_icon', "cmts/{$status->id}/{$status->comments_count}", 'images/list.png', '评论')."<span class='time'>{$status->comments_count}</span> ";
+			$actions[] = theme('action_icon', "cmts/".number_format($status->id,0,'','')."/".number_format($status->comments_count), 'images/list.png', '评论')."<span class='time'>{$status->comments_count}</span> ";
 		}
 	} else {
 		//$actions[] = theme('action_icon', "recomment/{$status->id}", 'images/comments.gif', 'CMS');
