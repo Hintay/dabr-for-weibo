@@ -1375,7 +1375,12 @@ function theme_timeline($feed)
 		}
 		$time = strtotime($status->created_at);
 		if ($time > 0) {
-			$date = twitter_date('l jS F Y', strtotime($status->created_at));
+			//中文星期
+			$cweekday = array("星期日","星期一","星期二","星期三","星期四","星期五","星期六"); 
+			$now = getdate(time()); 
+			$cur_wday=$now['wday'];
+			
+			$date = twitter_date('Y年n月j日 '.date($cweekday[$cur_wday]).'  ', strtotime($status->created_at));
 			if ($date_heading !== $date) {
 				$date_heading = $date;
 				$rows[] = array(array(
