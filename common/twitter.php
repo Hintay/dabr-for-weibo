@@ -300,14 +300,17 @@ function twitter_process($url, $post_data = false, $method = "get") {
 			if ($json) return $json;
 			return $response;
 		case 0:
-			theme('error', '<h2>Twitter timed out</h3><p>Dabr gave up on waiting for Twitter to respond. They\'re probably overloaded right now, try again in a minute.</p>'."<p>$url</p><pre>".var_export(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), true).'</pre>');
+			theme('error', '<h2>连接超时</h2><p>请稍等几分钟后刷新重新连接。</p>'."<p>$url</p><pre>".var_export(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), true).'</pre>');
 		case 400:
 			$_SESSION = array();
+		case 403:
+			user_logout();
+			theme('error', '<p>账号或者密码不正确。<a href="'.BASE_URL.'">重新登录</a></p>');
 		default:
 			$result = json_decode($response);
 			$result = $result->error ? $result->error : $response;
-			if (strlen($result) > 500) $result = 'Something broke on Twitter\'s end.';
-			theme('error', "<h2>An error occured while calling the Twitter API</h2><p>{$c->oauth->http_info['http_code']}: {$result}</p><hr><p>$url</p><pre>".var_export(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), true).'</pre>');
+			if (strlen($result) > 500) $result = '微博API返回结果出现错误';
+			theme('error', "<h2>调用微博API时遇到错误</h2><p>{$c->oauth->http_info['http_code']}: {$result}</p><hr><p>$url</p><pre>".var_export(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), true).'</pre>');
 	}
 }
 
@@ -482,11 +485,11 @@ function generate_thumbnail($query) {
 
 function format_interval($timestamp, $granularity = 2) {
 	$units = array(
-		'years' => 31536000,
-		'days' => 86400,
-		'hours' => 3600,
-		'min' => 60,
-		'sec' => 1
+		'年' => 31536000,
+		'天' => 86400,
+		'小时' => 3600,
+		'分钟' => 60,
+		'秒' => 1
 	);
 	$output = '';
 	foreach ($units as $key => $value) {
@@ -499,7 +502,7 @@ function format_interval($timestamp, $granularity = 2) {
 			break;
 		}
 	}
-	return $output ? $output : '0 sec';
+	return $output ? $output : '0 秒';
 }
 
 function twitter_status_page($query) {
@@ -535,7 +538,7 @@ function twitter_comment_page($query) {
 		$request = "comments/show_batch";
 		$tl = twitter_process($request, array("cids"=>$id));
 		$content = theme('comment', $tl[0]);
-		theme('page', 'Comment', $content);
+		theme('page', '评论', $content);
 	}
 }
 
@@ -545,7 +548,7 @@ function weibo_recomment($query) {
 		$request = "http://twitter.com/statuses/show/{$id}.json";
 		$tl = twitter_process($request);
 		$content = theme('comment', $tl);
-		theme('page', 'Comment', $content);
+		theme('page', '评论', $content);
 	}
 }
 /*
@@ -836,7 +839,7 @@ function twitter_directs_page($query) {
 		case 'create':
 			$to = $query[2];
 			$content = theme('directs_form', $to);
-			theme('page', 'Create DM', $content);
+			theme('page', '新私信', $content);
 
 		case 'send':
 			twitter_ensure_post_action();
@@ -851,7 +854,7 @@ function twitter_directs_page($query) {
 			$tl = twitter_standard_timeline(twitter_process($request), 'directs_sent');
 			$content = theme_directs_menu();
 			$content .= theme('timeline', $tl);
-			theme('page', 'DM Sent', $content);
+			theme('page', '已发送', $content);
 
 		case 'inbox':
 		default:
@@ -859,16 +862,16 @@ function twitter_directs_page($query) {
 			$tl = twitter_standard_timeline(twitter_process($request, $_GET), 'directs_inbox');
 			$content = theme_directs_menu();
 			$content .= theme('timeline', $tl);
-			theme('page', 'DM Inbox', $content);
+			theme('page', '收件箱', $content);
 	}
 }
 
 function theme_directs_menu() {
-	return '<p><a href="directs/create">Create</a> | <a href="directs/inbox">Inbox</a> | <a href="directs/sent">Sent</a></p>';
+	return '<p><a href="directs/create">新私信</a> | <a href="directs/inbox">收件箱</a> | <a href="directs/sent">已发送</a></p>';
 }
 
 function theme_cmts_menu() {
-	return '<p><a href="cmts/to_me">To me</a> | <a href="cmts/by_me">by me</a></p>';
+	return '<p><a href="cmts/to_me">收到的评论</a> | <a href="cmts/by_me">发出的评论</a></p>';
 }
 
 function theme_directs_form($to) {
@@ -876,11 +879,11 @@ function theme_directs_form($to) {
 
 		if (friendship_exists($to) != 1)
 		{
-			$html_to = "<em>Warning</em> <b>" . $to . "</b> is not following you. You may not send them a Direct Message :-(<br/>";
+			$html_to = "<em>提示</em> <b>" . $to . "</b> 没有关注您，所以您不能发私信给 TA :-(<br/>";
 		}
-		$html_to .= "Sending direct message to <b>$to</b><input name='to' value='$to' type='hidden'>";
+		$html_to .= "发私信给 <b>$to</b><input name='to' value='$to' type='hidden'>";
 	} else {
-		$html_to .= "To: <input name='to'><br />Message:";
+		$html_to .= "收信人: <input name='to'><br />消息:";
 	}
 	$content = "<form action='directs/send' method='post'>$html_to<br><textarea name='message' style='width:90%; max-width: 400px;' rows='3' id='message'></textarea><br><input type='submit' value='Send'><span id='remaining'>140</span></form>";
 	$content .= js_counter("message");
@@ -905,7 +908,7 @@ function twitter_search_page() {
 		}
 		$content .= theme('timeline', $tl);
 	}
-	theme('page', 'Search', $content);
+	theme('page', '搜索', $content);
 }
 
 function twitter_search($search_query) {
@@ -937,7 +940,7 @@ function twitter_user_page($query) {
 			$tl = twitter_standard_timeline($tl->statuses, 'user');
 			$content .= theme('timeline', $tl);
 		}
-		theme('page', "User {$screen_name}", $content);
+		theme('page', "用户 {$screen_name}", $content);
 	} else {
 		// TODO: user search screen
 	}
@@ -954,7 +957,7 @@ function twitter_favourites_page($query) {
 	$tl = twitter_standard_timeline($tl->favorites, 'favourites');
 	$content = theme('status_form');
 	$content .= theme('timeline', $tl);
-	theme('page', 'Favourites', $content);
+	theme('page', '收藏', $content);
 }
 
 function twitter_mark_favourite_page($query) {
@@ -989,7 +992,7 @@ function twitter_home_page() {
 	$tl = twitter_standard_timeline($tl->statuses, 'friends');
 	$content = theme('status_form');
 	$content .= theme('timeline', $tl);
-	theme('page', 'Home', $content);
+	theme('page', '首页', $content);
 }
 
 function twitter_hashtag_page($query) {
@@ -1098,57 +1101,64 @@ function theme_user_header($user) {
 	$full_avatar = str_replace('_normal.', '.', $user->profile_image_url);
 	$link = theme('external_link', $user->url);
 	$raw_date_joined = strtotime($user->created_at);
-	$date_joined = date('jS M Y', $raw_date_joined);
+	$date_joined = date('Y-m-d', $raw_date_joined);
 	$tweets_per_day = twitter_tweets_per_day($user, 1);
 	$out = "<table><tr><td>".theme('external_link', $full_avatar, theme('avatar', $user->profile_image_url, 1))."</td>
 <td><b>{$name}</b>
 <small>";
 	if ($user->verified == true) {
-		$out .= '<br /><strong>Verified Account</strong>';
+		$out .= '<br /><strong>微博认证</strong>';
 	}
 	if ($user->protected == true) {
 		$out .= '<br /><strong>Private/Protected Tweets</strong>';
 	}
 	$link = $link ? "<br />Link: ".$link : "";
 	$out .= "
-<br />Bio: {$user->description}
+<br />个人简介：{$user->description}
 {$link}
-<br />Location: {$user->location}
-<br />Joined: {$date_joined} (~$tweets_per_day tweets per day)
+<br />所在位置：{$user->location}
+<br />于{$date_joined}注册，每天约{$tweets_per_day}条微博。
 </small>
 <br />
-{$user->statuses_count} tweets |
-<a href='followers/{$user->screen_name}'>{$user->followers_count} followers</a> ";
+{$user->statuses_count} 微博 |
+<a href='followers/{$user->screen_name}'>{$user->followers_count} 粉丝</a> ";
 
 	if ($user->following !== true) {
-		$out .= "| <a href='follow/{$user->screen_name}'>Follow</a>";
+		$out .= "| <a href='follow/{$user->screen_name}'>加关注</a>";
 	} else {
-		$out .= " | <a href='unfollow/{$user->screen_name}'>Unfollow</a>";
+		$out .= " | <a href='unfollow/{$user->screen_name}'>取消关注</a>";
 	}
 	
 	//We need to pass the User Name and the User ID.	The Name is presented in the UI, the ID is used in checking
-	$out.= " | <a href='confirm/block/{$user->screen_name}/{$user->id}'>Block | Unblock</a>";
-	$out .= " | <a href='confirm/spam/{$user->screen_name}/{$user->id}'>Report Spam</a>";
-	$out.= " | <a href='friends/{$user->screen_name}'>{$user->friends_count} friends</a>
-| <a href='favourites/{$user->screen_name}'>{$user->favourites_count} favourites</a>
+	$out.= " | <a href='confirm/block/{$user->screen_name}/{$user->id}'>屏蔽 | 取消屏蔽</a>";
+	$out .= " | <a href='confirm/spam/{$user->screen_name}/{$user->id}'>举报</a>";
+	$out.= " | <a href='friends/{$user->screen_name}'>{$user->friends_count} 关注</a>
+| <a href='favourites/{$user->screen_name}'>{$user->favourites_count} 收藏</a>
 </td></table>";
-// | <a href='directs/create/{$user->screen_name}'>Direct Message</a>
+// | <a href='directs/create/{$user->screen_name}'>发私信</a>
 	return $out;
 }
 
 function theme_avatar($url, $force_large = false) {
 	$size = $force_large ? 48 : 24;
-	return "<img src='$url' height='$size' width='$size' />";
+	if (setting_fetch('avataro', 'yes') !== 'yes') {
+		return "<img class='shead' src='$url' height='$size' width='$size' />";
+	} else {
+		return '';
+	}
 }
 
 function theme_status_time_link($status, $is_link = true) {
 	$time = strtotime($status->created_at);
 	if ($time > 0) {
 		/*if (twitter_date('dmy') == twitter_date('dmy', $time)) {
-			$out = format_interval(time() - $time, 1). ' ago';
+			$out = format_interval(time() - $time, 1). '前';
 		} else {*/
-			$out = twitter_date('M d H:i:s', ($time + 60 * 60 * 8) );
-		//}
+		if (setting_fetch('timestamp') == 'yes') {
+			$out = twitter_date('n月d日 H:i:s', ($time + 60 * 60 * 8) );
+		} else {
+			$out = format_interval(time() - $time, 1). '前';
+		}
 	} else {
 		$out = $status->created_at;
 	}
@@ -1388,18 +1398,27 @@ function theme_timeline($feed)
 			if ($status->status->thumbnail_pic)
 				$srctext .= "<br/> <a href='{$status->status->original_pic}' target=_blank><img src='{$status->status->thumbnail_pic}' /></a> <br />";
 			$link = theme('status_time_link', $status, false);
-			$link2 = theme('status_time_link', $status->status, !$status->is_direct);
+			if (setting_fetch('buttontime', 'yes') == 'yes') {//时间
+				$link2 = theme('status_time_link', $status->status, !$status->is_direct);
+			}
 			$actions = theme('action_icons', $status);
 			$avatar = theme('avatar', $status->from->profile_image_url);
-			$source2 = $status->status->source ? " from {$status->status->source}" : '';
+			if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
+				if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'touch') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'naiping')) {
+					$source2 = $status->status->source ? " 来自 {$status->status->source}" : '';
+				}else{
+					$source2 = $status->status->source ? " 来自 ".strip_tags($status->status->source)."" : '';
+				}
+			}
 			$row = array(
-				"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link <br />{$text} <br /> 原文<br/> <b> <a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $link2 <br />{$srctext} <small>$source2</small>",
+				"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link <br />{$text} <br /> <small>原文</small><br/> <b> <a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $link2 <br />{$srctext} <small>$source2</small>",
 			);
-		}
-		elseif($status->retweeted_status){
+		}elseif($status->retweeted_status){
 			//$avatar = theme('avatar',$status->retweeted_status->user->profile_image_url);
 			$avatar = theme('avatar', $status->from->profile_image_url);
-			$link = theme('status_time_link', $status, !$status->is_direct);
+			if (setting_fetch('buttontime', 'yes') == 'yes') {//时间
+				$link = theme('status_time_link', $status, !$status->is_direct);
+			}
 			$actions = theme('action_icons', $status);
 
 			$reason = twitter_parse_tags($status->text);
@@ -1407,22 +1426,39 @@ function theme_timeline($feed)
 			if ($status->retweeted_status->thumbnail_pic)
 				$text .= "<br/> <a href='{$status->retweeted_status->original_pic}' target=_blank><img src='{$status->retweeted_status->thumbnail_pic}' /></a> <br />";
             if ($status->retweeted_status->deleted) {
-                $text = "Original weibo is deleted. try <a target='_blank' href='https://freeweibo.com/weibo/{$status->retweeted_status->mid}'>freeweibo</a>.";
+                $text = "原微博已被删除，试试 <a target='_blank' href='https://freeweibo.com/weibo/{$status->retweeted_status->mid}'>freeweibo</a> 吧。";
             }
-			$source = $status->source ? " from {$status->source}" : '';
-			$source2 = $status->retweeted_status->source ? " from {$status->retweeted_status->source}" : '';
+			if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
+				if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'touch') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'naiping')) {
+					$source = $status->source ? " 来自 {$status->source}" : '';
+					$source2 = $status->retweeted_status->source ? " 来自 {$status->retweeted_status->source}" : '';
+				}else{
+					$source = $status->source ? " 来自 ".strip_tags($status->source) ."" : '';
+					$source2 = $status->retweeted_status->source ? " 来自 ".strip_tags($status->retweeted_status->source) ."" : '';
+				}
+			}
 			$row = array(
-				"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link <br /> $reason <small>$source</small> <br/>原文<br/> <b> <a href='user/{$status->retweeted_status->user->screen_name}'>{$status->retweeted_status->user->screen_name}</a></b> <br />{$text} <small>$source2</small>",
+				"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link <br /> $reason <small>$source</small> <br/><small>原文</small><br/> <b> <a href='user/{$status->retweeted_status->user->screen_name}'>{$status->retweeted_status->user->screen_name}</a></b> <br />{$text} <small>$source2</small>",
 			);
 		}
 		else{
 			$text = twitter_parse_tags($status->text);
 			if ($status->thumbnail_pic)
 				$text .= "<br/> <a href='$status->original_pic' target=_blank><img src='$status->thumbnail_pic' /></a> <br />";
-			$link = theme('status_time_link', $status, !$status->is_direct);
+			if (setting_fetch('buttontime', 'yes') == 'yes') {//时间
+				$link = theme('status_time_link', $status, !$status->is_direct);
+			}
 			$actions = theme('action_icons', $status);
 			$avatar = theme('avatar', $status->from->profile_image_url);
-			$source = $status->source ? " from {$status->source}" : '';
+			if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
+				if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'touch') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'naiping')) {
+					$source = $status->source ? "来自 {$status->source}" : '';
+				}else{
+					$source = $status->source ? " 来自 ".strip_tags($status->source) ."" : '';
+				}
+			} else {
+				$source = NULL;
+			}
 			$row = array(
 				"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link<br />{$text} <small>$source</small>",
 			);
@@ -1438,7 +1474,7 @@ function theme_timeline($feed)
 	}
 	$content = theme('table', array(), $rows, array('class' => 'timeline'));
 	
-		$links[] = "<a href='{$_GET['q']}?max_id=$max_id' accesskey='9'>Older</a> 9";
+		$links[] = "<a href='{$_GET['q']}?max_id=$max_id' accesskey='9'>更旧的</a> 9";
 		$content .= '<p>'.implode(' | ', $links).'</p>';
 	return $content;
 }
@@ -1471,7 +1507,7 @@ function theme_followers($feed, $hide_pagination = false) {
 			theme('avatar', $user->profile_image_url),
 			"{$name} - {$user->location}<br />" .
 			"<small>{$user->description}<br />" .
-			"Info: {$user->statuses_count} tweets, {$user->friends_count} friends, {$user->followers_count} followers, ~{$tweets_per_day} tweets per day</small>"
+			"{$user->statuses_count} 条微博 | 关注 {$user->friends_count} 人 | 粉丝 {$user->followers_count} 人 | 每天约 {$tweets_per_day} 条微博</small>"
 		);
 	}
 	$content = theme('table', array(), $rows, array('class' => 'followers'));
