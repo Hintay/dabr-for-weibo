@@ -1405,6 +1405,7 @@ function theme_timeline($feed)
 			}
 			$actions = theme('action_icons', $status);
 			$avatar = theme('avatar', $status->from->profile_image_url);
+			$avatar_retweeted = theme('avatar', $status->status->user->profile_image_url);
 			if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
 				if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'touch') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'naiping')) {
 					$source2 = $status->status->source ? " 来自 {$status->status->source}" : '';
@@ -1413,7 +1414,7 @@ function theme_timeline($feed)
 				}
 			}
 			$row = array(
-				"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link <br />{$text} <br /> <small>原文</small><br/> <b> <a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $link2 <br />{$srctext} <small>$source2</small>",
+				"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link <br />{$text} <br /> <blockquote style='margin: 10px 20px;'>$avatar_retweeted<b> <a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $link2 <br />{$srctext} <small>$source2</small></blockquote>",
 			);
 		}elseif($status->retweeted_status){
 			//$avatar = theme('avatar',$status->retweeted_status->user->profile_image_url);
