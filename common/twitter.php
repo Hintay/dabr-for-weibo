@@ -1436,7 +1436,7 @@ function theme_favourites($feed)
 				}
 			}
 			$row = array(
-				"<b><a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $actions $link <small>$source</small><br />{$text} <br /> <blockquote style='margin: 10px 20px;'>$avatar_retweeted<b> <a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $link2 <br />{$srctext} <small>$source2</small></blockquote>",
+				"<b><a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $actions $link <small>$source</small><br />{$text} <br /> <blockquote style='margin: 10px 20px;'>$avatar_retweeted<b> <a href='user/{$status->status->retweeted_status->user->screen_name}'>{$status->status->retweeted_status->user->screen_name}</a></b> $link2 <br />{$srctext} <small>$source2</small></blockquote>",
 			);
 			//print_r($row);
 			
