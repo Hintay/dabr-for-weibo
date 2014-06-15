@@ -1331,8 +1331,13 @@ function theme_weibocomments($feed)
 		if($status->status) { // comment
 			$text = twitter_parse_tags($status->text);
 			$srctext = twitter_parse_tags($status->status->text);
-			if ($status->status->thumbnail_pic)
-				$srctext .= "<br/> <a href='{$status->status->original_pic}' target=_blank><img src='{$status->status->thumbnail_pic}' /></a> <br />";
+			if ($status->status->thumbnail_pic){
+				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
+					$srctext .= "<br/> <a href='{$status->status->original_pic}' target=_blank>[图片]</a> <br />";
+				}else{
+					$srctext .= "<br/> <a href='{$status->status->original_pic}' target=_blank><img src='{$status->status->thumbnail_pic}' /></a> <br />";
+				}
+			}
 			$link = theme('status_time_link', $status, false);
 			$actions = theme('action_icons', $status);
 			$avatar = theme('avatar', $status->from->profile_image_url);
@@ -1404,8 +1409,13 @@ function theme_timeline($feed)
 		if($status->status) { // comment
 			$text = twitter_parse_tags($status->text);
 			$srctext = twitter_parse_tags($status->status->text);
-			if ($status->status->thumbnail_pic)
-				$srctext .= "<br/> <a href='{$status->status->original_pic}' target=_blank><img src='{$status->status->thumbnail_pic}' /></a> <br />";
+			if ($status->status->thumbnail_pic){
+				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
+					$srctext .= "<br/> <a href='{$status->status->original_pic}' target=_blank>[图片]</a> <br />";
+				}else{
+					$srctext .= "<br/> <a href='{$status->status->original_pic}' target=_blank><img src='{$status->status->thumbnail_pic}' /></a> <br />";
+				}
+			}
 			$link = theme('status_time_link', $status, false);
 			if (setting_fetch('buttontime', 'yes') == 'yes') {//时间
 				$link2 = theme('status_time_link', $status->status, !$status->is_direct);
@@ -1434,8 +1444,13 @@ function theme_timeline($feed)
 
 			$reason = twitter_parse_tags($status->text);
 			$text = twitter_parse_tags($status->retweeted_status->text);
-			if ($status->retweeted_status->thumbnail_pic)
-				$text .= "<br/> <a href='{$status->retweeted_status->original_pic}' target=_blank><img src='{$status->retweeted_status->thumbnail_pic}' /></a> <br />";
+			if ($status->retweeted_status->thumbnail_pic){
+				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
+					$text .= "<br/> <a href='{$status->retweeted_status->original_pic}' target=_blank>[图片]</a> <br />";
+				}else{
+					$text .= "<br/> <a href='{$status->retweeted_status->original_pic}' target=_blank><img src='{$status->retweeted_status->thumbnail_pic}' /></a> <br />";
+				}
+			}
             if ($status->retweeted_status->deleted) {
                 $text = "原微博已被删除，试试 <a target='_blank' href='https://freeweibo.com/weibo/{$status->retweeted_status->mid}'>freeweibo</a> 吧。";
             }
@@ -1454,8 +1469,13 @@ function theme_timeline($feed)
 		}
 		else{
 			$text = twitter_parse_tags($status->text);
-			if ($status->thumbnail_pic)
-				$text .= "<br/> <a href='$status->original_pic' target=_blank><img src='$status->thumbnail_pic' /></a> <br />";
+			if ($status->thumbnail_pic){
+				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
+					$text .= "<br/> <a href='$status->original_pic' target=_blank>[图片]</a> <br />";
+				}else{
+					$text .= "<br/> <a href='$status->original_pic' target=_blank><img src='$status->thumbnail_pic' /></a> <br />";
+				}
+			}
 			if (setting_fetch('buttontime', 'yes') == 'yes') {//时间
 				$link = theme('status_time_link', $status, !$status->is_direct);
 			}

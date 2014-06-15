@@ -118,6 +118,7 @@ function settings_page($args) {
 		$settings['avataro'] = $_POST['avataro'];
 		$settings['buttonintext'] = $_POST['buttonintext'];
 		//$settings['moreinreply'] = $_POST['moreinreply'];
+		$settings['piclink'] = $_POST['piclink'];
 		
 		// Save a user's oauth details to a MySQL table
 		if (MYSQL_USERS == 'ON' && $newpass = $_POST['newpassword']) {
@@ -246,6 +247,13 @@ function settings_page($args) {
 	//$content .= '<p><label><input type="checkbox" name="buttonend" value="yes" '. (setting_fetch('buttonend') == 'yes' ? ' checked="checked" ' : '') .' /> '.("把按钮放在每条消息的最后").'</label></p><hr>';
 	//$content .= '<p><label><input type="checkbox" name="moreinreply" value="yes" '. (setting_fetch('moreinreply') == 'yes' ? ' checked="checked" ' : '') .' /> '.("回复时显示对方的消息").'</label></p><hr>';
 	
+	if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'text')) {
+		$content .= '<span style="display:none;">';
+	}else{
+		$content .= '<span>';
+	}
+	$content .= '<p><label><input type="checkbox" name="piclink" value="yes" '. (setting_fetch('piclink') == 'yes' ? ' checked="checked" ' : '') .' /> 将微博图片显示为链接</label></p>';
+	$content .= '</span>';
 	$content .= '<p><label><input type="checkbox" name="avataro" value="yes"'. (setting_fetch('avataro') == 'yes' ? ' checked="checked" ' : '') .' /> '.("不显示头像").'</label></p><hr>';
 	
 	$content .= '<p>'.("每页消息数").' (15-200): <input type="text" id="tpp" name="tpp" value="'.setting_fetch('tpp', 20).'" maxlength="3" style="width:20px;"/><br><small><b>注意：</b>如果超出这个范围将会出现不可预料的后果！</small></p><hr />';
