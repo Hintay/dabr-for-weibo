@@ -982,10 +982,10 @@ function twitter_home_page() {
 
 	$count = setting_fetch('tpp');
 	$request = 'statuses/home_timeline';
-	$postdata = array('count'=>$count,'page'=>1,'base_app'=>0,'feature'=>0);
+	$postdata = array('count'=>$count,'page'=>$_GET['page'],'base_app'=>0,'feature'=>0);
 	if ($_GET['max_id'])
 	{
-		$postdata = array('max_id'=>$_GET['max_id']);
+		$postdata = array_merge($postdata, array('max_id'=>$_GET['max_id']));
 	}
 
 	if ($_GET['since_id'])
@@ -1628,7 +1628,9 @@ function theme_timeline($feed)
 		$rows[] = $row;
 	}
 	$content = theme('table', array(), $rows, array('class' => 'timeline'));
-	$content .= theme('pagination');
+	//$content .= theme('pagination');
+	$links[] = "<a href='{$_GET['q']}?max_id=".number_format($max_id,0,'','')."' accesskey='9'>更旧的</a> 9";
+	$content .= '<p>'.implode(' | ', $links).'</p>';
 	return $content;
 }
 
