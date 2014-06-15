@@ -716,6 +716,7 @@ function twitter_update() {
 	twitter_ensure_post_action();
 	$status = twitter_url_shorten(stripslashes(trim($_POST['status'])));
 	if ($status) {
+		$status = setting_fetch('fixedtagspre')." ".$status." ".setting_fetch('fixedtagspost');
 		$request = 'statuses/update';
 		$post_data = array('source' => OAUTH_CONSUMER_KEY, 'status' => $status);
 		
