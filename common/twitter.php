@@ -112,6 +112,11 @@ menu_register(array(
 		'security' => true,
 		'callback' => 'twitter_delete_page',
 	),
+	'delcmt' => array(
+		'hidden' => true,
+		'security' => true,
+		'callback' => 'twitter_delcmt_page',
+	),
 	'retweet' => array(
 		'hidden' => true,
 		'security' => true,
@@ -301,8 +306,6 @@ function twitter_process($url, $post_data = false, $method = "get") {
 			return $response;
 		case 0:
 			theme('error', '<h2>连接超时</h2><p>请稍等几分钟后刷新重新连接。</p>'."<p>$url</p><pre>".var_export(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), true).'</pre>');
-		case 400:
-			$_SESSION = array();
 		case 403:
 			$result = json_decode($response);
 			$result = $result->error ? $result->error : $response;
@@ -586,6 +589,18 @@ function twitter_delete_page($query) {
 	}
 }
 
+function twitter_delcmt_page($query) {
+	twitter_ensure_post_action();
+
+	$id = (string) $query[1];
+	if (is_numeric($id)) {
+		$request = "comments/destroy";
+		$post_data = array('cid'=>$id);
+		$tl = twitter_process($request, $post_data, 'post');
+		twitter_refresh('user/'.user_current_username());
+	}
+}
+
 function twitter_ensure_post_action() {
 	// This function is used to make sure the user submitted their action as an HTTP POST request
 	// It slightly increases security for actions such as Delete, Block and Spam
@@ -664,6 +679,11 @@ function twitter_confirmation_page($query)
 		case 'delete':
 			$content = '<p>你确定要删除这条微博？</p>';
 			$content .= "<ul><li>微博ID: <strong>$target</strong></li><li>删除后将无法恢复。</li></ul>";
+			break;
+		
+		case 'delcmt':
+			$content = '<p>你确定要删除这条评论？</p>';
+			$content .= "<ul><li>评论ID: <strong>$target</strong></li><li>删除后将无法恢复。</li></ul>";
 			break;
 
 		case 'spam':
@@ -1789,7 +1809,11 @@ function theme_action_icons($status) {
 	
 	if (setting_fetch('buttondel', 'yes') == 'yes') {
 		if (user_is_current_user($from)) {
-			$actions[] = theme('action_icon', "confirm/delete/".number_format($status->id,0,'',''), 'images/trash.gif', 'DEL');
+			if ($status->status) {
+				$actions[] = theme('action_icon', "confirm/delcmt/".number_format($status->id,0,'',''), 'images/trash.gif', 'DEL');
+			}else{
+				$actions[] = theme('action_icon', "confirm/delete/".number_format($status->id,0,'',''), 'images/trash.gif', 'DEL');
+			}
 		}
 	}
 
