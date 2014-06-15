@@ -1447,9 +1447,9 @@ function theme_favourites($feed)
 			
 			if ($status->status->thumbnail_pic){//缩略图
 				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-					$srctext .= "<br/> <a href='{$status->status->original_pic}' target=_blank>[图片]</a> <br />";
+					$text .= "<br/> <a href='{$status->status->original_pic}' target=_blank>[图片]</a> <br />";
 				}else{
-					$srctext .= "<br/> <a href='{$status->status->original_pic}' target=_blank><img src='{$status->status->thumbnail_pic}' /></a> <br />";
+					$text .= "<br/> <a href='{$status->status->original_pic}' target=_blank><img src='{$status->status->thumbnail_pic}' /></a> <br />";
 				}
 			}
 			
