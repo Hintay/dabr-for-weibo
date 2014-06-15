@@ -1204,7 +1204,7 @@ function twitter_standard_timeline($feed, $source) {
 						$retweet_users[] = "@".$feed[$list[$idx]]->user->screen_name;
 						unset($feed[$list[$idx]]);
 					}
-					$feed[$list[0]]->text .= (" || Also retweeted by " . implode(", " , array_unique($retweet_users)). " ||");
+					$feed[$list[0]]->text .= (" || " . implode(", " , array_unique($retweet_users)). " 也转发了 ||");
 				}
 			}
 		case 'favourites':
@@ -1709,8 +1709,8 @@ function theme_cursor($prev, $next) {
 	}
 	if ($prev and ($prev == $_GET["cursor"])) $prev -= 20;
     $links = array();
-	if ($prev) $links[] = "<a href='{$_GET['q']}?cursor=".($prev)."$query' accesskey='9'>Prev</a> 9";
-	if ($next) $links[] = "<a href='{$_GET['q']}?cursor=".($next)."$query' accesskey='8'>Next</a> 8";
+	if ($prev) $links[] = "<a href='{$_GET['q']}?cursor=".($prev)."$query' accesskey='9'>上一页</a> 9";
+	if ($next) $links[] = "<a href='{$_GET['q']}?cursor=".($next)."$query' accesskey='8'>下一页</a> 8";
 	return '<p>'.implode(' | ', $links).'</p>';
 }
 
