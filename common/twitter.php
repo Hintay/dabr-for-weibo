@@ -1215,8 +1215,11 @@ function twitter_standard_timeline($feed, $source) {
 				$new = $status;
 				$new->from = $new->user;
 				unset($new->user);
-				$output[(string) $new->id] = $new;
-				if ($source == 'favourites') $output[(string) $new->status->id] = $new;
+				if ($source == 'favourites'){
+					$output[(string) $new->status->id] = $new;
+				}else{
+					$output[(string) $new->id] = $new;
+				}
 			}
 			return $output;
 	 
@@ -1387,14 +1390,14 @@ function theme_favourites($feed)
 				$max_id =	$status->original_id;
 			}
 		}
-		$time = strtotime($status->created_at);
+		$time = strtotime($status->favorited_time);
 		if ($time > 0) {
 			//中文星期
 			$cweekday = array("星期日","星期一","星期二","星期三","星期四","星期五","星期六"); 
 			$now = getdate(time()); 
 			$cur_wday=$now['wday'];
 			
-			$date = twitter_date('Y年n月j日 '.date($cweekday[$cur_wday]).'  ', strtotime($status->created_at));
+			$date = twitter_date('收藏日期：Y年n月j日 '.date($cweekday[$cur_wday]).'  ', strtotime($status->favorited_time));
 			if ($date_heading !== $date) {
 				$date_heading = $date;
 				$rows[] = array(array(
@@ -1405,7 +1408,7 @@ function theme_favourites($feed)
 		} else {
 			$date = $status->created_at;
 		}
-		if($status->status) { // 收藏
+		if($status->status->retweeted_status) { // 转发
 			$text = twitter_parse_tags($status->status->text);
 			$srctext = twitter_parse_tags($status->status->retweeted_status->text);
 			
@@ -1417,9 +1420,9 @@ function theme_favourites($feed)
 				}
 			}
 			
-			$link = theme('status_time_link', $status, false);
 			if (setting_fetch('buttontime', 'yes') == 'yes') {//时间
-				$link2 = theme('status_time_link', $status->status, !$status->is_direct);
+				$link = theme('status_time_link', $status->status, !$status->is_direct);
+				$link2 = theme('status_time_link', $status->status->retweeted_status, !$status->is_direct);
 			}
 			$actions = theme('action_icons', $status->status);
 			
@@ -1438,8 +1441,39 @@ function theme_favourites($feed)
 			$row = array(
 				"<b><a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $actions $link <small>$source</small><br />{$text} <br /> <blockquote style='margin: 10px 20px;'>$avatar_retweeted<b> <a href='user/{$status->status->retweeted_status->user->screen_name}'>{$status->status->retweeted_status->user->screen_name}</a></b> $link2 <br />{$srctext} <small>$source2</small></blockquote>",
 			);
-			//print_r($row);
+			//print_r($row);	
+		}else{ // 远创
+			$text = twitter_parse_tags($status->status->text);
 			
+			if ($status->status->thumbnail_pic){//缩略图
+				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
+					$srctext .= "<br/> <a href='{$status->status->original_pic}' target=_blank>[图片]</a> <br />";
+				}else{
+					$srctext .= "<br/> <a href='{$status->status->original_pic}' target=_blank><img src='{$status->status->thumbnail_pic}' /></a> <br />";
+				}
+			}
+			
+			if (setting_fetch('buttontime', 'yes') == 'yes') {//时间
+				$link = theme('status_time_link', $status->status, !$status->is_direct);
+			}
+			$actions = theme('action_icons', $status->status);
+			
+			//头像
+			$avatar = theme('avatar', $status->status->user->profile_image_url);
+			$avatar_retweeted = theme('avatar', $status->status->retweeted_status->user->profile_image_url);
+			if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
+				if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'touch') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'naiping')) {
+					$source = $status->status->source ? " 来自 {$status->status->source}" : '';
+					$source2 = $status->status->retweeted_status->source ? " 来自 {$status->status->retweeted_status->source}" : '';
+				}else{
+					$source = $status->status->source ? " 来自 ".strip_tags($status->status->source) ."" : '';
+					$source2 = $status->status->retweeted_status->source ? " 来自 ".strip_tags($status->status->retweeted_status->source)."" : '';
+				}
+			}
+			$row = array(
+				"<b><a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $actions $link <br />{$text} <br /><small>$source</small>",
+			);
+			//print_r($row);	
 		}
 
 		if ($page != 'user' && $avatar) {
