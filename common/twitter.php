@@ -293,7 +293,7 @@ function twitter_process($url, $post_data = false, $method = "get") {
 	
 	if(FILE_IO) file_put_contents('./tmp/urls', $url." ".user_type(). " ".json_encode($post_data)."\n", FILE_APPEND);
 
-	if(FILE_IO) file_put_contents("./tmp/api_response.dump",  "$response <==== $url\n", FILE_APPEND);
+	//if(FILE_IO) file_put_contents("./tmp/api_response.dump",  "$response <==== $url\n", FILE_APPEND);
 	switch( intval( $c->oauth->http_info['http_code'] ) ) {
 		case 200:
 			$json = json_decode($response);
@@ -951,15 +951,17 @@ function twitter_user_page($query) {
 
 function twitter_favourites_page($query) {
 	$screen_name = $query[1];
+	$count = setting_fetch('tpp', 20);
+	
 	if (!$screen_name) {
 		user_ensure_authenticated();
 		$screen_name = $GLOBALS['user']['screen_name'];
 	}
 	$request = "favorites";
-	$tl = twitter_process($request, $_GET);
+	$tl = twitter_process($request, array('count'=>$count, 'page'=>$_GET['page']));
 	$tl = twitter_standard_timeline($tl->favorites, 'favourites');
 	$content = theme('status_form');
-	$content .= theme('timeline', $tl);
+	$content .= theme('favourites', $tl);
 	theme('page', '收藏', $content);
 }
 
@@ -1211,10 +1213,10 @@ function twitter_standard_timeline($feed, $source) {
 		case 'user':
 			foreach ($feed as $status) {
 				$new = $status;
-				if ($source == 'favorites') $new = $status->status;
 				$new->from = $new->user;
 				unset($new->user);
 				$output[(string) $new->id] = $new;
+				if ($source == 'favourites') $output[(string) $new->status->id] = $new;
 			}
 			return $output;
 	 
@@ -1359,6 +1361,94 @@ function theme_weibocomments($feed)
 	
 		$links[] = "<a href='{$_GET['q']}?max_id=$max_id' accesskey='9'>Older</a> 9";
 		$content .= '<p>'.implode(' | ', $links).'</p>';
+	return $content;
+}
+
+function theme_favourites($feed)
+{
+	if (count($feed) == 0) return theme('no_tweets');
+	$rows = array();
+	$page = menu_current_page();
+	$date_heading = false;
+	$first=0;
+
+	foreach ($feed as $status)
+	{
+		if ($first==0)
+		{
+			$since_id = $status->id;
+			$first++;
+		}
+		else
+		{
+			$max_id =	$status->id;
+			if ($status->original_id)
+			{
+				$max_id =	$status->original_id;
+			}
+		}
+		$time = strtotime($status->created_at);
+		if ($time > 0) {
+			//中文星期
+			$cweekday = array("星期日","星期一","星期二","星期三","星期四","星期五","星期六"); 
+			$now = getdate(time()); 
+			$cur_wday=$now['wday'];
+			
+			$date = twitter_date('Y年n月j日 '.date($cweekday[$cur_wday]).'  ', strtotime($status->created_at));
+			if ($date_heading !== $date) {
+				$date_heading = $date;
+				$rows[] = array(array(
+					'data' => "<small><b>$date</b></small>",
+					'colspan' => 2
+				));
+			}
+		} else {
+			$date = $status->created_at;
+		}
+		if($status->status) { // 收藏
+			$text = twitter_parse_tags($status->status->text);
+			$srctext = twitter_parse_tags($status->status->retweeted_status->text);
+			
+			if ($status->status->retweeted_status->thumbnail_pic){//缩略图
+				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
+					$srctext .= "<br/> <a href='{$status->status->retweeted_status->original_pic}' target=_blank>[图片]</a> <br />";
+				}else{
+					$srctext .= "<br/> <a href='{$status->status->retweeted_status->original_pic}' target=_blank><img src='{$status->status->retweeted_status->thumbnail_pic}' /></a> <br />";
+				}
+			}
+			
+			$link = theme('status_time_link', $status, false);
+			if (setting_fetch('buttontime', 'yes') == 'yes') {//时间
+				$link2 = theme('status_time_link', $status->status, !$status->is_direct);
+			}
+			$actions = theme('action_icons', $status->status);
+			
+			//头像
+			$avatar = theme('avatar', $status->status->user->profile_image_url);
+			$avatar_retweeted = theme('avatar', $status->status->retweeted_status->user->profile_image_url);
+			if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
+				if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'touch') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'naiping')) {
+					$source = $status->status->source ? " 来自 {$status->status->source}" : '';
+					$source2 = $status->status->retweeted_status->source ? " 来自 {$status->status->retweeted_status->source}" : '';
+				}else{
+					$source = $status->status->source ? " 来自 ".strip_tags($status->status->source) ."" : '';
+					$source2 = $status->status->retweeted_status->source ? " 来自 ".strip_tags($status->status->retweeted_status->source)."" : '';
+				}
+			}
+			$row = array(
+				"<b><a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $actions $link <small>$source</small><br />{$text} <br /> <blockquote style='margin: 10px 20px;'>$avatar_retweeted<b> <a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $link2 <br />{$srctext} <small>$source2</small></blockquote>",
+			);
+			//print_r($row);
+			
+		}
+
+		if ($page != 'user' && $avatar) {
+			array_unshift($row, $avatar);
+		}
+		$rows[] = $row;
+	}
+	$content = theme('table', array(), $rows, array('class' => 'timeline'));
+	$content .= theme('pagination');
 	return $content;
 }
 
