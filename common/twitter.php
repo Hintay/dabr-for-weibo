@@ -575,8 +575,9 @@ function twitter_delete_page($query) {
 
 	$id = (string) $query[1];
 	if (is_numeric($id)) {
-		$request = API_URL."statuses/destroy/{$id}.json?page=".intval($_GET['page']);
-		$tl = twitter_process($request, true);
+		$request = "statuses/destroy";
+		$post_data = array('id'=>$id);
+		$tl = twitter_process($request, $post_data, 'post');
 		twitter_refresh('user/'.user_current_username());
 	}
 }
@@ -1638,12 +1639,12 @@ function theme_action_icons($status) {
 	
 	if (setting_fetch('buttondel', 'yes') == 'yes') {
 		if (user_is_current_user($from)) {
-			$actions[] = theme('action_icon', "confirm/delete/{$status->id}", 'images/trash.gif', 'DEL');
+			$actions[] = theme('action_icon', "confirm/delete/".number_format($status->id,0,'',''), 'images/trash.gif', 'DEL');
 		}
 	}
 
 	} else {
-		$actions[] = theme('action_icon', "directs/delete/{$status->id}", 'images/trash.gif', 'DEL');
+		$actions[] = theme('action_icon', "directs/delete/".number_format($status->id,0,'',''), 'images/trash.gif', 'DEL');
 	}
 	if ($geo !== null)
 	{
