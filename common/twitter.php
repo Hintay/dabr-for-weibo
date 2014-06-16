@@ -1586,6 +1586,7 @@ function theme_timeline($feed)
 		if($status->status) { // comment
 			$text = twitter_parse_tags($status->text);
 			$srctext = twitter_parse_tags($status->status->text);
+			$replytext = twitter_parse_tags($status->reply_comment->text);
 			if ($status->status->thumbnail_pic){
 				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
 					$srctext .= "<br/> <a href='{$status->status->original_pic}' target=_blank>[图片]</a> <br />";
@@ -1593,23 +1594,53 @@ function theme_timeline($feed)
 					$srctext .= "<br/> <a href='{$status->status->original_pic}' target=_blank><img src='{$status->status->thumbnail_pic}' /></a> <br />";
 				}
 			}
-			$link = theme('status_time_link', $status, false);
-			if (setting_fetch('buttontime', 'yes') == 'yes') {//时间
-				$link2 = theme('status_time_link', $status->status, !$status->is_direct);
-			}
-			$actions = theme('action_icons', $status);
-			$avatar = theme('avatar', $status->from->profile_image_url);
-			$avatar_retweeted = theme('avatar', $status->status->user->profile_image_url);
-			if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
-				if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'touch') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'naiping')) {
-					$source2 = $status->status->source ? " 来自 {$status->status->source}" : '';
+			if ($status->reply_comment->thumbnail_pic){
+				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
+					$srctext .= "<br/> <a href='{$status->reply_comment->original_pic}' target=_blank>[图片]</a> <br />";
 				}else{
-					$source2 = $status->status->source ? " 来自 ".strip_tags($status->status->source)."" : '';
+					$srctext .= "<br/> <a href='{$status->reply_comment->original_pic}' target=_blank><img src='{$status->reply_comment->thumbnail_pic}' /></a> <br />";
 				}
 			}
+			
+			if (setting_fetch('buttontime', 'yes') == 'yes') {//时间
+				$link = theme('status_time_link', $status, false);
+				$link2 = theme('status_time_link', $status->status, !$status->is_direct);
+				$link_reply = theme('status_time_link', $status->reply_comment, !$status->is_direct);
+			}
+			
+			//按钮
+			$actions = theme('action_icons', $status);
+			$actions2 = theme('action_icons', $status->status);
+			$actions_reply = theme('action_icons_reply', $status);
+			
+			//头像
+			$avatar = theme('avatar', $status->from->profile_image_url);
+			$avatar_comment = theme('avatar', $status->status->user->profile_image_url);
+			$avatar_reply = theme('avatar', $status->reply_comment->user->profile_image_url);
+			
+			if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
+				if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'touch') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'naiping')) {
+					$source = $status->source ? " 来自 {$status->source}" : '';
+					$source2 = $status->status->source ? " 来自 {$status->status->source}" : '';
+					$source_reply = $status->reply_comment->source ? " 来自 {$status->reply_comment->source}" : '';
+				}else{
+					$source = $status->source ? " 来自 ".strip_tags($status->source)."" : '';
+					$source2 = $status->status->source ? " 来自 ".strip_tags($status->status->source)."" : '';
+					$source_reply = $status->reply_comment->source ? " 来自 ".strip_tags($status->reply_comment->source)."" : '';
+				}
+			}
+			if ($status->reply_comment){
 			$row = array(
-				"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link <br />{$text} <br /> <blockquote style='margin: 10px 20px;'>$avatar_retweeted<b> <a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $link2 <br />{$srctext} <small>$source2</small></blockquote>",
+				"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link <small>$source</small><br />{$text} <br /> 
+				$avatar_reply<b><a href='user/{$status->reply_comment->user->screen_name}'>{$status->reply_comment->user->screen_name}</a></b> $actions_reply $link_reply <small>$source_reply</small><br />{$replytext} <br /> 
+				<blockquote style='margin: 10px 20px;'>原博：<br />$avatar_comment<b> <a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $actions2 $link2 <small>$source2</small><br />{$srctext} </blockquote>",
 			);
+			}else{
+			$row = array(
+				"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link <small>$source</small><br />{$text} <br /> 
+				<blockquote style='margin: 10px 20px;'>$avatar_comment<b> <a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $actions2 $link2 <small>$source2</small><br />{$srctext} </blockquote>",
+			);
+			}
 		}elseif($status->retweeted_status){
 			//$avatar = theme('avatar',$status->retweeted_status->user->profile_image_url);
 			$avatar = theme('avatar', $status->from->profile_image_url);
@@ -1805,9 +1836,34 @@ function theme_cursor($prev, $next) {
 	return '<p>'.implode(' | ', $links).'</p>';
 }
 
+function theme_action_icons_reply($status) {
+	$from = $status->reply_comment->user->screen_name;
+	$retweeted_by = $status->retweeted_by->user->screen_name;
+	$retweeted_id = $status->retweeted_by->id;
+	$geo = $status->geo;
+	$actions = array();
+
+	if (!$status->is_direct) {
+		
+	if ($status->reply_comment) {
+		$actions[] = theme('action_icon', "recomment/".number_format($status->status->id,0,'','')."/".number_format($status->reply_comment->id,0,'',''), 'images/comments.gif', 'CMS');
+	}
+
+	if (setting_fetch('buttondel', 'yes') == 'yes') {
+		if (user_is_current_user($from)) {
+			$actions[] = theme('action_icon', "confirm/delcmt/".number_format($status->reply_comment->id,0,'',''), 'images/trash.gif', 'DEL');
+		}
+	}
+	} else {
+		$actions[] = theme('action_icon', "directs/delete/".number_format($status->id,0,'',''), 'images/trash.gif', 'DEL');
+	}
+
+	return implode(' ', $actions);
+}
 
 function theme_action_icons($status) {
 	$from = $status->from->screen_name;
+	$from2 = $status->user->screen_name;
 	$retweeted_by = $status->retweeted_by->user->screen_name;
 	$retweeted_id = $status->retweeted_by->id;
 	$geo = $status->geo;
@@ -1845,6 +1901,8 @@ function theme_action_icons($status) {
 			}else{
 				$actions[] = theme('action_icon', "confirm/delete/".number_format($status->id,0,'',''), 'images/trash.gif', 'DEL');
 			}
+		}elseif (user_is_current_user($from2)) {
+			$actions[] = theme('action_icon', "confirm/delete/".number_format($status->id,0,'',''), 'images/trash.gif', 'DEL');
 		}
 	}
 
