@@ -1088,14 +1088,54 @@ function theme_recomment_form($in_reply_to_id, $reply_id, $text = '') {
 }
 
 function theme_comments_status($status) {
-	$time_since = theme('status_time_link', $status, false);
+	if (setting_fetch('buttontime', 'yes') == 'yes') {//时间
+		$time_since = theme('status_time_link', $status, false);
+		$time_retweeted = theme('status_time_link', $status->retweeted_status, false);
+	}
 	$parsed = twitter_parse_tags($status->text);
 	$avatar = theme('avatar', $status->user->profile_image_url);
-
+	$actions = theme('action_icons', $status);
+	
+	if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
+		if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'touch') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'naiping')) {
+			$source = $status->source ? " 来自 {$status->source}" : '';
+			$source_retweeted = $status->retweeted_status->source ? " 来自 {$status->retweeted_status->source}" : '';
+		}else{
+			$source = $status->source ? " 来自 ".strip_tags($status->source)."" : '';
+			$source_retweeted = $status->retweeted_status->source ? " 来自 ".strip_tags($status->retweeted_status->source)."" : '';
+		}
+	}
+	
+	if ($status->thumbnail_pic){
+		if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
+			$parsed .= "<br/> <a href='{$status->original_pic}' target=_blank>[图片]</a> <br />";
+		}else{
+			$parsed .= "<br/> <a href='{$status->original_pic}' target=_blank><img src='{$status->thumbnail_pic}' /></a> <br />";
+		}
+	}
+	
+	
 	$out = "<div class='timeline'>\n";
 	$out .= " <div class='tweet odd'>\n";
 	$out .= "	<span class='avatar'>$avatar</span>\n";
-	$out .= "	<span class='status shift'><b><a href='user/{$status->user->screen_name}'>{$status->user->screen_name}</a></b> $time_since<br />$parsed</span>\n";
+	if($status->retweeted_status){
+		$retweeted_text = twitter_parse_tags($status->retweeted_status->text);
+		$avatar_retweeted = theme('avatar', $status->retweeted_status->user->profile_image_url);
+		$actions_retweeted = theme('action_icons', $status->retweeted_status);
+		if ($status->retweeted_status->thumbnail_pic){
+			if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
+				$retweeted_text .= "<br/> <a href='{$status->retweeted_status->original_pic}' target=_blank>[图片]</a> <br />";
+			}else{
+				$retweeted_text .= "<br/> <a href='{$status->retweeted_status->original_pic}' target=_blank><img src='{$status->retweeted_status->thumbnail_pic}' /></a> <br />";
+			}
+		}
+	
+		$out .= "	<span class='status shift'><b><a href='user/{$status->user->screen_name}'>{$status->user->screen_name}</a></b> $actions $time_since <small>$source</small><br />$parsed </span><br/>
+		<div class='retweeted'><span class='avatar'>$avatar_retweeted</span>
+		<span class='status shift'><b><a href='user/{$status->retweeted_status->user->screen_name}'>{$status->retweeted_status->user->screen_name}</a></b> $actions_retweeted $time_retweeted <small>$source_retweeted</small><br/>$retweeted_text</span></div>\n";
+	}else{
+		$out .= "	<span class='status shift'><b><a href='user/{$status->user->screen_name}'>{$status->user->screen_name}</a></b> $actions $time_since <small>$source</small><br />$parsed</span>\n";
+	}
 	$out .= " </div>\n";
 	$out .= "</div>\n";
 	if (user_is_current_user($status->user->screen_name)) {
@@ -1113,7 +1153,7 @@ function theme_status($status) {
 	$out .= "<div class='timeline'>\n";
 	$out .= " <div class='tweet odd'>\n";
 	$out .= "	<span class='avatar'>$avatar</span>\n";
-	$out .= "	<span class='status shift'><b><a href='user/{$status->user->screen_name}'>{$status->user->screen_name}</a></b> $time_since<br />$parsed</span>\n";
+	$out .= "	<span class='status shift'><b><a href='user/{$status->user->screen_name}'>{$status->user->screen_name}</a></b> $time_since <br />$parsed</span>\n";
     
     if ($status->retweeted_status) {
         $source2 = $status->retweeted_status->source ? " from {$status->retweeted_status->source}" : '';
@@ -1231,7 +1271,7 @@ function theme_status_time_link($status, $is_link = true) {
 		$out = $status->created_at;
 	}
 	if ($is_link)
-		$out = "<a href='status/{$status->id}' class='time'>$out</a>";
+		$out = "<a href='status/".number_format($status->id,0,'','')."' class='time'>$out</a>";
     else 
         $out = "<span class='time'>$out</span>";
 	return $out;
@@ -1356,7 +1396,7 @@ function twitter_user_info($username = null) {
 	return $user;
 }
 
-function theme_weibocomments($feed)
+function theme_weibocomments($feed) //具体评论
 {
 	if (count($feed) == 0) return theme('no_tweets');
 	$rows = array();
@@ -1381,7 +1421,12 @@ function theme_weibocomments($feed)
 		}
 		$time = strtotime($status->created_at);
 		if ($time > 0) {
-			$date = twitter_date('l jS F Y', strtotime($status->created_at));
+			//中文星期
+			$cweekday = array("星期日","星期一","星期二","星期三","星期四","星期五","星期六"); 
+			$now = getdate(time()); 
+			$cur_wday=$now['wday'];
+			
+			$date = twitter_date('Y年n月j日 '.date($cweekday[$cur_wday]).'  ', strtotime($status->created_at));
 			if ($date_heading !== $date) {
 				$date_heading = $date;
 				$rows[] = array(array(
@@ -1397,20 +1442,12 @@ function theme_weibocomments($feed)
 		}
 		if($status->status) { // comment
 			$text = twitter_parse_tags($status->text);
-			$srctext = twitter_parse_tags($status->status->text);
-			if ($status->status->thumbnail_pic){
-				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-					$srctext .= "<br/> <a href='{$status->status->original_pic}' target=_blank>[图片]</a> <br />";
-				}else{
-					$srctext .= "<br/> <a href='{$status->status->original_pic}' target=_blank><img src='{$status->status->thumbnail_pic}' /></a> <br />";
-				}
-			}
 			$link = theme('status_time_link', $status, false);
 			$actions = theme('action_icons', $status);
 			$avatar = theme('avatar', $status->from->profile_image_url);
-			$source2 = $status->status->source ? " from {$status->status->source}" : '';
+			$source = $status->source ? " 来自 {$status->source}" : '';
 			$row = array(
-				"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link<br />{$text}",
+				"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link <small>$source</small><br />{$text}",
 			);
 		}
 		
@@ -1424,7 +1461,7 @@ function theme_weibocomments($feed)
 	}
 	$content = theme('table', array(), $rows, array('class' => 'timeline'));
 	
-		$links[] = "<a href='{$_GET['q']}?max_id=$max_id' accesskey='9'>Older</a> 9";
+		$links[] = "<a href='{$_GET['q']}?max_id=$max_id' accesskey='9'>更旧的</a> 9";
 		$content .= '<p>'.implode(' | ', $links).'</p>';
 	return $content;
 }

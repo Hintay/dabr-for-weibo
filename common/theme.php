@@ -208,6 +208,7 @@ function theme_css() {
   .shift{margin-left:30px;min-height:24px;}
   .from{font-size:0.75em;color:#{$c->small};font-family:serif;}
   .from a{color:#{$c->small};}
+  .retweeted {position:relative;margin-left: 20px; padding-left: 5px;}
   ".setting_fetch('css')."
 </style>";
 }
