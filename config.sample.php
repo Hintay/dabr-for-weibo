@@ -1,7 +1,7 @@
 <?php
 
 //网站名称
-define('SINA_TITLE', 'Dabr for Weibo');
+define('DABR_TITLE', 'Dabr for Weibo');
 
 //网站主的UID，用于注册链接邀请
 define('REGUID', '');

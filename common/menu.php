@@ -106,7 +106,7 @@ function theme_menu_toptop($menu) {
 			$links[] = "<a href='".BASE_URL."logout'>".("登出")."</a>";
 		}
 	} else {
-		$links[] = "<span style=font-weight:bold;color:#FFF;>".SINA_TITLE."</span>";
+		$links[] = "<span style=font-weight:bold;color:#FFF;>".DABR_TITLE."</span>";
 	}
 	return "<div class='menu menu-$menu'>".implode(' | ', $links).'</div>';
 }
