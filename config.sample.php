@@ -9,6 +9,12 @@ define('REGUID', '');
 // Weibo API地址
 define('API_URL','http://api.weibo.com');
 
+//邀请模式，0为开放模式，1为邀请模式
+define('INVITE', '0');
+
+//邀请码
+define('INVITE_CODE', '');
+
 // Cookie加密密匙，最大52字符
 define('ENCRYPTION_KEY', 'Example Key - Change Me!');
 

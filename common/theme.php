@@ -209,6 +209,7 @@ function theme_css() {
   .from{font-size:0.75em;color:#{$c->small};font-family:serif;}
   .from a{color:#{$c->small};}
   .retweeted {position:relative;margin-left: 20px; padding-left: 5px;}
+  .retweeted_tl {position:relative; margin: 5px; padding-left: 5px;}
   ".setting_fetch('css')."
 </style>";
 }

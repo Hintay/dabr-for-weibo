@@ -47,6 +47,11 @@ exit;
 	}
        $_SESSION['user']['username'] = $user["id"];
        $_SESSION['user']['screen_name'] = $user["screen_name"];
+	//判断 user 是否在列表中
+	if (INVITE && !_is_user_invited($_SESSION['user']['screen_name'])) {
+		unset($GLOBALS['user']);
+		exit('<!doctype html><meta charset="utf-8" />对不起，您不是受邀用户，无法登录（如果你有邀请码，<a href="'.BASE_URL.'invite.php">请自行添加</a>）');
+	}
     #echo '<html>Welcome'.$user["screen_name"].',<a href="/">Home</a><br /><a href="/sdk/weibolist.php">Test</a></html>';
 header("Location: ".BASE_URL);
     exit;
@@ -144,6 +149,16 @@ function theme_login() {
 
 	$content = '<p>[1] <b><a href="' . $authorise_url . '">使用 OAuth 方式登录</a></b><br><small>未激活用户请点击下方"注册"进行激活</small></p><p><b>[2] <a href="'.BASE_URL.'reg">'.("注册").'</a></b></p>';
 	return $content;
+}
+
+function _is_user_invited($username) {
+	$allowed_users = file(dirname(dirname(__FILE__)).'/invited');
+
+	if (in_array(strtolower($username)."\n", $allowed_users)) {
+		return TRUE;
+	}
+	
+	return FALSE;
 }
 
 function theme_logged_out() {
