@@ -1,8 +1,9 @@
 ##这是什么？
 
 * 这是一个开源的中文的新浪微博网页客户端
-* 本代码最先由Tim Yang [http://timyang.net/](http://timyang.net/))修改，后来由 <a href="http://www.weibo.com/liruqi">@liruqi</a> 修改。
-* 感谢Dabr的作者 @davidcarrington 和给他灵感的 @whatleydude ，以及奶瓶腿的作者<a href="http://weibo.com/NetPuter">@NetPuter</a>!
+* dabr-for-weibo最先由Tim Yang ([http://timyang.net/](http://timyang.net/))发布在open.t.sina.com，后来由 [@liruqi](http://www.weibo.com/liruqi) 修改。
+* 本代码基于 [@liruqi](http://www.weibo.com/liruqi) 修改的 [dabr-for-weibo](https://github.com/liruqi/dabr-for-weibo)，项目也发布在GitHub
+* 感谢Dabr的作者 @davidcarrington 和给他灵感的 @whatleydude ，以及奶瓶腿的作者 [@NetPuter](http://weibo.com/NetPuter) !
 
 ##安装
 
