@@ -160,13 +160,13 @@ function settings_page($args) {
 		'tinyurl.com' => 'tinyurl.com',
 		'j.mp' => 'j.mp',
 		'r.im' => 'r.im',
-	);
+	);*/
 
 	$locale = array(
 		'zh_CN' => 简体中文,
 		'en_US' => English,
 		'zh_TW' => 繁體中文,
-	);*/
+	);
 	$colour_schemes = array();
 	foreach ($GLOBALS['colour_schemes'] as $id => $info) {
 		list($name, $colours) = explode('|', $info);
@@ -273,7 +273,7 @@ function settings_page($args) {
 	//$content .= '<p>'.("RT 格式").':<br /><input type="text" id="rtsyntax" name="rtsyntax" value="'.setting_fetch('rtsyntax', 'RT [User]: [Content]').'" maxlength="140" /><br /><small>'.("默认RT格式: RT [User]: [Content]").'</small></p><hr />';
 
 	$content .= '<p>'.("自定义 CSS").':<br /><textarea name="css" cols="50" rows="3" id="css" style="width:95%">'.setting_fetch('css').'</textarea></p><hr />';
-	//$content .= '<p>'.("语言").':<br /><select name="locale">'.theme('options', $locale, setting_fetch('locale', 'zh_CN')).'</select></p><hr />';
+	$content .= '<p>'.("语言(此功能暂未完成)").':<br /><select name="locale">'.theme('options', $locale, setting_fetch('locale', 'zh_CN')).'</select></p><hr />';
 	
 	// Allow users to choose a Dabr password if accounts are enabled
 	if (MYSQL_USERS == 'ON' && user_is_authenticated()) {

@@ -3,15 +3,16 @@ $dabr_start = microtime(1);
 
 session_start();
 
-require 'config.php';
-require 'common/OAuth.php';
-require 'common/browser.php';
-require 'common/menu.php';
-require 'common/user.php';
-require 'common/theme.php';
-require 'common/twitter.php';
-#require 'common/lists.php';
-require 'common/settings.php';
+require('config.php');
+require('common/OAuth.php');
+require('common/browser.php');
+require('common/menu.php');
+require('common/user.php');
+require('common/theme.php');
+require('common/twitter.php');
+#require('common/lists.php');
+require('common/settings.php');
+require('languages/languages.php');
 
 menu_register(array (
 	'about' => array (
