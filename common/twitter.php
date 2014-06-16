@@ -830,8 +830,8 @@ function twitter_cmts_page($query) {
 	$action = strtolower(trim($query[1]));
 	switch ($action) {
 	case 'by_me':
-		$count = setting_fetch('tpp', 20);
-	    $request = 'comments/by_me';
+	$count = setting_fetch('tpp', 20);
+	$request = 'comments/by_me';
         $tl = twitter_process($request, array('count'=>$count,'max_id'=>$_GET['max_id']));
         $tl = twitter_standard_timeline($tl->comments, 'cmts');
         $content = theme_cmts_menu();
@@ -840,8 +840,8 @@ function twitter_cmts_page($query) {
 
 	case '':
 	case 'to_me':
-		$count = setting_fetch('tpp', 20)+4;
-	    $request = 'comments/to_me';
+	$count = setting_fetch('tpp', 20)+4;
+	$request = 'comments/to_me';
         $tl = twitter_process($request, array('count'=>$count,'max_id'=>$_GET['max_id']));
         $tl = twitter_standard_timeline($tl->comments, 'cmts');
         $content = theme_cmts_menu();
@@ -858,7 +858,7 @@ function twitter_cmts_page($query) {
         theme('page', '评论', $content);
 
     case 'reply': // reply comment
-		$count = setting_fetch('tpp', 20);
+	$count = setting_fetch('tpp', 20);
         $rid = strtolower(trim($query[2]));
         $request = 'statuses/comments_by_me.json';
         $tl = twitter_process($request, array('count'=>$count,'max_id'=>$_GET['max_id']));
