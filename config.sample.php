@@ -1,34 +1,34 @@
 <?php
 
-//ÍøÕ¾Ãû³Æ
+//ç½‘ç«™åç§°
 define('SINA_TITLE', 'Dabr for Weibo');
 
-//ÍøÕ¾Ö÷µÄUID£¬ÓÃÓÚ×¢²áÁ´½ÓÑûÇë
+//ç½‘ç«™ä¸»çš„UIDï¼Œç”¨äºŽæ³¨å†Œé“¾æŽ¥é‚€è¯·
 define('REGUID', '');
 
-// Weibo APIµØÖ·
+// Weibo APIåœ°å€
 define('API_URL','http://api.weibo.com');
 
-// Cookie¼ÓÃÜÃÜ³×£¬×î´ó52×Ö·û
+// CookieåŠ å¯†å¯†åŒ™ï¼Œæœ€å¤§52å­—ç¬¦
 define('ENCRYPTION_KEY', 'Example Key - Change Me!');
 
-// OAuthÊÚÈ¨Ê¹ÓÃµÄApp KeyºÍApp Secret
-// ×¢ÒâÄúµÄÊÚÈ¨»Øµ÷Ò³ÒªÉèÖÃÎªhttp://dabrÂ·¾¶/oauth£¬·ñÔò»á³öÏÖ°ó¶¨´íÎó
+// OAuthæŽˆæƒä½¿ç”¨çš„App Keyå’ŒApp Secret
+// æ³¨æ„æ‚¨çš„æŽˆæƒå›žè°ƒé¡µè¦è®¾ç½®ä¸ºhttp://dabrè·¯å¾„/oauthï¼Œå¦åˆ™ä¼šå‡ºçŽ°ç»‘å®šé”™è¯¯
 define('OAUTH_CONSUMER_KEY', '');
 define('OAUTH_CONSUMER_SECRET', '');
 
-// bit.ly LOGIN¼°API key£¬ÓÃÓÚurlËõ¶Ì
+// bit.ly LOGINåŠAPI keyï¼Œç”¨äºŽurlç¼©çŸ­
 define('BITLY_LOGIN', '');
 define('BITLY_API_KEY', '');
 
-// ¿ÉÑ¡£ºËõÂÔÍ¼Éú³ÉAPI keys
+// å¯é€‰ï¼šç¼©ç•¥å›¾ç”ŸæˆAPI keys
 define('FLICKR_API_KEY', '');
 
 // Optional: Allows you to turn shortened URLs into long URLs http://www.longurlplease.com/docs
 // Uncomment to enable.
 // define('LONGURL_KEY', 'true');
 
-// ¿ÉÑ¡£ºÆôÓÃ¿É²é¿´Ò³ÃæÔØÈë½ø³ÌºÍAPIÏìÓ¦Ê±¼ä
+// å¯é€‰ï¼šå¯ç”¨å¯æŸ¥çœ‹é¡µé¢è½½å…¥è¿›ç¨‹å’ŒAPIå“åº”æ—¶é—´
 define('DEBUG_MODE', 'OFF');
 
 // Base URL, should point to your website, including a trailing slash
