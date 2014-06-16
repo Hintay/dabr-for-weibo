@@ -847,6 +847,15 @@ function twitter_cmts_page($query) {
         $content = theme_cmts_menu();
         $content .= theme('timeline', $tl);
         theme('page', '评论', $content);
+		
+	case 'mentions':
+	$count = setting_fetch('tpp', 20)+4;
+	$request = 'comments/mentions';
+        $tl = twitter_process($request, array('count'=>$count,'max_id'=>$_GET['max_id']));
+        $tl = twitter_standard_timeline($tl->comments, 'cmts');
+        $content = theme_cmts_menu();
+        $content .= theme('timeline', $tl);
+        theme('page', '评论', $content);
 
     case 'reply': // reply comment
 		$count = setting_fetch('tpp', 20);
@@ -921,7 +930,7 @@ function theme_directs_menu() {
 }
 
 function theme_cmts_menu() {
-	return '<p><a href="cmts/to_me">收到的评论</a> | <a href="cmts/by_me">发出的评论</a></p>';
+	return '<p><a href="cmts/to_me">收到的评论</a> | <a href="cmts/by_me">发出的评论</a> | <a href="cmts/mentions">提到我的评论</a></p>';
 }
 
 function theme_directs_form($to) {
@@ -1587,6 +1596,7 @@ function theme_timeline($feed)
 			$text = twitter_parse_tags($status->text);
 			$srctext = twitter_parse_tags($status->status->text);
 			$replytext = twitter_parse_tags($status->reply_comment->text);
+			$retweetedtext = twitter_parse_tags($status->status->retweeted_status->text);
 			if ($status->status->thumbnail_pic){
 				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
 					$srctext .= "<br/> <a href='{$status->status->original_pic}' target=_blank>[图片]</a> <br />";
@@ -1596,9 +1606,16 @@ function theme_timeline($feed)
 			}
 			if ($status->reply_comment->thumbnail_pic){
 				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-					$srctext .= "<br/> <a href='{$status->reply_comment->original_pic}' target=_blank>[图片]</a> <br />";
+					$replytext .= "<br/> <a href='{$status->reply_comment->original_pic}' target=_blank>[图片]</a> <br />";
 				}else{
-					$srctext .= "<br/> <a href='{$status->reply_comment->original_pic}' target=_blank><img src='{$status->reply_comment->thumbnail_pic}' /></a> <br />";
+					$replytext .= "<br/> <a href='{$status->reply_comment->original_pic}' target=_blank><img src='{$status->reply_comment->thumbnail_pic}' /></a> <br />";
+				}
+			}
+			if ($status->status->retweeted_status->thumbnail_pic){
+				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
+					$retweetedtext .= "<br/> <a href='{$status->status->retweeted_status->original_pic}' target=_blank>[图片]</a> <br />";
+				}else{
+					$retweetedtext .= "<br/> <a href='{$status->status->retweeted_status->original_pic}' target=_blank><img src='{$status->status->retweeted_status->thumbnail_pic}' /></a> <br />";
 				}
 			}
 			
@@ -1606,27 +1623,32 @@ function theme_timeline($feed)
 				$link = theme('status_time_link', $status, false);
 				$link2 = theme('status_time_link', $status->status, !$status->is_direct);
 				$link_reply = theme('status_time_link', $status->reply_comment, !$status->is_direct);
+				$link_retweeted = theme('status_time_link', $status->status->retweeted_status, !$status->is_direct);
 			}
 			
 			//按钮
 			$actions = theme('action_icons', $status);
 			$actions2 = theme('action_icons', $status->status);
 			$actions_reply = theme('action_icons_reply', $status);
+			$actions_retweeted = theme('action_icons', $status->status->retweeted_status);
 			
 			//头像
 			$avatar = theme('avatar', $status->from->profile_image_url);
 			$avatar_comment = theme('avatar', $status->status->user->profile_image_url);
 			$avatar_reply = theme('avatar', $status->reply_comment->user->profile_image_url);
+			$avatar_retweeted = theme('avatar', $status->status->retweeted_status->user->profile_image_url);
 			
 			if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
 				if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'touch') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'naiping')) {
 					$source = $status->source ? " 来自 {$status->source}" : '';
 					$source2 = $status->status->source ? " 来自 {$status->status->source}" : '';
 					$source_reply = $status->reply_comment->source ? " 来自 {$status->reply_comment->source}" : '';
+					$source_retweeted = $status->status->retweeted_status->source ? " 来自 {$status->status->retweeted_status->source}" : '';
 				}else{
 					$source = $status->source ? " 来自 ".strip_tags($status->source)."" : '';
 					$source2 = $status->status->source ? " 来自 ".strip_tags($status->status->source)."" : '';
 					$source_reply = $status->reply_comment->source ? " 来自 ".strip_tags($status->reply_comment->source)."" : '';
+					$source_retweeted = $status->status->retweeted_status->source ? " 来自 ".strip_tags($status->status->retweeted_status->source)."" : '';
 				}
 			}
 			if ($status->reply_comment){
@@ -1634,6 +1656,13 @@ function theme_timeline($feed)
 				"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link <small>$source</small><br />{$text} <br /> 
 				$avatar_reply<b><a href='user/{$status->reply_comment->user->screen_name}'>{$status->reply_comment->user->screen_name}</a></b> $actions_reply $link_reply <small>$source_reply</small><br />{$replytext} <br /> 
 				<blockquote style='margin: 10px 20px;'>原博：<br />$avatar_comment<b> <a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $actions2 $link2 <small>$source2</small><br />{$srctext} </blockquote>",
+			);
+			}elseif($status->status->retweeted_status){//提到的带转发评论
+			$row = array(
+				"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link <small>$source</small><br />{$text} <br /> 
+				<blockquote style='margin: 10px 20px;'>$avatar_comment<b> <a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $actions2 $link2 <small>$source2</small><br />{$srctext} 
+				<blockquote style='margin: 10px 20px;'>转发：<br />$avatar_retweeted<b> <a href='user/{$status->status->retweeted_status->user->screen_name}'>{$status->status->retweeted_status->user->screen_name}</a></b> $actions_retweeted $link_retweeted <small>$source_retweeted</small><br />{$retweetedtext} </blockquote>
+				</blockquote>",
 			);
 			}else{
 			$row = array(
