@@ -1,27 +1,32 @@
 <?php
+//请根据注释修改，大部分请修改putyourinfohere
 
 //网站名称
 define('DABR_TITLE', 'Dabr for Weibo');
 
 //网站主的UID，用于注册链接邀请
-define('REGUID', '');
+define('REGUID', '1061630973');
 
 // Weibo API地址
 define('API_URL','http://api.weibo.com');
 
 //邀请模式，0为开放模式，1为邀请模式
-define('INVITE', '0');
+define('INVITE', 0);
 
 //邀请码
-define('INVITE_CODE', '');
+define('INVITE_CODE', 'putyourinfohere');
 
 // Cookie加密密匙，最大52字符
 define('ENCRYPTION_KEY', 'Example Key - Change Me!');
 
 // OAuth授权使用的App Key和App Secret
 // 注意您的授权回调页要设置为http://dabr路径/oauth，否则会出现绑定错误
-define('OAUTH_CONSUMER_KEY', '');
-define('OAUTH_CONSUMER_SECRET', '');
+define('OAUTH_KEY', 'putyourinfohere');
+define('OAUTH_SECRET', 'putyourinfohere');
+
+//Google Analytics 跟踪 ID，类似于UA-19890535-X
+define('GA_ACCOUNT', 'putyourinfohere');
+$GA_PIXEL = "ga.php";
 
 // bit.ly LOGIN及API key，用于url缩短
 define('BITLY_LOGIN', '');
@@ -63,32 +68,6 @@ CREATE TABLE IF NOT EXISTS `user` (
 )
 
 */
-
-// Google Analytics Mobile tracking code
-// You need to download ga.php from the Google Analytics website for this to work
-// Copyright 2009 Google Inc. All Rights Reserved.
-$GA_ACCOUNT = "";
-$GA_PIXEL = "ga.php";
-
-function googleAnalyticsGetImageUrl() {
-	global $GA_ACCOUNT, $GA_PIXEL;
-	$url = "";
-	$url .= $GA_PIXEL . "?";
-	$url .= "utmac=" . $GA_ACCOUNT;
-	$url .= "&utmn=" . rand(0, 0x7fffffff);
-	$referer = $_SERVER["HTTP_REFERER"];
-	$query = $_SERVER["QUERY_STRING"];
-	$path = $_SERVER["REQUEST_URI"];
-	if (empty($referer)) {
-		$referer = "-";
-	}
-	$url .= "&utmr=" . urlencode($referer);
-	if (!empty($path)) {
-		$url .= "&utmp=" . urlencode($path);
-	}
-	$url .= "&guid=ON";
-	return str_replace("&", "&amp;", $url);
-}
 
 if (stristr($_SERVER["HTTP_HOST"], "sinaapp.com") === "sinaapp.com") {
     $uri = $_SERVER["REQUEST_URI"];

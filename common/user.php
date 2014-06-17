@@ -21,7 +21,7 @@ function user_oauth() {
 	// Flag forces twitter_process() to use OAuth signing
 	$GLOBALS['user']['type'] = 'oauth';
 
-    $o = new SaeTOAuthV2(OAUTH_CONSUMER_KEY, OAUTH_CONSUMER_SECRET);
+    $o = new SaeTOAuthV2(OAUTH_KEY, OAUTH_SECRET);
     // Generate ACCESS token request
     $last_key = $o->getAccessToken('code',
        array('code'=>$_GET['code'], 'redirect_uri'=>BASE_URL.'oauth') 
@@ -37,7 +37,7 @@ function user_oauth() {
     $_SESSION['token'] = $last_key;
     setcookie( 'weibojs_'.$o->client_id, http_build_query($last_key) );
 
-    $c = new SaeTClientV2( OAUTH_CONSUMER_KEY , OAUTH_CONSUMER_SECRET , $_SESSION['token']['access_token'] );
+    $c = new SaeTClientV2( OAUTH_KEY , OAUTH_SECRET , $_SESSION['token']['access_token'] );
     $uid_get = $c->get_uid();
     $uid = $uid_get['uid'];
     $user = $c->show_user_by_id( $uid);//根据ID获取用户等基本信息
@@ -137,7 +137,7 @@ function _user_decrypt_cookie($crypt_text) {
 
 function theme_login() {
     // Generate AUTH token request
-    $oauth = new SaeTOAuthV2(OAUTH_CONSUMER_KEY,OAUTH_CONSUMER_SECRET);
+    $oauth = new SaeTOAuthV2(OAUTH_KEY,OAUTH_SECRET);
 
     // redirect user to authorisation URL
     $authorise_url = $oauth->getAuthorizeURL( BASE_URL.'oauth');

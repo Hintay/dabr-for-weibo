@@ -127,6 +127,26 @@ function theme_error($message) {
 	theme_page('Error', $message);
 }
 
+function googleAnalyticsGetImageUrl() {
+	global $GA_PIXEL;
+	$url = "";
+	$url .= $GA_PIXEL . "?";
+	$url .= "utmac=" . GA_ACCOUNT;
+	$url .= "&utmn=" . rand(0, 0x7fffffff);
+	$referer = $_SERVER["HTTP_REFERER"];
+	$query = $_SERVER["QUERY_STRING"];
+	$path = $_SERVER["REQUEST_URI"];
+	if (empty($referer)) {
+		$referer = "-";
+	}
+	$url .= "&utmr=" . urlencode($referer);
+	if (!empty($path)) {
+		$url .= "&utmp=" . urlencode($path);
+	}
+	$url .= "&guid=ON";
+	return str_replace("&", "&amp;", $url);
+}
+
 function theme_page($title, $content) {
 	$body = theme('menu_top');
 	$body .= $content;

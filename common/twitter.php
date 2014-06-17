@@ -289,8 +289,8 @@ function twitter_process($url, $post_data = false, $method = "get") {
 	$url = str_replace("https://api.twitter.com/", "", $url);
 	$url = str_replace("http://api.twitter.com/", "", $url);
 	if(FILE_IO) file_put_contents('./tmp/session', var_export($_SESSION, true)."\n", FILE_APPEND);
-    #$c = new WeiboClient(OAUTH_CONSUMER_KEY , OAUTH_CONSUMER_SECRET , $_SESSION['last_key']['oauth_token'] , $_SESSION['last_key']['oauth_token_secret']);
-    $c = new SaeTClientV2(OAUTH_CONSUMER_KEY , OAUTH_CONSUMER_SECRET , $_SESSION['token']['access_token']) ;
+    #$c = new WeiboClient(OAUTH_KEY , OAUTH_SECRET , $_SESSION['last_key']['oauth_token'] , $_SESSION['last_key']['oauth_token_secret']);
+    $c = new SaeTClientV2(OAUTH_KEY , OAUTH_SECRET , $_SESSION['token']['access_token']) ;
 
     $c->oauth->decode_json = false;
 	//if(FILE_IO) file_put_contents('/tmp/dabr.log', $method." ".$url." ".json_encode($post_data)."\n", FILE_APPEND);
@@ -752,7 +752,7 @@ function twitter_update() {
 	if ($status) {
 		$status = setting_fetch('fixedtagspre')." ".$status." ".setting_fetch('fixedtagspost');
 		$request = 'statuses/update';
-		$post_data = array('source' => OAUTH_CONSUMER_KEY, 'status' => $status);
+		$post_data = array('source' => OAUTH_KEY, 'status' => $status);
 		
 		// Geolocation parameters
 		list($lat, $long) = explode(',', $_POST['location']);

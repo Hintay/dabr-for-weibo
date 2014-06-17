@@ -1,4 +1,11 @@
 <?php
+if (!file_exists('config.php')) {
+	$root .= ($directory = trim(dirname($_SERVER["SCRIPT_NAME"]), "/\,")) ? "/$directory/" : "/";
+
+	header('Location: '.$root.'setup.php');
+	exit;
+}
+
 $dabr_start = microtime(1);
 
 session_start();
