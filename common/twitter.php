@@ -157,6 +157,7 @@ menu_register(array(
 		'security' => true,
 		'hidden' => false,
 		'callback' => 'twitter_upload_page',
+		'title' => __("Upload Picture"),
 	),
 	'trends' => array(
 		'security' => true,
@@ -273,13 +274,13 @@ function twitter_upload_page($query) {
 			twitter_refresh('upload/fail');
 		}
 	} elseif ($query[1] == 'confirm') {
-		$content = "<p>Upload success.</p>";
+		$content = "<p>".__("Upload success.")."</p>";
 	} elseif ($query[1] == 'fail') {
-		$content = '<p>Weibo pic upload failed. No idea why!</p>';
+		$content = '<p>'.__("Weibo pic upload failed. No idea why!").'</p>';
 	} else {
-		$content = '<form method="post" action="upload" enctype="multipart/form-data">Image <input type="file" name="media" /><br />Message: <textarea name="message" cols="80" rows="6"></textarea><br /><input type="submit" value="Upload" /></form>';
+		$content = '<form method="post" action="upload" enctype="multipart/form-data">'.__("Image: ").'<input type="file" name="media" /><br />'.__("Content: ").'<textarea name="message" cols="80" rows="6"></textarea><br /><input type="submit" value="'.__("Send").'" /></form>';
 	}
-	return theme('page', 'Twitpic Upload', $content);
+	return theme('page', __('Upload Picture'), $content);
 }
 
 function endsWith( $str, $sub ) {

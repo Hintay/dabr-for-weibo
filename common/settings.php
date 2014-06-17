@@ -226,7 +226,7 @@ function settings_page($args) {
 	$content .= '<label>　<input type="checkbox" name="about" value="yes" '. (setting_fetch('about') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("About").'</label><br />';
 	$content .= '<label>　<input type="checkbox" name="ssettings" value="yes" '. (setting_fetch('ssettings', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Settings").'</label><br />';
 	$content .= '<label>　<input type="checkbox" name="slogout" value="yes" '. (setting_fetch('slogout', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Logout").'</label><br />';
-	$content .= '<label>　<input type="checkbox" name="srefresh" value="yes" '. (setting_fetch('srefresh', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Refresh").'</label><hr />';
+	$content .= '<label>　<input type="checkbox" name="srefresh" value="yes" '. (setting_fetch('srefresh', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Refresh").'</label>';
 	$content .= '</span>';
 	
 	$content .= '<p><b>'.__("Status Settings").'</b></p>';

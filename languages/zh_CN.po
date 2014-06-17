@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Dabr for Weibo\n"
-"POT-Creation-Date: 2014-06-17 22:16+0800\n"
-"PO-Revision-Date: 2014-06-17 22:16+0800\n"
+"POT-Creation-Date: 2014-06-17 23:17+0800\n"
+"PO-Revision-Date: 2014-06-17 23:17+0800\n"
 "Last-Translator: Hintay <hintay@me.com>\n"
 "Language-Team: Hintay <hintay@me.com>\n"
 "Language: zh_CN\n"
@@ -14,6 +14,10 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-SearchPath-0: .\n"
+
+#: browsers/desktop.php:8 common/twitter.php:160 common/twitter.php:283
+msgid "Upload Picture"
+msgstr "传图"
 
 #: common/settings.php:4
 msgid "Facebook Blue"
@@ -267,6 +271,26 @@ msgstr "重置"
 #: common/settings.php:277
 msgid " if things go horribly wrong - it will clear all settings."
 msgstr "所有设置，但您可能需要重新登录"
+
+#: common/twitter.php:277
+msgid "Upload success."
+msgstr "上传成功。"
+
+#: common/twitter.php:279
+msgid "Weibo pic upload failed. No idea why!"
+msgstr "微博图片上传失败"
+
+#: common/twitter.php:281
+msgid "Image: "
+msgstr "图片："
+
+#: common/twitter.php:281
+msgid "Content: "
+msgstr "内容："
+
+#: common/twitter.php:281
+msgid "Send"
+msgstr "发送"
 
 #~ msgid "Retweet"
 #~ msgstr "转发"
