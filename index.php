@@ -28,19 +28,19 @@ menu_register(array (
 	'logout' => array (
 		'security' => true,
 		'callback' => 'logout_page',
-		'title' => '登出',
+		'title' => __("Logout"),
 	),
 ));
 
 function logout_page() {
 	user_logout();
 	$content = theme('logged_out');
-	theme('page', '登出', $content);
+	theme('page', __("Logout"), $content);
 }
 
 function about_page() {
 	$content = file_get_contents('about.html');
-	theme('page', '关于', $content);
+	theme('page', __("About"), $content);
 }
 
 browser_detect();

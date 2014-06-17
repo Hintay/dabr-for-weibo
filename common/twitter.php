@@ -37,6 +37,7 @@ menu_register(array(
 		'security' => true,
 		'callback' => 'twitter_replies_page',
 		'accesskey' => '1',
+		'title' => __("Mentions"),
 	),
 	'cmts' => array(
 		'security' => true,

@@ -1,20 +1,21 @@
 <?php
 
 $GLOBALS['colour_schemes'] = array(
-	1 => 'Facebook蓝|3B5998,F7F7F7,000,555,D8DFEA,EEE,FFA,DD9,3B5998,FFF,FFF',
-	2 => '嘀咕橙|b50,ddd,111,555,fff,eee,ffa,dd9,e81,c40,fff',
-	3 => '饭否蓝|13819F,E7F2F5,333,555,fff,E7F2F5,FFA,DD9,00CCFF,333,333',
-	4 => '多彩|535F74,D1D0B4,000,555,FFEDED,FFD3D3,FFA,DD9,D33D3E,FFF,FFF',
-	5 => 'Twitter蓝|1481B1,FFF,333,555,FFF,EEE,FFA,DD9,9AE4E8,333,333',
-	6 => '粉色|c06,fcd,623,c8a,fee,fde,ffa,dd9,C06,fee,fee',
-	7 => '绿色|293C03,ccc,000,555,fff,eee,CCE691,ACC671,495C23,919C35,fff',
-	8 => '紫色|BAAECB,1F1530,9C8BB5,6D617E,362D45,4C4459,4A423E,5E5750,191432,6D617E,6D617E',
+	1 => __("Facebook Blue").'|3B5998,F7F7F7,000,555,D8DFEA,EEE,FFA,DD9,3B5998,FFF,FFF',
+	2 => __("Digu Orange").'|b50,ddd,111,555,fff,eee,ffa,dd9,e81,c40,fff',
+	3 => __("Fanfou Blue").'|13819F,E7F2F5,333,555,fff,E7F2F5,FFA,DD9,00CCFF,333,333',
+	4 => __("Colorful").'|535F74,D1D0B4,000,555,FFEDED,FFD3D3,FFA,DD9,D33D3E,FFF,FFF',
+	5 => __("Twitter Blue").'|1481B1,FFF,333,555,FFF,EEE,FFA,DD9,9AE4E8,333,333',
+	6 => __("Whimsical Pink").'|c06,fcd,623,c8a,fee,fde,ffa,dd9,C06,fee,fee',
+	7 => __("Green").'|293C03,ccc,000,555,fff,eee,CCE691,ACC671,495C23,919C35,fff',
+	8 => __("Purple").'|BAAECB,1F1530,9C8BB5,6D617E,362D45,4C4459,4A423E,5E5750,191432,6D617E,6D617E',
+	9 => __("Dabr Red").'|d12,ddd,111,555,fff,eee,ffa,dd9,c12,fff,fff',
 );
 
 menu_register(array(
 	'settings' => array(
 		'callback' => 'settings_page',
-		'title' => '设置',
+		'title' => __("Settings"),
 	),
 	'reset' => array(
 		'hidden' => true,
@@ -35,7 +36,7 @@ function cookie_monster() {
 		setcookie($cookie, NULL, $duration, '/');
 		setcookie($cookie, NULL, $duration);
 	}
-	return theme('page', '清除Cookies', "<p>".("您清空了所有设置，可能需要重新登录。")."</p>");
+	return theme('page', __("Cookie Monster"), "<p>".__("The cookie monster has cleared all settings, maybe need logging in again.")."</p>");
 }
 
 function setting_fetch($setting, $default = NULL) {
@@ -56,6 +57,7 @@ function settings_page($args) {
 	if ($args[1] == 'save') {
 		$settings['browser']     = $_POST['browser'];
 		$settings['gwt']         = $_POST['gwt'];
+		$settings['locale']      = $_POST['locale'];
 		$settings['colours']     = $_POST['colours'];
 		$settings['reverse']     = $_POST['reverse'];
 		$settings['timestamp']   = $_POST['timestamp'];
@@ -110,7 +112,6 @@ function settings_page($args) {
 		//$settings['showthumbs'] = $_POST['showthumbs'];
 		$settings['fixedtagspre'] = $_POST['fixedtagspre'];
 		$settings['fixedtagspost'] = $_POST['fixedtagspost'];
-		//$settings['rtsyntax'] = $_POST['rtsyntax'];
 		$settings['css'] = $_POST['css'];
 		$settings['tpp'] = $_POST['tpp'];
 		
@@ -133,19 +134,18 @@ function settings_page($args) {
 	}
 
 	$modes = array(
-		'mobile' => ("普通手机"),
-		'touch' => ("触屏手机"),
-		'desktop' => ("台式电脑/笔记本"),
-		'text' => ("纯文本模式"),
-		//'blackberry' => ("黑莓模式(翻页置最底)"),
-		'worksafe' => ("Work Safe"),
-		'bigtouch' => 'Big Touch',
-		//'naiping' => ("奶瓶模式(更适用于PC)"),
+		'mobile' => __("Normal phone"),
+		'touch' => __("Touch phone"),
+		'desktop' => __("PC/Laptop"),
+		'text' => __("Text Only"),
+		'blackberry' => __("BlackBerry (Pagination At Bottom)"),
+		'worksafe' => __("Work Safe"),
+		'bigtouch' => __("Big Touch"),
 	);
 
 	$gwt = array(
-		'off' => ("直接打开"),
-		'on' => ("通过 GWT 压缩"),
+		'off' => __("direct"),
+		'on' => __("via GWT"),
 	);
 
 	/*$ort = array(
@@ -185,25 +185,25 @@ function settings_page($args) {
 	}
 
 	$content .= '<form action="settings/save" method="post">';
-	$content .= '<p>'.("个性化菜单选项").'<br />';
+	$content .= '<p><b>'.__("Menu Settings").'</b></p>';
 	if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'mobile') || (setting_fetch('browser') == 'worksafe') || (setting_fetch('browser') == 'text') || (setting_fetch('browser') == 'naiping')) {
 		$content .= '<span>';
 	}else{
 		$content .= '<span style="display:none;">';
 	}
-	$content .= '<small>'.("选择你想放置在页首菜单的按钮").'</small><br />';
-	$content .= '<label><input type="checkbox" name="topuser" value="yes" '. (setting_fetch('topuser') == 'yes' ? ' checked="checked" ' : '') .' /> '.("用户").'</label><br />';
-	$content .= '<label><input type="checkbox" name="tophome" value="yes" '. (setting_fetch('tophome', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("首页").'</label><br />';
-	$content .= '<label><input type="checkbox" name="topreplies" value="yes" '. (setting_fetch('topreplies', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("提到").'</label><br />';
-	$content .= '<label><input type="checkbox" name="topcomments" value="yes" '. (setting_fetch('topcomments', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("评论").'</label><br />';
-	//$content .= '<label><input type="checkbox" name="topdirects" value="yes" '. (setting_fetch('topdirects', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("私信").'</label><br />';
-	//$content .= '<label><input type="checkbox" name="topsearch" value="yes" '. (setting_fetch('topsearch') == 'yes' ? ' checked="checked" ' : '') .' /> '.("搜索").'</label><br />';
-	//$content .= '<label><input type="checkbox" name="toppublic" value="yes" '. (setting_fetch('toppublic', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("随便看看").'</label><br />';
-	$content .= '<label><input type="checkbox" name="topfavourites" value="yes" '. (setting_fetch('topfavourites', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("收藏").'</label><br />';
-	$content .= '<label><input type="checkbox" name="topfollowers" value="yes" '. (setting_fetch('topfollowers', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("粉丝").'</label><br />';
-	$content .= '<label><input type="checkbox" name="topfriends" value="yes" '. (setting_fetch('topfriends', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("关注").'</label><br />';
-	//$content .= '<label><input type="checkbox" name="toptwitpic" value="yes" '. (setting_fetch('toptwitpic') == 'yes' ? ' checked="checked" ' : '') .' /> '.("Twitpic").'</label><br />';
-	$content .= '<label><input type="checkbox" name="toplogout" value="yes" '. (setting_fetch('toplogout', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("登出").'</label><br />';
+	$content .= '<small>'.__("Choose what you want to display on the Top Bar.").'</small><br />';
+	$content .= '<label>　<input type="checkbox" name="topuser" value="yes" '. (setting_fetch('topuser') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("User").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="tophome" value="yes" '. (setting_fetch('tophome', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Home").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="topreplies" value="yes" '. (setting_fetch('topreplies', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Mentions").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="topcomments" value="yes" '. (setting_fetch('topcomments', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Comments").'</label><br />';
+	//$content .= '<label>　<input type="checkbox" name="topdirects" value="yes" '. (setting_fetch('topdirects', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("私信").'</label><br />';
+	//$content .= '<label>　<input type="checkbox" name="topsearch" value="yes" '. (setting_fetch('topsearch') == 'yes' ? ' checked="checked" ' : '') .' /> '.("搜索").'</label><br />';
+	//$content .= '<label>　<input type="checkbox" name="toppublic" value="yes" '. (setting_fetch('toppublic', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("随便看看").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="topfavourites" value="yes" '. (setting_fetch('topfavourites', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Favourites").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="topfollowers" value="yes" '. (setting_fetch('topfollowers', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Followers").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="topfriends" value="yes" '. (setting_fetch('topfriends', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Friends").'</label><br />';
+	//$content .= '<label>　<input type="checkbox" name="toptwitpic" value="yes" '. (setting_fetch('toptwitpic') == 'yes' ? ' checked="checked" ' : '') .' /> '.("Twitpic").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="toplogout" value="yes" '. (setting_fetch('toplogout', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Logout").'</label><br />';
 	$content .= '</span>';
 	
 	if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'mobile') || (setting_fetch('browser') == 'text') || (setting_fetch('browser') == 'naiping')) {
@@ -211,78 +211,70 @@ function settings_page($args) {
 	}else{
 		$content .= '<span style="display:none;">';
 	}
-	$content .= '<small>'.("选择你想放置在页尾菜单的按钮").'</small><br />';
-	$content .= '<label><input type="checkbox" name="replies" value="yes" '. (setting_fetch('replies') == 'yes' ? ' checked="checked" ' : '') .' /> '.("提到").'</label><br />';
-	$content .= '<label><input type="checkbox" name="comments" value="yes" '. (setting_fetch('comments') == 'yes' ? ' checked="checked" ' : '') .' /> '.("评论").'</label><br />';
-	//$content .= '<label><input type="checkbox" name="directs" value="yes" '. (setting_fetch('directs') == 'yes' ? ' checked="checked" ' : '') .' /> '.("私信").'</label><br />';
-	//$content .= '<label><input type="checkbox" name="search" value="yes" '. (setting_fetch('search') == 'yes' ? ' checked="checked" ' : '') .' /> '.("搜索").'</label><br />';
-	//$content .= '<label><input type="checkbox" name="twitpic" value="yes" '. (setting_fetch('twitpic') == 'yes' ? ' checked="checked" ' : '') .' /> '.("Twitpic").'</label><br />';
-	$content .= '<label><input type="checkbox" name="favourites" value="yes" '. (setting_fetch('favourites') == 'yes' ? ' checked="checked" ' : '') .' /> '.("收藏").'</label><br />';
-	//$content .= '<label><input type="checkbox" name="lists" value="yes" '. (setting_fetch('lists') == 'yes' ? ' checked="checked" ' : '') .' /> '.("频道").'</label><br />';
-	$content .= '<label><input type="checkbox" name="followers" value="yes" '. (setting_fetch('followers') == 'yes' ? ' checked="checked" ' : '') .' /> '.("粉丝").'</label><br />';
-	$content .= '<label><input type="checkbox" name="friends" value="yes" '. (setting_fetch('friends') == 'yes' ? ' checked="checked" ' : '') .' /> '.("关注").'</label><br />';
-	//$content .= '<label><input type="checkbox" name="blockings" value="yes" '. (setting_fetch('blockings') == 'yes' ? ' checked="checked" ' : '') .' /> '.("黑名单").'</label><br />';
-	//$content .= '<label><input type="checkbox" name="public" value="yes" '. (setting_fetch('public') == 'yes' ? ' checked="checked" ' : '') .' /> '.("随便看看").'</label><br />';
-	//$content .= '<label><input type="checkbox" name="trends" value="yes" '. (setting_fetch('trends') == 'yes' ? ' checked="checked" ' : '') .' /> '.("话题").'</label><br />';
-	$content .= '<label><input type="checkbox" name="about" value="yes" '. (setting_fetch('about') == 'yes' ? ' checked="checked" ' : '') .' /> '.("关于").'</label><br />';
-	$content .= '<label><input type="checkbox" name="ssettings" value="yes" '. (setting_fetch('ssettings', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("设置").'</label><br />';
-	$content .= '<label><input type="checkbox" name="slogout" value="yes" '. (setting_fetch('slogout', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("登出").'</label><br />';
-	$content .= '<label><input type="checkbox" name="srefresh" value="yes" '. (setting_fetch('srefresh', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("刷新").'</label></p><hr />';
+	$content .= '<small>'.__("Choose what you want to display on the Bottom Bar.").'</small><br />';
+	$content .= '<label>　<input type="checkbox" name="replies" value="yes" '. (setting_fetch('replies') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Mentions").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="comments" value="yes" '. (setting_fetch('comments') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Comments").'</label><br />';
+	//$content .= '<label>　<input type="checkbox" name="directs" value="yes" '. (setting_fetch('directs') == 'yes' ? ' checked="checked" ' : '') .' /> '.("私信").'</label><br />';
+	//$content .= '<label>　<input type="checkbox" name="search" value="yes" '. (setting_fetch('search') == 'yes' ? ' checked="checked" ' : '') .' /> '.("搜索").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="favourites" value="yes" '. (setting_fetch('favourites') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Favourites").'</label><br />';
+	//$content .= '<label>　<input type="checkbox" name="lists" value="yes" '. (setting_fetch('lists') == 'yes' ? ' checked="checked" ' : '') .' /> '.("频道").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="followers" value="yes" '. (setting_fetch('followers') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Followers").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="friends" value="yes" '. (setting_fetch('friends') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Friends").'</label><br />';
+	//$content .= '<label>　<input type="checkbox" name="blockings" value="yes" '. (setting_fetch('blockings') == 'yes' ? ' checked="checked" ' : '') .' /> '.("黑名单").'</label><br />';
+	//$content .= '<label>　<input type="checkbox" name="public" value="yes" '. (setting_fetch('public') == 'yes' ? ' checked="checked" ' : '') .' /> '.("随便看看").'</label><br />';
+	//$content .= '<label>　<input type="checkbox" name="trends" value="yes" '. (setting_fetch('trends') == 'yes' ? ' checked="checked" ' : '') .' /> '.("话题").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="about" value="yes" '. (setting_fetch('about') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("About").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="ssettings" value="yes" '. (setting_fetch('ssettings', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Settings").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="slogout" value="yes" '. (setting_fetch('slogout', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Logout").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="srefresh" value="yes" '. (setting_fetch('srefresh', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Refresh").'</label><hr />';
 	$content .= '</span>';
 	
-	$content .= '<p>'.("主题").':<br /><select name="colours">'.theme('options', $colour_schemes, setting_fetch('colours', 1)).'</select></p><hr />';
-	
-	$content .= '<p>'.("模式").':<br /><select name="browser">'.theme('options', $modes, $GLOBALS['current_theme']).'</select></p><hr />';
-	
-	$content .= '<p><label><input type="checkbox" name="buttonintext" value="yes" '. (setting_fetch('buttonintext', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("显示按钮为纯文本").'</label><br />';
-	$content .= '<small>'.("选择你想放置在消息上的元素").'</small><br />';
-	$content .= '<label><input type="checkbox" name="buttonrt" value="yes" '. (setting_fetch('buttonrt', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("转发").'</label>';
-	$content .= '<label><input type="checkbox" name="buttonco" value="yes" '. (setting_fetch('buttonco', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("评论").'</label>';
-	//$content .= '<label><input type="checkbox" name="buttonre" value="yes" '. (setting_fetch('buttonre', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("转发").'</label>';
-	//$content .= '<label><input type="checkbox" name="buttondm" value="yes" '. (setting_fetch('buttondm') == 'yes' ? ' checked="checked" ' : '') .' /> '.("私信").'</label>';
-	$content .= '<label><input type="checkbox" name="buttonfav" value="yes" '. (setting_fetch('buttonfav', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("收藏").'</label>';
-	$content .= '<label><input type="checkbox" name="buttondel" value="yes" '. (setting_fetch('buttondel', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("删除").'</label><br />';
-	$content .= '<label><input type="checkbox" name="buttontime" value="yes" '. (setting_fetch('buttontime', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("时间").'</label>';
-	$content .= '<label><input type="checkbox" name="buttonfrom" value="yes" '. (setting_fetch('buttonfrom', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("客户端").'</label></p><hr>';
-	//$content .= '<p><label><input type="checkbox" name="buttonend" value="yes" '. (setting_fetch('buttonend') == 'yes' ? ' checked="checked" ' : '') .' /> '.("把按钮放在每条消息的最后").'</label></p><hr>';
-	//$content .= '<p><label><input type="checkbox" name="moreinreply" value="yes" '. (setting_fetch('moreinreply') == 'yes' ? ' checked="checked" ' : '') .' /> '.("回复时显示对方的消息").'</label></p><hr>';
-	
+	$content .= '<p><b>'.__("Status Settings").'</b></p>';
+	$content .= '<label>　<input type="checkbox" name="buttonintext" value="yes" '. (setting_fetch('buttonintext', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Show @/DM/RT/FAV/DEL As Text instead of images").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="avataro" value="yes"'. (setting_fetch('avataro') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Do Not Show Avatar").'</label><br/>';
 	if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'text')) {
 		$content .= '<span style="display:none;">';
 	}else{
 		$content .= '<span>';
 	}
-	$content .= '<p><label><input type="checkbox" name="piclink" value="yes" '. (setting_fetch('piclink') == 'yes' ? ' checked="checked" ' : '') .' /> 将微博图片显示为链接</label></p>';
+	$content .= '<label>　<input type="checkbox" name="piclink" value="yes" '. (setting_fetch('piclink') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Show Images As Link").'</label><br />';
 	$content .= '</span>';
-	$content .= '<p><label><input type="checkbox" name="avataro" value="yes"'. (setting_fetch('avataro') == 'yes' ? ' checked="checked" ' : '') .' /> '.("不显示头像").'</label></p><hr>';
-	
-	$content .= '<p>'.("每页消息数").' (15-200): <input type="text" id="tpp" name="tpp" value="'.setting_fetch('tpp', 20).'" maxlength="3" style="width:20px;"/><br><small><b>注意：</b>如果超出这个范围将会出现不可预料的后果！</small></p><hr />';
-	
-	$content .= '<p>'.("外部链接").':<br /><select name="gwt">'.theme('options', $gwt, setting_fetch('gwt', $GLOBALS['current_theme'] == 'text' ? 'on' : 'off')).'</select><br /><small>'.("Google 网页转换器(GWT)可以将第三方网页转换成更小更适合手机的页面,且节省流量.").'</small></p><hr />';
+	//$content .= '<label>　<input type="checkbox" name="reverse" value="yes" '. (setting_fetch('reverse') == 'yes' ? ' checked="checked" ' : '') .' /> 反转相关对话的顺序</label><br />';
+	$content .= '<label>　<input type="checkbox" name="timestamp" value="yes" '. (setting_fetch('timestamp') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Show the timestamp ") . twitter_date('H:i') . __(" instead of 25 sec ago") .'</label><br />';
+	//$content .= '<label>　<input type="checkbox" name="hide_inline" value="yes" '. (setting_fetch('hide_inline') == 'yes' ? ' checked="checked" ' : '') .' /> 隐藏链接媒体文件 (例如TwitPic缩略图)</label><br />';
+	$content .= '<p>　'.__("Fixed Tag Pre").': <input type="text" id="fixedtagspre" name="fixedtagspre" value="'.setting_fetch('fixedtagspre').'" maxlength="70" style="width:40px;" /> '.__("Fixed Tag After Post").': <input type="text" id="fixedtagspost" name="fixedtagspost" value="'.setting_fetch('fixedtagspost').'" maxlength="70" style="width:40px;" /><br /><small>　'.__("Will automatically add the tags in your status.").'</small></p>';
 
-	$content .= '<p><label><input type="checkbox" name="reverse" value="yes" '. (setting_fetch('reverse') == 'yes' ? ' checked="checked" ' : '') .' /> 反转相关对话的顺序</label></p>';
-	$content .= '<p><label><input type="checkbox" name="timestamp" value="yes" '. (setting_fetch('timestamp') == 'yes' ? ' checked="checked" ' : '') .' /> 显示时间戳 ' . twitter_date('H:i') . ' 而不是 25秒前</label></p>';
-	$content .= '<p><label><input type="checkbox" name="hide_inline" value="yes" '. (setting_fetch('hide_inline') == 'yes' ? ' checked="checked" ' : '') .' /> 隐藏链接媒体文件 (例如TwitPic缩略图)</label></p>';
+	$content .= '<small>'.__("Choose what you want to display on the Status.").'</small><br />';
+	$content .= '<label>　<input type="checkbox" name="buttonrt" value="yes" '. (setting_fetch('buttonrt', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("RT").'</label>';
+	$content .= '<label>　<input type="checkbox" name="buttonco" value="yes" '. (setting_fetch('buttonco', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("CM").'</label>';
+	//$content .= '<label>　<input type="checkbox" name="buttonre" value="yes" '. (setting_fetch('buttonre', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("转发").'</label>';
+	//$content .= '<label>　<input type="checkbox" name="buttondm" value="yes" '. (setting_fetch('buttondm') == 'yes' ? ' checked="checked" ' : '') .' /> '.("私信").'</label>';
+	$content .= '<label>　<input type="checkbox" name="buttonfav" value="yes" '. (setting_fetch('buttonfav', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("FAV").'</label>';
+	$content .= '<label>　<input type="checkbox" name="buttondel" value="yes" '. (setting_fetch('buttondel', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("DEL").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="buttontime" value="yes" '. (setting_fetch('buttontime', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Time").'</label>';
+	$content .= '<label>　<input type="checkbox" name="buttonfrom" value="yes" '. (setting_fetch('buttonfrom', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("From").'</label><hr />';
+	//$content .= '<p><label>　<input type="checkbox" name="buttonend" value="yes" '. (setting_fetch('buttonend') == 'yes' ? ' checked="checked" ' : '') .' /> '.("把按钮放在每条消息的最后").'</label></p><hr>';
+	//$content .= '<p><label>　<input type="checkbox" name="moreinreply" value="yes" '. (setting_fetch('moreinreply') == 'yes' ? ' checked="checked" ' : '') .' /> '.("回复时显示对方的消息").'</label></p><hr>';
+	
+	$content .= '<p><b>'.__("Global Settings").'</b></p>';
+	$content .= '<label>　'.__("Colour scheme: ").'<select name="colours">'.theme('options', $colour_schemes, setting_fetch('colours', 1)).'</select></label><br />';	
+	$content .= '<label>　'.__("Mode: ").'<select name="browser">'.theme('options', $modes, $GLOBALS['current_theme']).'</select></label><br />';
+	$content .= '<label>　'.__("Language: ").'<select name="locale">'.theme('options', $locale, setting_fetch('locale', 'zh_CN')).'</select></label><br />';
+	
+	$content .= '<label>　'.__("Tweets Per Page: ").'<input type="text" id="tpp" name="tpp" value="'.setting_fetch('tpp', 20).'" maxlength="3" style="width:20px;" /> (15-200)</label><br />';	
+	$content .= '<label>　'.__("External links go:").'<select name="gwt">'.theme('options', $gwt, setting_fetch('gwt', $GLOBALS['current_theme'] == 'text' ? 'on' : 'off')).'</select><br /><small>　'.__("Google Web Transcoder (GWT) converts third-party sites into small, speedy pages suitable for older phones and people with less bandwidth.").'</small></label><p />';
 	//$content .= '<p><label>现在UTC时间为 ' . gmdate('H:i') . '， 设置一个差值 <input type="text" name="utc_offset" value="'. $utc_offset .'" size="3" /> 使时间显示为 ' . twitter_date('H:i') . '.<br />如果时间显示错误请调整该值。</label></p><hr />';
 	//$content .= '<p><label><input type="checkbox" name="linktrans" value="yes" '. (setting_fetch('linktrans') == 'yes' ? ' checked="checked" ' : '') .' /> '.("显示链接地址为 [link]").'</label></p><hr />';
 	//$content .= '<p>'.("短链接").':<br /><select name="short">'.theme('options', $short, setting_fetch('short', 'is.gd')).'</select></p><hr />';
 	//if (LONG_URL == 1) {$content .= '<p><label><input type="checkbox" name="longurl" value="yes" '. (setting_fetch('longurl') == 'yes' ? ' checked="checked" ' : '') .' /> '.("还原所有短链为原始地址").'</label></p><hr />';}
-	//$content .= '<p><label><input type="checkbox" name="showthumbs" value="yes" '. (setting_fetch('showthumbs', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.("在首页预览图片").'</label></p><hr>';
-	$content .= '<p>'.("固定标签").': <input type="text" id="fixedtagspre" name="fixedtagspre" value="'.setting_fetch('fixedtagspre').'" maxlength="70" style="width:40px;" /> '.("消息内容").' <input type="text" id="fixedtagspost" name="fixedtagspost" value="'.setting_fetch('fixedtagspost').'" maxlength="70" style="width:40px;" /><br /><small>'.("将自动添加标签在您的消息中").'</small></p><hr />';
 
-	//$content .= '<p>'.("RT 格式").':<br /><input type="text" id="rtsyntax" name="rtsyntax" value="'.setting_fetch('rtsyntax', 'RT [User]: [Content]').'" maxlength="140" /><br /><small>'.("默认RT格式: RT [User]: [Content]").'</small></p><hr />';
-
-	$content .= '<p>'.("自定义 CSS").':<br /><textarea name="css" cols="50" rows="3" id="css" style="width:95%">'.setting_fetch('css').'</textarea></p><hr />';
-	$content .= '<p>'.("语言(此功能暂未完成)").':<br /><select name="locale">'.theme('options', $locale, setting_fetch('locale', 'zh_CN')).'</select></p><hr />';
-	
+	$content .= '<p><label>'.__("Custom CSS: ").'<br /><textarea name="css" cols="50" rows="3" id="css" style="width:95%">'.setting_fetch('css').'</textarea></label></p>';	
 	// Allow users to choose a Dabr password if accounts are enabled
 	if (MYSQL_USERS == 'ON' && user_is_authenticated()) {
 		$content .= '<fieldset><legend>Dabr account</legend><small>If you want to sign in to Dabr without going via Weibo.com in the future, create a password and we\'ll remember you.</small></p><p>Change Dabr password<br /><input type="password" name="newpassword" /><br /><small>Leave blank if you don\'t want to change it</small></fieldset>';
 	}
 	
-	$content .= '<p><input type="submit" value="保存" /></p></form>';
+	$content .= '<hr /><p><input type="submit" name="Submit" value="'.__("Save").'" /> <small>'.__('Visit ').'<a href="'.BASE_URL.'reset">'.__("Reset").'</a>'.__(' if things go horribly wrong - it will clear all settings.').'</small></p></form>';
 
-	$content .= '<hr /><p>如果设置出错，请 <a href="reset">重置</a> 所有设置，但您需要重新登陆。</p>';
-
-	return theme('page', '设置', $content);
+	return theme('page', __("Settings"), $content);
 }
