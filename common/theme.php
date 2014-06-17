@@ -235,8 +235,7 @@ function theme_css() {
 }
 
 function theme_google_analytics() {
-	global $GA_ACCOUNT;
-	if (!$GA_ACCOUNT) return '';
+	if (!GA_ACCOUNT) return '';
 	$googleAnalyticsImageUrl = googleAnalyticsGetImageUrl();
 	return "<img src='{$googleAnalyticsImageUrl}' />";
 }
