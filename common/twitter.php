@@ -1123,17 +1123,17 @@ function theme_comments_status($status) {
 	
 	if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
 		if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'touch') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'naiping')) {
-			$source = $status->source ? " 来自 {$status->source}" : '';
-			$source_retweeted = $status->retweeted_status->source ? " 来自 {$status->retweeted_status->source}" : '';
+			$source = $status->source ? __("from ")."{$status->source}" : '';
+			$source_retweeted = $status->retweeted_status->source ? __("from ")."{$status->retweeted_status->source}" : '';
 		}else{
-			$source = $status->source ? " 来自 ".strip_tags($status->source)."" : '';
-			$source_retweeted = $status->retweeted_status->source ? " 来自 ".strip_tags($status->retweeted_status->source)."" : '';
+			$source = $status->source ? __("from ").strip_tags($status->source)."" : '';
+			$source_retweeted = $status->retweeted_status->source ? __("from ").strip_tags($status->retweeted_status->source)."" : '';
 		}
 	}
 	
 	if ($status->thumbnail_pic){
 		if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-			$parsed .= "<br/> <a href='{$status->original_pic}' target=_blank>[图片]</a>";
+			$parsed .= "<br/> <a href='{$status->original_pic}' target=_blank>[".__("Picture")."]</a>";
 		}else{
 			$parsed .= "<br/> <a href='{$status->original_pic}' target=_blank><img src='{$status->thumbnail_pic}' /></a>";
 		}
@@ -1149,13 +1149,13 @@ function theme_comments_status($status) {
 		$actions_retweeted = theme('action_icons', $status->retweeted_status);
 		if ($status->retweeted_status->thumbnail_pic){
 			if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-				$retweeted_text .= "<br/> <a href='{$status->retweeted_status->original_pic}' target=_blank>[图片]</a>";
+				$retweeted_text .= "<br/> <a href='{$status->retweeted_status->original_pic}' target=_blank>[".__("Picture")."]</a>";
 			}else{
 				$retweeted_text .= "<br/> <a href='{$status->retweeted_status->original_pic}' target=_blank><img src='{$status->retweeted_status->thumbnail_pic}' /></a>";
 			}
 		}
 	
-		$out .= "	<span class='status shift'><b><a href='user/{$status->user->screen_name}'>{$status->user->screen_name}</a></b> $actions $time_since <small>$source</small><br />$parsed </span><br/>
+		$out .= "	<span class='status shift'><b><a href='user/{$status->user->screen_name}'>{$status->user->screen_name}</a></b> $actions $time_since <small>$source</small><br />$parsed </span>
 		<div class='retweeted'><span class='avatar'>$avatar_retweeted</span>
 		<span class='status shift'><b><a href='user/{$status->retweeted_status->user->screen_name}'>{$status->retweeted_status->user->screen_name}</a></b> $actions_retweeted $time_retweeted <small>$source_retweeted</small><br/>$retweeted_text</span></div>\n";
 	}else{
@@ -1470,7 +1470,7 @@ function theme_weibocomments($feed) //具体评论
 		$link = theme('status_time_link', $status, false);
 		$actions = theme('action_icons', $status);
 		$avatar = theme('avatar', $status->from->profile_image_url);
-		$source = $status->source ? " 来自 {$status->source}" : '';
+		$source = $status->source ? __("from ")."{$status->source}" : '';
 		$row = array(
 			"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link <small>$source</small><br />{$text}",
 		);
@@ -1559,11 +1559,11 @@ function theme_favourites($feed)
 			$avatar_retweeted = theme('avatar', $status->status->retweeted_status->user->profile_image_url);
 			if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
 				if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'touch') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'naiping')) {
-					$source = $status->status->source ? " 来自 {$status->status->source}" : '';
-					$source2 = $status->status->retweeted_status->source ? " 来自 {$status->status->retweeted_status->source}" : '';
+					$source = $status->status->source ? __("from ")."{$status->status->source}" : '';
+					$source2 = $status->status->retweeted_status->source ? __("from ")."{$status->status->retweeted_status->source}" : '';
 				}else{
-					$source = $status->status->source ? " 来自 ".strip_tags($status->status->source) ."" : '';
-					$source2 = $status->status->retweeted_status->source ? " 来自 ".strip_tags($status->status->retweeted_status->source)."" : '';
+					$source = $status->status->source ? __("from ").strip_tags($status->status->source) ."" : '';
+					$source2 = $status->status->retweeted_status->source ? __("from ").strip_tags($status->status->retweeted_status->source)."" : '';
 				}
 			}
 			$row = array(
@@ -1580,7 +1580,7 @@ function theme_favourites($feed)
 					$thumbnail_pic = $pic_urls->thumbnail_pic;
 					$original_pic = str_replace("thumbnail", "large", $thumbnail_pic);
 					if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-						$text .= "<a href='{$original_pic}' target=_blank>[图片]</a> ";
+						$text .= "<a href='{$original_pic}' target=_blank>[".__("Picture")."]</a> ";
 					}else{
 						$text .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a> ";
 					}
@@ -1597,11 +1597,11 @@ function theme_favourites($feed)
 			$avatar_retweeted = theme('avatar', $status->status->retweeted_status->user->profile_image_url);
 			if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
 				if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'touch') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'naiping')) {
-					$source = $status->status->source ? " 来自 {$status->status->source}" : '';
-					$source2 = $status->status->retweeted_status->source ? " 来自 {$status->status->retweeted_status->source}" : '';
+					$source = $status->status->source ? __("from ")."{$status->status->source}" : '';
+					$source2 = $status->status->retweeted_status->source ? __("from ")."{$status->status->retweeted_status->source}" : '';
 				}else{
-					$source = $status->status->source ? " 来自 ".strip_tags($status->status->source) ."" : '';
-					$source2 = $status->status->retweeted_status->source ? " 来自 ".strip_tags($status->status->retweeted_status->source)."" : '';
+					$source = $status->status->source ? __("from ").strip_tags($status->status->source) ."" : '';
+					$source2 = $status->status->retweeted_status->source ? __("from ").strip_tags($status->status->retweeted_status->source)."" : '';
 				}
 			}
 			$row = array(
@@ -1725,15 +1725,15 @@ function theme_timeline($feed)
 			
 			if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
 				if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'touch') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'naiping')) {
-					$source = $status->source ? " 来自 {$status->source}" : '';
-					$source2 = $status->status->source ? " 来自 {$status->status->source}" : '';
-					$source_reply = $status->reply_comment->source ? " 来自 {$status->reply_comment->source}" : '';
-					$source_retweeted = $status->status->retweeted_status->source ? " 来自 {$status->status->retweeted_status->source}" : '';
+					$source = $status->source ? __("from ")."{$status->source}" : '';
+					$source2 = $status->status->source ? __("from ")."{$status->status->source}" : '';
+					$source_reply = $status->reply_comment->source ? __("from ")."{$status->reply_comment->source}" : '';
+					$source_retweeted = $status->status->retweeted_status->source ? __("from ")."{$status->status->retweeted_status->source}" : '';
 				}else{
-					$source = $status->source ? " 来自 ".strip_tags($status->source)."" : '';
-					$source2 = $status->status->source ? " 来自 ".strip_tags($status->status->source)."" : '';
-					$source_reply = $status->reply_comment->source ? " 来自 ".strip_tags($status->reply_comment->source)."" : '';
-					$source_retweeted = $status->status->retweeted_status->source ? " 来自 ".strip_tags($status->status->retweeted_status->source)."" : '';
+					$source = $status->source ? __("from ").strip_tags($status->source)."" : '';
+					$source2 = $status->status->source ? __("from ").strip_tags($status->status->source)."" : '';
+					$source_reply = $status->reply_comment->source ? __("from ").strip_tags($status->reply_comment->source)."" : '';
+					$source_retweeted = $status->status->retweeted_status->source ? __("from ").strip_tags($status->status->retweeted_status->source)."" : '';
 				}
 			}
 			if ($status->reply_comment){
@@ -1745,7 +1745,7 @@ function theme_timeline($feed)
 			}elseif($status->status->retweeted_status){//提到的带转发评论
 			$row = array(
 				"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link <small>$source</small><br />{$text} <hr /> 
-				<div class='retweeted'><small>转发：</small><br /><span class='avatar'>$avatar_comment</span> <span class='status shift'><b><a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $actions2 $link2 <small>$source2</small><br />{$srctext}</span><hr />
+				<div class='retweeted'><small>".__("Repost")."：</small><br /><span class='avatar'>$avatar_comment</span> <span class='status shift'><b><a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $actions2 $link2 <small>$source2</small><br />{$srctext}</span><hr />
 				<div class='retweeted'><span class='avatar'>$avatar_retweeted</span> <span class='status shift'><b><a href='user/{$status->status->retweeted_status->user->screen_name}'>{$status->status->retweeted_status->user->screen_name}</a></b> $actions_retweeted $link_retweeted <small>$source_retweeted</small><br />{$retweetedtext}</span></div></div>",
 			);
 			}else{
@@ -1784,11 +1784,11 @@ function theme_timeline($feed)
             }
 			if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
 				if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'touch') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'naiping')) {
-					$source = $status->source ? " 来自 {$status->source}" : '';
-					$source2 = $status->retweeted_status->source ? " 来自 {$status->retweeted_status->source}" : '';
+					$source = $status->source ? __("from ")."{$status->source}" : '';
+					$source2 = $status->retweeted_status->source ? __("from ")."{$status->retweeted_status->source}" : '';
 				}else{
-					$source = $status->source ? " 来自 ".strip_tags($status->source) ."" : '';
-					$source2 = $status->retweeted_status->source ? " 来自 ".strip_tags($status->retweeted_status->source) ."" : '';
+					$source = $status->source ? __("from ").strip_tags($status->source) ."" : '';
+					$source2 = $status->retweeted_status->source ? __("from ").strip_tags($status->retweeted_status->source) ."" : '';
 				}
 			}
 			$row = array(
@@ -1817,9 +1817,9 @@ function theme_timeline($feed)
 			$avatar = theme('avatar', $status->from->profile_image_url);
 			if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
 				if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'touch') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'naiping')) {
-					$source = $status->source ? "来自 {$status->source}" : '';
+					$source = $status->source ? __("from ")."{$status->source}" : '';
 				}else{
-					$source = $status->source ? " 来自 ".strip_tags($status->source) ."" : '';
+					$source = $status->source ? __("from ").strip_tags($status->source) ."" : '';
 				}
 			} else {
 				$source = NULL;
