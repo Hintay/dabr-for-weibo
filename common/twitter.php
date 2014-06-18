@@ -499,11 +499,11 @@ function generate_thumbnail($query) {
 
 function format_interval($timestamp, $granularity = 2) {
 	$units = array(
-		'年' => 31536000,
-		'天' => 86400,
-		'小时' => 3600,
-		'分钟' => 60,
-		'秒' => 1
+		__(" years") => 31536000,
+		__(" days") => 86400,
+		__(" hours") => 3600,
+		__(" min") => 60,
+		__(" sec") => 1
 	);
 	$output = '';
 	foreach ($units as $key => $value) {
@@ -516,7 +516,7 @@ function format_interval($timestamp, $granularity = 2) {
 			break;
 		}
 	}
-	return $output ? $output : '0 秒';
+	return $output ? $output : __("0 sec");
 }
 
 function twitter_status_page($query) {
@@ -1290,7 +1290,7 @@ function theme_status_time_link($status, $is_link = true) {
 		if (setting_fetch('timestamp') == 'yes') {
 			$out = twitter_date('n月d日 H:i:s', ($time + 60 * 60 * 8) );
 		} else {
-			$out = format_interval(time() - $time, 1). '前';
+			$out = format_interval(time() - $time, 1). __(" ago");
 		}
 	} else {
 		$out = $status->created_at;
@@ -1446,12 +1446,15 @@ function theme_weibocomments($feed) //具体评论
 		}
 		$time = strtotime($status->created_at);
 		if ($time > 0) {
-			//中文星期
-			$cweekday = array("星期日","星期一","星期二","星期三","星期四","星期五","星期六"); 
-			$now = getdate(time()); 
-			$cur_wday=$now['wday'];
-			
-			$date = twitter_date('Y年n月j日 '.date($cweekday[$cur_wday]).'  ', strtotime($status->created_at));
+			if((get_locale() == "zh_CN") || (get_locale() == "zh_TW")){
+				//中文星期
+				$cweekday = array("星期日","星期一","星期二","星期三","星期四","星期五","星期六"); 
+				$now = getdate(time()); 
+				$cur_wday=$now['wday'];
+				$date = twitter_date("Y年n月j日 ".date($cweekday[$cur_wday]).'  ', strtotime($status->created_at));
+			}else{
+				$date = twitter_date('l jS F Y', strtotime($status->created_at));
+			}
 			if ($date_heading !== $date) {
 				$date_heading = $date;
 				$rows[] = array(array(
@@ -1515,12 +1518,15 @@ function theme_favourites($feed)
 		}
 		$time = strtotime($status->favorited_time);
 		if ($time > 0) {
-			//中文星期
-			$cweekday = array("星期日","星期一","星期二","星期三","星期四","星期五","星期六"); 
-			$now = getdate(time()); 
-			$cur_wday=$now['wday'];
-			
-			$date = twitter_date('收藏日期：Y年n月j日 '.date($cweekday[$cur_wday]).'  ', strtotime($status->favorited_time));
+			if((get_locale() == "zh_CN") || (get_locale() == "zh_TW")){
+				//中文星期
+				$cweekday = array("星期日","星期一","星期二","星期三","星期四","星期五","星期六"); 
+				$now = getdate(time()); 
+				$cur_wday=$now['wday'];
+				$date = twitter_date("收藏日期：Y年n月j日 ".date($cweekday[$cur_wday]).'  ', strtotime($status->created_at));
+			}else{
+				$date = "Favourite date: ".twitter_date('l jS F Y', strtotime($status->created_at));
+			}
 			if ($date_heading !== $date) {
 				$date_heading = $date;
 				$rows[] = array(array(
@@ -1643,12 +1649,15 @@ function theme_timeline($feed)
 		}
 		$time = strtotime($status->created_at);
 		if ($time > 0) {
-			//中文星期
-			$cweekday = array("星期日","星期一","星期二","星期三","星期四","星期五","星期六"); 
-			$now = getdate(time()); 
-			$cur_wday=$now['wday'];
-			
-			$date = twitter_date('Y年n月j日 '.date($cweekday[$cur_wday]).'  ', strtotime($status->created_at));
+			if((get_locale() == "zh_CN") || (get_locale() == "zh_TW")){
+				//中文星期
+				$cweekday = array("星期日","星期一","星期二","星期三","星期四","星期五","星期六"); 
+				$now = getdate(time()); 
+				$cur_wday=$now['wday'];
+				$date = twitter_date("Y年n月j日 ".date($cweekday[$cur_wday]).'  ', strtotime($status->created_at));
+			}else{
+				$date = twitter_date('l jS F Y', strtotime($status->created_at));
+			}
 			if ($date_heading !== $date) {
 				$date_heading = $date;
 				$rows[] = array(array(
