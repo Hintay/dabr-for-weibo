@@ -126,7 +126,7 @@ menu_register(array(
 		'security' => true,
 		'callback' => 'twitter_delcmt_page',
 	),
-	'retweet' => array(
+	'repost' => array(
 		'hidden' => true,
 		'security' => true,
 		'callback' => 'twitter_retweet_page',
@@ -538,11 +538,22 @@ function twitter_thread_timeline($thread_id) {
 
 function twitter_retweet_page($query) {
 	$id = (string) $query[1];
+	$request = "statuses/show";
 	if (is_numeric($id)) {
-		$request = "statuses/show";
-		$tl = twitter_process($request, array('id'=>$id));
-		$content = theme('retweet', $tl);
-		theme('page', 'Retweet', $content);
+		if ($query[2] == "0") {
+			$status = twitter_process($request, array('id'=>$id));
+			$content = theme('comments_status', $status);
+			$content .= theme_retweet_form($id);
+		}else{
+			$status = twitter_process($request, array('id'=>$id));
+			$content = theme('comments_status', $status);
+			$content .= theme_retweet_form($id);
+			$request = "statuses/repost_timeline";
+			$tl = twitter_process($request, array("id"=>$id, "max_id"=>$_GET['max_id']));
+			$tl = twitter_standard_timeline($tl->reposts, 'cmts');
+			$content .= theme('weibocomments', $tl);
+		}
+	theme('page', __("Repost"), $content);
 	}
 }
 
@@ -552,7 +563,7 @@ function twitter_comment_page($query) {
 		$request = "comments/show_batch";
 		$tl = twitter_process($request, array("cids"=>$id));
 		$content = theme('comment', $tl[0]);
-		theme('page', '评论', $content);
+		theme('page', __("Comment"), $content);
 	}
 }
 
@@ -841,7 +852,7 @@ function twitter_cmts_page($query) {
         $tl = twitter_standard_timeline($tl->comments, 'cmts');
         $content = theme_cmts_menu();
         $content .= theme('timeline', $tl);
-        theme('page', '评论', $content);
+        theme('page', __("Comments"), $content);
 
 	case '':
 	case 'to_me':
@@ -851,7 +862,7 @@ function twitter_cmts_page($query) {
         $tl = twitter_standard_timeline($tl->comments, 'cmts');
         $content = theme_cmts_menu();
         $content .= theme('timeline', $tl);
-        theme('page', '评论', $content);
+        theme('page', __("Comments"), $content);
 		
 	case 'mentions':
 	$count = setting_fetch('tpp', 20)+4;
@@ -860,7 +871,7 @@ function twitter_cmts_page($query) {
         $tl = twitter_standard_timeline($tl->comments, 'cmts');
         $content = theme_cmts_menu();
         $content .= theme('timeline', $tl);
-        theme('page', '评论', $content);
+        theme('page', __("Comments"), $content);
 
     case 'reply': // reply comment
 	$count = setting_fetch('tpp', 20);
@@ -870,7 +881,7 @@ function twitter_cmts_page($query) {
         $tl = twitter_standard_timeline($tl, 'cmts');
         $content = theme_cmts_menu();
         $content .= theme('timeline', $tl);
-        theme('page', '评论', $content);
+        theme('page', __("Comments"), $content);
 
     default:
 	$request = "comments/show";
@@ -886,7 +897,7 @@ function twitter_cmts_page($query) {
         $tl = twitter_standard_timeline($tl->comments, 'cmts');
         $content .= theme('weibocomments', $tl);
     }
-	theme('page', '评论', $content);
+	theme('page', __("Comments"), $content);
 	}
 }
 
@@ -1082,8 +1093,17 @@ function theme_status_form($text = '') {
 
 function theme_comment_form($in_reply_to_id, $text = '') {
 	if (user_is_authenticated()) {
-		return "<form method='post' action='twitter-comment'><input name='comment' value='{$text}' maxlength='140' /> <input name='id' value='{$in_reply_to_id}' type='hidden' /><input type='submit' value='Comment' /></form>";
+		return "<form method='post' action='twitter-comment'><input name='comment' value='{$text}' maxlength='140' /> <input name='id' value='{$in_reply_to_id}' type='hidden' /><input type='submit' value='".__("Comment")."' /></form>";
 	}
+}
+
+function theme_retweet_form($status) {
+	$length = function_exists('mb_strlen') ? mb_strlen($text,'UTF-8') : strlen($text);
+	$from = substr($_SERVER['HTTP_REFERER'], strlen(BASE_URL));
+	$content.= __("Repost Comment")."<br /><form action='twitter-retweet/{$status}' method='post'>
+<textarea name='status' cols='50' rows='3' id='status'></textarea>
+<input type='hidden' name='from' value='$from' /><input type='submit' value='".__("Repost")."'></form>";
+	return $content;
 }
 
 function theme_recomment_form($in_reply_to_id, $reply_id, $text = '') {
@@ -1445,16 +1465,15 @@ function theme_weibocomments($feed) //具体评论
 		if ($status->in_reply_to_status_id) {
 			$source .= " in reply to <a href='status/{$status->in_reply_to_status_id}'>{$status->in_reply_to_screen_name}</a>";
 		}
-		if($status->status) { // comment
-			$text = twitter_parse_tags($status->text);
-			$link = theme('status_time_link', $status, false);
-			$actions = theme('action_icons', $status);
-			$avatar = theme('avatar', $status->from->profile_image_url);
-			$source = $status->source ? " 来自 {$status->source}" : '';
-			$row = array(
-				"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link <small>$source</small><br />{$text}",
-			);
-		}
+		
+		$text = twitter_parse_tags($status->text);
+		$link = theme('status_time_link', $status, false);
+		$actions = theme('action_icons', $status);
+		$avatar = theme('avatar', $status->from->profile_image_url);
+		$source = $status->source ? " 来自 {$status->source}" : '';
+		$row = array(
+			"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link <small>$source</small><br />{$text}",
+		);
 		
 		if ($page != 'user' && $avatar) {
 			array_unshift($row, $avatar);
@@ -1984,19 +2003,19 @@ function theme_action_icons($status) {
 	if (!$status->status) {
 		if (setting_fetch('buttonfav', 'yes') == 'yes') {
 			if ($status->favorited == '1') {
-				$actions[] = theme('action_icon', "unfavourite/".number_format($status->id,0,'',''), 'images/star.png', '取消收藏');
+				$actions[] = theme('action_icon', "unfavourite/".number_format($status->id,0,'',''), 'images/star.png', __("UNFAV"));
 			} else {
-				$actions[] = theme('action_icon', "favourite/".number_format($status->id,0,'',''), 'images/star_grey.png', '收藏');
+				$actions[] = theme('action_icon', "favourite/".number_format($status->id,0,'',''), 'images/star_grey.png', __("FAV"));
 			}
 		}
 		if (setting_fetch('buttonrt', 'yes') == 'yes') {
-			$actions[] = theme('action_icon', "retweet/".number_format($status->id,0,'',''), 'images/retweet.png', '转发');
+			$actions[] = theme('action_icon', "repost/".number_format($status->id,0,'','')."/".number_format($status->reposts_count), 'images/retweet.png', __("RT"))."<span class='time'>{$status->reposts_count}</span>";
 		}
 		if (setting_fetch('buttonco', 'yes') == 'yes') {
-			$actions[] = theme('action_icon', "cmts/".number_format($status->id,0,'','')."/".number_format($status->comments_count), 'images/list.png', '评论')."<span class='time'>{$status->comments_count}</span> ";
+			$actions[] = theme('action_icon', "cmts/".number_format($status->id,0,'','')."/".number_format($status->comments_count), 'images/list.png', __("CM"))."<span class='time'>{$status->comments_count}</span> ";
 		}
 	} else {
-		$actions[] = theme('action_icon', "recomment/".number_format($status->status->id,0,'','')."/".number_format($status->id,0,'',''), 'images/comments.gif', 'CMS');
+		$actions[] = theme('action_icon', "recomment/".number_format($status->status->id,0,'','')."/".number_format($status->id,0,'',''), 'images/comments.gif', __("RE"));
 	}
 	
 	if (setting_fetch('buttondel', 'yes') == 'yes') {
