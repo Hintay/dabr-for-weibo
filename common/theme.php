@@ -230,6 +230,7 @@ function theme_css() {
   .from a{color:#{$c->small};}
   .retweeted {position:relative;margin-left: 20px; padding-left: 5px;}
   .retweeted_tl {position:relative; margin: 5px; padding-left: 5px;}
+  .avatartd {width:48px;}
   ".setting_fetch('css')."
 </style>";
 }

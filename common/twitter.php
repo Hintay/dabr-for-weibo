@@ -1848,7 +1848,7 @@ function theme_followers($feed, $hide_pagination = false) {
 		$name = theme('full_name', $user);
 		$tweets_per_day = twitter_tweets_per_day($user);
 		$rows[] = array(
-			theme('avatar', $user->profile_image_url),
+			"</td><td class='avatartd'>".theme('avatar', $user->profile_image_url)."</td>",
 			"{$name} - {$user->location}<br />" .
 			"<small>{$user->description}<br />" .
 			"{$user->statuses_count} 条微博 | 关注 {$user->friends_count} 人 | 粉丝 {$user->followers_count} 人 | 每天约 {$tweets_per_day} 条微博</small>"
