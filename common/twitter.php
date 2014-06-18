@@ -946,7 +946,7 @@ function theme_directs_menu() {
 }
 
 function theme_cmts_menu() {
-	return '<p><a href="cmts/to_me">收到的评论</a> | <a href="cmts/by_me">发出的评论</a> | <a href="cmts/mentions">提到我的评论</a></p>';
+	return '<p><a href="cmts/to_me">'.__("To Me").'</a> | <a href="cmts/by_me">'.__("By Me").'</a> | <a href="cmts/mentions">'.__("Mention Me").'</a></p>';
 }
 
 function theme_directs_form($to) {
@@ -1108,7 +1108,7 @@ function theme_retweet_form($status) {
 
 function theme_recomment_form($in_reply_to_id, $reply_id, $text = '') {
 	if (user_is_authenticated()) {
-		return "<form method='post' action='weibo-recomment'><input name='comment' value='{$text}' maxlength='140' /> <input name='id' value='{$in_reply_to_id}' type='hidden' /><input name='cid' value='{$reply_id}' type='hidden' /><input type='submit' value='回复' /></form>";
+		return "<form method='post' action='weibo-recomment'><input name='comment' value='{$text}' maxlength='140' /> <input name='id' value='{$in_reply_to_id}' type='hidden' /><input name='cid' value='{$reply_id}' type='hidden' /><input type='submit' value='".__("Reply")."' /></form>";
 	}
 }
 
@@ -1331,7 +1331,7 @@ function twitter_standard_timeline($feed, $source) {
 						$retweet_users[] = "@".$feed[$list[$idx]]->user->screen_name;
 						unset($feed[$list[$idx]]);
 					}
-					$feed[$list[0]]->text .= (" || " . implode(", " , array_unique($retweet_users)). " 也转发了 ||");
+					$feed[$list[0]]->text .= (" ||" . implode(", ".__(" Also retweeted by ") , array_unique($retweet_users)). __(" ||"));
 				}
 			}
 		case 'favourites':
@@ -1749,7 +1749,7 @@ function theme_timeline($feed)
 			$row = array(
 				"<b><a href='user/{$status->from->screen_name}'>{$status->from->screen_name}</a></b> $actions $link <small>$source</small><br />{$text}<hr />
 				<b><a href='user/{$status->reply_comment->user->screen_name}'>{$status->reply_comment->user->screen_name}</a></b> $actions_reply $link_reply <small>$source_reply</small><br />{$replytext} <hr />
-				<div class='retweeted_tl'><small>原博：</small><br /><span class='avatar'>$avatar_comment</span> <span class='status shift'><b><a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $actions2 $link2 <small>$source2</small><br />{$srctext}</span></div>",
+				<div class='retweeted_tl'><small>".__("Original:")."</small><br /><span class='avatar'>$avatar_comment</span> <span class='status shift'><b><a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $actions2 $link2 <small>$source2</small><br />{$srctext}</span></div>",
 			);
 			}elseif($status->status->retweeted_status){//提到的带转发评论
 			$row = array(
