@@ -281,7 +281,8 @@ function twitter_upload_page($query) {
 	} elseif ($query[1] == 'fail') {
 		$content = '<p>'.__("Weibo pic upload failed. No idea why!").'</p>';
 	} else {
-		$content = '<form method="post" action="upload" enctype="multipart/form-data">'.__("Image: ").'<input type="file" name="media" /><br />'.__("Content: ").'<textarea name="message" cols="80" rows="6"></textarea><br /><input type="submit" value="'.__("Send").'" /></form>';
+		$content = '<form method="post" action="upload" enctype="multipart/form-data">'.__("Image: ").'<input type="file" name="media" /><br />'.__("Content: ").'<textarea name="message" cols="80" rows="6" id="message"></textarea><br /><input type="submit" value="'.__("Send").'" /><span id="remaining">140</span></form>';
+		$content .= js_counter("message");
 	}
 	return theme('page', __('Upload Picture'), $content);
 }
