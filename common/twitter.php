@@ -1519,9 +1519,9 @@ function theme_favourites($feed)
 					$thumbnail_pic = $pic_urls->thumbnail_pic;
 					$original_pic = str_replace("thumbnail", "large", $thumbnail_pic);
 					if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-						$srctext .= "<a href='{$original_pic}' target=_blank>[".__("Picture")."]</a>";
+						$srctext .= "<a href='{$original_pic}' target=_blank>[".__("Picture")."]</a> ";
 					}else{
-						$srctext .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a>";
+						$srctext .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a> ";
 					}
 				}
 			}
@@ -1558,9 +1558,9 @@ function theme_favourites($feed)
 					$thumbnail_pic = $pic_urls->thumbnail_pic;
 					$original_pic = str_replace("thumbnail", "large", $thumbnail_pic);
 					if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-						$text .= "<a href='{$original_pic}' target=_blank>[图片]</a>";
+						$text .= "<a href='{$original_pic}' target=_blank>[图片]</a> ";
 					}else{
-						$text .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a>";
+						$text .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a> ";
 					}
 				}
 			}
