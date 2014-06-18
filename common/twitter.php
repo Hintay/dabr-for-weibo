@@ -1514,10 +1514,15 @@ function theme_favourites($feed)
 			$srctext = twitter_parse_tags($status->status->retweeted_status->text);
 			
 			if ($status->status->retweeted_status->thumbnail_pic){//缩略图
-				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-					$srctext .= "<br/> <a href='{$status->status->retweeted_status->original_pic}' target=_blank>[图片]</a>";
-				}else{
-					$srctext .= "<br/> <a href='{$status->status->retweeted_status->original_pic}' target=_blank><img src='{$status->status->retweeted_status->thumbnail_pic}' /></a>";
+				$srctext .= "<br />";
+				foreach ($status->status->retweeted_status->pic_urls as $pic_urls){
+					$thumbnail_pic = $pic_urls->thumbnail_pic;
+					$original_pic = str_replace("thumbnail", "large", $thumbnail_pic);
+					if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
+						$srctext .= "<a href='{$original_pic}' target=_blank>[".__("Picture")."]</a>";
+					}else{
+						$srctext .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a>";
+					}
 				}
 			}
 			
@@ -1541,17 +1546,22 @@ function theme_favourites($feed)
 			}
 			$row = array(
 				"<b><a href='user/{$status->status->user->screen_name}'>{$status->status->user->screen_name}</a></b> $actions $link <small>$source</small><br />{$text} <br />
-				<div class='retweeted_tl'><span class='avatar'>$avatar_retweeted</span> <span class='status shift'><b><a href='user/{$status->status->retweeted_status->user->screen_name}'>{$status->status->retweeted_status->user->screen_name}</a></b> $link2 <br />{$srctext} <small>$source2</small></span></div>",
+				<div class='retweeted_tl'><span class='avatar'>$avatar_retweeted</span> <span class='status shift'><b><a href='user/{$status->status->retweeted_status->user->screen_name}'>{$status->status->retweeted_status->user->screen_name}</a></b> $link2 <br />{$srctext} <br/><small>$source2</small></span></div>",
 			);
 			//print_r($row);	
 		}else{ // 原创
 			$text = twitter_parse_tags($status->status->text);
 			
 			if ($status->status->thumbnail_pic){//缩略图
-				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-					$text .= "<br/> <a href='{$status->status->original_pic}' target=_blank>[图片]</a> ";
-				}else{
-					$text .= "<br/> <a href='{$status->status->original_pic}' target=_blank><img src='{$status->status->thumbnail_pic}' /></a>";
+				$text .= "<br />";
+				foreach ($status->status->pic_urls as $pic_urls){
+					$thumbnail_pic = $pic_urls->thumbnail_pic;
+					$original_pic = str_replace("thumbnail", "large", $thumbnail_pic);
+					if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
+						$text .= "<a href='{$original_pic}' target=_blank>[图片]</a>";
+					}else{
+						$text .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a>";
+					}
 				}
 			}
 			
@@ -1578,9 +1588,7 @@ function theme_favourites($feed)
 			//print_r($row);	
 		}
 
-		if ($page != 'user' && $avatar) {
-			array_unshift($row, $avatar);
-		}
+		array_unshift($row, $avatar);
 		$rows[] = $row;
 	}
 	$content = theme('table', array(), $rows, array('class' => 'timeline'));
@@ -1638,24 +1646,39 @@ function theme_timeline($feed)
 			$replytext = twitter_parse_tags($status->reply_comment->text);
 			$retweetedtext = twitter_parse_tags($status->status->retweeted_status->text);
 			if ($status->status->thumbnail_pic){
-				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-					$srctext .= "<br/> <a href='{$status->status->original_pic}' target=_blank>[图片]</a>";
-				}else{
-					$srctext .= "<br/> <a href='{$status->status->original_pic}' target=_blank><img src='{$status->status->thumbnail_pic}' /></a>";
+				$srctext .= "<br />";
+				foreach ($status->status->pic_urls as $pic_urls){
+					$thumbnail_pic = $pic_urls->thumbnail_pic;
+					$original_pic = str_replace("thumbnail", "large", $thumbnail_pic);
+					if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
+						$srctext .= "<a href='{$original_pic}' target=_blank>[".__("Picture")."]</a>" ;
+					}else{
+						$srctext .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a> ";
+					}
 				}
 			}
 			if ($status->reply_comment->thumbnail_pic){
-				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-					$replytext .= "<br/> <a href='{$status->reply_comment->original_pic}' target=_blank>[图片]</a>";
-				}else{
-					$replytext .= "<br/> <a href='{$status->reply_comment->original_pic}' target=_blank><img src='{$status->reply_comment->thumbnail_pic}' /></a>";
+				$replytext .= "<br />";
+				foreach ($status->reply_comment->pic_urls as $pic_urls){
+					$thumbnail_pic = $pic_urls->thumbnail_pic;
+					$original_pic = str_replace("thumbnail", "large", $thumbnail_pic);
+					if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
+						$replytext .= "<a href='{$original_pic}' target=_blank>[".__("Picture")."]</a> ";
+					}else{
+						$replytext .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a> ";
+					}
 				}
 			}
 			if ($status->status->retweeted_status->thumbnail_pic){
-				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-					$retweetedtext .= "<br/> <a href='{$status->status->retweeted_status->original_pic}' target=_blank>[图片]</a>";
-				}else{
-					$retweetedtext .= "<br/> <a href='{$status->status->retweeted_status->original_pic}' target=_blank><img src='{$status->status->retweeted_status->thumbnail_pic}' /></a>";
+				$retweetedtext .= "<br />";
+				foreach ($status->status->retweeted_status->pic_urls as $pic_urls){
+					$thumbnail_pic = $pic_urls->thumbnail_pic;
+					$original_pic = str_replace("thumbnail", "large", $thumbnail_pic);
+					if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
+						$retweetedtext .= "<a href='{$original_pic}' target=_blank>[".__("Picture")."]</a> ";
+					}else{
+						$retweetedtext .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a> ";
+					}
 				}
 			}
 			
@@ -1723,10 +1746,15 @@ function theme_timeline($feed)
 			$reason = twitter_parse_tags($status->text);
 			$text = twitter_parse_tags($status->retweeted_status->text);
 			if ($status->retweeted_status->thumbnail_pic){
-				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-					$text .= "<br/> <a href='{$status->retweeted_status->original_pic}' target=_blank>[图片]</a>";
-				}else{
-					$text .= "<br/> <a href='{$status->retweeted_status->original_pic}' target=_blank><img src='{$status->retweeted_status->thumbnail_pic}' /></a>";
+				$text .= "<br />";
+				foreach ($status->retweeted_status->pic_urls as $pic_urls){
+					$thumbnail_pic = $pic_urls->thumbnail_pic;
+					$original_pic = str_replace("thumbnail", "large", $thumbnail_pic);
+					if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
+						$text .= "<a href='{$original_pic}' target=_blank>[".__("Picture")."]</a> ";
+					}else{
+						$text .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a> ";
+					}
 				}
 			}
             if ($status->retweeted_status->deleted) {
@@ -1749,10 +1777,15 @@ function theme_timeline($feed)
 		else{
 			$text = twitter_parse_tags($status->text);
 			if ($status->thumbnail_pic){
-				if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-					$text .= "<br/> <a href='$status->original_pic' target=_blank>[图片]</a>";
-				}else{
-					$text .= "<br/> <a href='$status->original_pic' target=_blank><img src='$status->thumbnail_pic' /></a>";
+				$text .= "<br />";
+				foreach ($status->pic_urls as $pic_urls){
+					$thumbnail_pic = $pic_urls->thumbnail_pic;
+					$original_pic = str_replace("thumbnail", "large", $thumbnail_pic);
+					if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
+						$text .= "<a href='{$original_pic}' target=_blank>[".__("Picture")."]</a> ";
+					}else{
+						$text .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a> ";
+					}
 				}
 			}
 			if (setting_fetch('buttontime', 'yes') == 'yes') {//时间

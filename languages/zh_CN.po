@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Dabr for Weibo\n"
-"POT-Creation-Date: 2014-06-17 23:17+0800\n"
-"PO-Revision-Date: 2014-06-17 23:17+0800\n"
+"POT-Creation-Date: 2014-06-18 11:20+0800\n"
+"PO-Revision-Date: 2014-06-18 11:21+0800\n"
 "Last-Translator: Hintay <hintay@me.com>\n"
 "Language-Team: Hintay <hintay@me.com>\n"
 "Language: zh_CN\n"
@@ -292,9 +292,7 @@ msgstr "内容："
 msgid "Send"
 msgstr "发送"
 
-#~ msgid "Retweet"
-#~ msgstr "转发"
-
-#, fuzzy
-#~ msgid "Comment"
-#~ msgstr "评论"
+#: common/twitter.php:1522 common/twitter.php:1654 common/twitter.php:1666
+#: common/twitter.php:1678 common/twitter.php:1754 common/twitter.php:1785
+msgid "Picture"
+msgstr "图片"
