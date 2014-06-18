@@ -43,6 +43,7 @@ menu_register(array(
 		'security' => true,
 		'callback' => 'twitter_cmts_page',
 		'accesskey' => '9',
+		'title' => __("Comments"),
 	),
 	'favourite' => array(
 		'hidden' => true,
@@ -103,15 +104,17 @@ menu_register(array(
 	'favourites' => array(
 		'security' => true,
 		'callback' =>	'twitter_favourites_page',
+		'title' => __("Favourites"),
 	),
 	'followers' => array(
 		'security' => true,
 		'callback' => 'twitter_followers_page',
+		'title' => __("Followers"),
 	),
 	'friends' => array(
 		'security' => true,
-		'security' => true,
 		'callback' => 'twitter_friends_page',
+		'title' => __("Friends"),
 	),
 	'delete' => array(
 		'hidden' => true,
@@ -155,7 +158,7 @@ menu_register(array(
 	),
 	'upload' => array(
 		'security' => true,
-		'hidden' => false,
+		'hidden' => true,
 		'callback' => 'twitter_upload_page',
 		'title' => __("Upload Picture"),
 	),
@@ -719,7 +722,7 @@ function twitter_friends_page($query) {
 	$request =  "friendships/friends";
 	$tl = twitter_process($request, array('cursor'=>$cursor, 'screen_name'=>$user));
 	$content = theme('followers', $tl);
-	theme('page', 'Friends', $content);
+	theme('page', __("Friends"), $content);
 }
 
 function twitter_followers_page($query) {
@@ -732,7 +735,7 @@ function twitter_followers_page($query) {
 	$request =  "friendships/followers";
 	$tl = twitter_process($request, array('cursor'=>$cursor, 'screen_name'=>$user));
 	$content = theme('followers', $tl);
-	theme('page', 'Followers', $content);
+	theme('page', __("Followers"), $content);
 }
 
 function twitter_blockings_page($query) {
@@ -1001,7 +1004,7 @@ function twitter_user_page($query) {
 			$tl = twitter_standard_timeline($tl->statuses, 'user');
 			$content .= theme('timeline', $tl);
 		}
-		theme('page', "用户 {$screen_name}", $content);
+		theme('page', __("User")." {$screen_name}", $content);
 	} else {
 		// TODO: user search screen
 	}
@@ -1020,7 +1023,7 @@ function twitter_favourites_page($query) {
 	$tl = twitter_standard_timeline($tl->favorites, 'favourites');
 	$content = theme('status_form');
 	$content .= theme('favourites', $tl);
-	theme('page', '收藏', $content);
+	theme('page', __("Favourites"), $content);
 }
 
 function twitter_mark_favourite_page($query) {
@@ -1213,7 +1216,7 @@ function theme_user_header($user) {
 	$raw_date_joined = strtotime($user->created_at);
 	$date_joined = date('Y-m-d', $raw_date_joined);
 	$tweets_per_day = twitter_tweets_per_day($user, 1);
-	$out = "<table><tr><td>".theme('external_link', $full_avatar, theme('avatar', $user->profile_image_url, 1))."</td>
+	$out = "<table><tr><td class='avatartd'>".theme('external_link', $full_avatar, theme('avatar', $user->profile_image_url, 1))."</td>
 <td><b>{$name}</b>
 <small>";
 	if ($user->verified == true) {
@@ -1463,8 +1466,8 @@ function theme_weibocomments($feed) //具体评论
 	}
 	$content = theme('table', array(), $rows, array('class' => 'timeline'));
 	
-		$links[] = "<a href='{$_GET['q']}?max_id=$max_id' accesskey='9'>更旧的</a> 9";
-		$content .= '<p>'.implode(' | ', $links).'</p>';
+		$links[] = "<a href='{$_GET['q']}?max_id=$max_id' accesskey='9'>".__("Older")."</a> 9";
+		$content .= '<p class="pagination">'.implode(' | ', $links).'</p>';
 	return $content;
 }
 
@@ -1817,8 +1820,8 @@ function theme_timeline($feed)
 	}
 	$content = theme('table', array(), $rows, array('class' => 'timeline'));
 	//$content .= theme('pagination');
-	$links[] = "<a href='{$_GET['q']}?max_id=".number_format($max_id,0,'','')."' accesskey='9'>更旧的</a> 9";
-	$content .= '<p>'.implode(' | ', $links).'</p>';
+	$links[] = "<a href='{$_GET['q']}?max_id=".number_format($max_id,0,'','')."' accesskey='9'>".__("Older")."</a> 9";
+	$content .= '<p class="pagination">'.implode(' | ', $links).'</p>';
 	return $content;
 }
 
@@ -1922,9 +1925,9 @@ function theme_pagination() {
 		$query = $matches[0];
 	}
 	if ($page == 0) $page = 1;
-	$links[] = "<a href='{$_GET['q']}?page=".($page+1)."$query' accesskey='9'>下一页</a> 9";
-	if ($page > 1) $links[] = "<a href='{$_GET['q']}?page=".($page-1)."$query' accesskey='8'>上一页</a> 8";
-	return '<p>'.implode(' | ', $links).'</p>';
+	$links[] = "<a href='{$_GET['q']}?page=".($page+1)."$query' accesskey='9'>".__("Older")."</a> 9";
+	if ($page > 1) $links[] = "<a href='{$_GET['q']}?page=".($page-1)."$query' accesskey='8'>".__("Newer")."</a> 8";
+	return '<p class="pagination">'.implode(' | ', $links).'</p>';
 }
 
 function theme_cursor($prev, $next) {
@@ -1933,8 +1936,8 @@ function theme_cursor($prev, $next) {
 	}
 	if ($prev and ($prev == $_GET["cursor"])) $prev -= 20;
     $links = array();
-	if ($prev) $links[] = "<a href='{$_GET['q']}?cursor=".($prev)."$query' accesskey='9'>上一页</a> 9";
-	if ($next) $links[] = "<a href='{$_GET['q']}?cursor=".($next)."$query' accesskey='8'>下一页</a> 8";
+	if ($prev) $links[] = "<a href='{$_GET['q']}?cursor=".($prev)."$query' accesskey='9'>".__("Prev")."</a> 9";
+	if ($next) $links[] = "<a href='{$_GET['q']}?cursor=".($next)."$query' accesskey='8'>".__("Next")."</a> 8";
 	return '<p>'.implode(' | ', $links).'</p>';
 }
 

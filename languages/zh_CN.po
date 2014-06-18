@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Dabr for Weibo\n"
-"POT-Creation-Date: 2014-06-18 11:20+0800\n"
-"PO-Revision-Date: 2014-06-18 11:21+0800\n"
+"POT-Creation-Date: 2014-06-18 15:49+0800\n"
+"PO-Revision-Date: 2014-06-18 15:49+0800\n"
 "Last-Translator: Hintay <hintay@me.com>\n"
 "Language-Team: Hintay <hintay@me.com>\n"
 "Language: zh_CN\n"
@@ -15,9 +15,31 @@ msgstr ""
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: browsers/desktop.php:8 common/twitter.php:160 common/twitter.php:283
+#: browsers/desktop.php:8 common/twitter.php:163 common/twitter.php:286
 msgid "Upload Picture"
 msgstr "传图"
+
+#: browsers/naiping.php:72
+msgid "in reply to"
+msgstr ""
+
+#: browsers/touch.php:19 browsers/touch.php:26 common/settings.php:191
+msgid "Home"
+msgstr "首页"
+
+#: browsers/touch.php:20 common/settings.php:192 common/settings.php:215
+#: common/twitter.php:40
+msgid "Mentions"
+msgstr "提到"
+
+#: browsers/touch.php:21 common/settings.php:193 common/settings.php:216
+#: common/twitter.php:46
+msgid "Comments"
+msgstr "评论"
+
+#: browsers/touch.php:35
+msgid "More"
+msgstr "更多"
 
 #: common/settings.php:4
 msgid "Facebook Blue"
@@ -108,39 +130,30 @@ msgstr "通过 GWT 压缩"
 msgid "Menu Settings"
 msgstr "个性化菜单选项"
 
-#: common/settings.php:194
+#: common/settings.php:189
 msgid "Choose what you want to display on the Top Bar."
 msgstr "选择你想放置在页首菜单的按钮"
 
-#: common/settings.php:195
+#: common/settings.php:190 common/twitter.php:1007
 msgid "User"
 msgstr "用户"
 
-#: common/settings.php:196
-msgid "Home"
-msgstr "首页"
-
-#: common/settings.php:197 common/settings.php:215 common/twitter.php:40
-msgid "Mentions"
-msgstr "提到"
-
-#: common/settings.php:198 common/settings.php:216
-msgid "Comments"
-msgstr "评论"
-
-#: common/settings.php:202 common/settings.php:219
+#: common/settings.php:202 common/settings.php:219 common/twitter.php:107
+#: common/twitter.php:1026
 msgid "Favourites"
 msgstr "收藏"
 
-#: common/settings.php:203 common/settings.php:221
+#: common/settings.php:203 common/settings.php:221 common/twitter.php:112
+#: common/twitter.php:738
 msgid "Followers"
 msgstr "粉丝"
 
-#: common/settings.php:204 common/settings.php:222
+#: common/settings.php:204 common/settings.php:222 common/twitter.php:117
+#: common/twitter.php:725
 msgid "Friends"
 msgstr "关注"
 
-#: common/settings.php:206 common/settings.php:228 index.php:31 index.php:38
+#: common/settings.php:206 common/settings.php:228 index.php:32 index.php:39
 msgid "Logout"
 msgstr "登出"
 
@@ -148,7 +161,7 @@ msgstr "登出"
 msgid "Choose what you want to display on the Bottom Bar."
 msgstr "选择你想放置在页尾菜单的按钮"
 
-#: common/settings.php:226 index.php:43
+#: common/settings.php:226 index.php:27 index.php:44
 msgid "About"
 msgstr "关于"
 
@@ -272,27 +285,43 @@ msgstr "重置"
 msgid " if things go horribly wrong - it will clear all settings."
 msgstr "所有设置，但您可能需要重新登录"
 
-#: common/twitter.php:277
+#: common/twitter.php:280
 msgid "Upload success."
 msgstr "上传成功。"
 
-#: common/twitter.php:279
+#: common/twitter.php:282
 msgid "Weibo pic upload failed. No idea why!"
 msgstr "微博图片上传失败"
 
-#: common/twitter.php:281
+#: common/twitter.php:284
 msgid "Image: "
 msgstr "图片："
 
-#: common/twitter.php:281
+#: common/twitter.php:284
 msgid "Content: "
 msgstr "内容："
 
-#: common/twitter.php:281
+#: common/twitter.php:284
 msgid "Send"
 msgstr "发送"
 
-#: common/twitter.php:1522 common/twitter.php:1654 common/twitter.php:1666
-#: common/twitter.php:1678 common/twitter.php:1754 common/twitter.php:1785
+#: common/twitter.php:1469 common/twitter.php:1823 common/twitter.php:1928
+msgid "Older"
+msgstr "更旧的"
+
+#: common/twitter.php:1525 common/twitter.php:1657 common/twitter.php:1669
+#: common/twitter.php:1681 common/twitter.php:1757 common/twitter.php:1788
 msgid "Picture"
 msgstr "图片"
+
+#: common/twitter.php:1929
+msgid "Newer"
+msgstr "更新的"
+
+#: common/twitter.php:1939
+msgid "Prev"
+msgstr "上一页"
+
+#: common/twitter.php:1940
+msgid "Next"
+msgstr "下一页"

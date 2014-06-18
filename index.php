@@ -24,6 +24,7 @@ require('common/settings.php');
 menu_register(array (
 	'about' => array (
 		'callback' => 'about_page',
+		'title' => __("About"),
 	),
 	'logout' => array (
 		'security' => true,

@@ -211,7 +211,7 @@ function theme_css() {
 	$c = theme('colours');
 	return "<style type='text/css'>
   a{color:#{$c->links}}table{border-collapse:collapse}
-  form{margin:.3em;}td{vertical-align:top;padding:0.3em}img{border:0}small,small a{color:#{$c->small}}
+  form{margin:.3em;}td{vertical-align:top;padding:0.3em;}img{border:0}small,small a{color:#{$c->small}}
   body{background:#{$c->bodybg};
   color:#{$c->bodyt};margin:0;font:90% sans-serif}tr.odd td{background:#{$c->odd}}tr.even td{background:#{$c->even}}
   .odd{background:#{$c->odd}}
@@ -230,7 +230,7 @@ function theme_css() {
   .from a{color:#{$c->small};}
   .retweeted {position:relative;margin-left: 20px; padding-left: 5px;}
   .retweeted_tl {position:relative; margin: 5px; padding-left: 5px;}
-  .avatartd {width:48px;}
+  .avatartd {width:0;}
   ".setting_fetch('css')."
 </style>";
 }
