@@ -316,16 +316,16 @@ function twitter_process($url, $post_data = false, $method = "get") {
 			if ($json) return $json;
 			return $response;
 		case 0:
-			theme('error', '<h2>连接超时</h2><p>请稍等几分钟后刷新重新连接。</p>'."<p>$url</p><pre>".var_export(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), true).'</pre>');
+			theme('error', '<h2>'.__("Weibo timed out").'</h2><p>'.__("Please try again in a minute.").'</p>'."<p>$url</p><pre>".var_export(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), true).'</pre>');
 		case 403:
 			$result = json_decode($response);
 			$result = $result->error ? $result->error : $response;
-			theme('error', "<h2>因微博接口限制，该功能暂不可用</h2><p>{$c->oauth->http_info['http_code']}: {$result}</p><hr><p>$url</p>");
+			theme('error', "<h2>".__("Weibo API limited, this functionality is not available.")."</h2><p>{$c->oauth->http_info['http_code']}: {$result}</p><hr><p>$url</p>");
 		default:
 			$result = json_decode($response);
 			$result = $result->error ? $result->error : $response;
-			if (strlen($result) > 500) $result = '微博API返回结果出现错误';
-			theme('error', "<h2>调用微博API时遇到错误</h2><p>{$c->oauth->http_info['http_code']}: {$result}</p><hr><p>$url</p><pre>".var_export(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), true).'</pre>');
+			if (strlen($result) > 500) $result = __('Something broke on Weibo\'s end.');
+			theme('error', "<h2>".__("An error occured while calling the Weibo API")."</h2><p>{$c->oauth->http_info['http_code']}: {$result}</p><hr><p>$url</p><pre>".var_export(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), true).'</pre>');
 	}
 }
 
@@ -578,7 +578,7 @@ function weibo_recomment_page($query) {
         $content .= theme_recomment_form($id,$id2);
         $tl = twitter_standard_timeline($tl->comments, 'cmts');
         $content .= theme('weibocomments', $tl);
-		theme('page', '评论', $content);
+		theme('page', __('Reply'), $content);
 	}
 }
 /*
@@ -692,36 +692,36 @@ function twitter_confirmation_page($query)
 			if (twitter_block_exists($target_id)) //Is the target blocked by the user?
 			{
 				$action = 'unblock';
-				$content	= "<p>您确定你要 <strong>取消屏蔽 $target</strong>?</p>";
-				$content .= '<ul><li>如果对方重新关注你,那么你的消息会显示在他们的首页上。</li><li>您<em>可以</em>随时重新屏蔽对方。</li></ul>';
+				$content	= "<p>".__("Are you really sure you want to ")."<strong>".__("Unblock ")."$target</strong>?</p>";
+				$content .= __('<ul><li>They will see your updates on their home page if they follow you again.</li><li>You <em>can</em> block them again if you want.</li></ul>');
 			}
 			else
 			{
-				$content = "<p>您确定你要 <strong>$action $target</strong>?</p>";
-				$content .= "<ul><li>您将不会出现在他们的好友列表中</li><li>他们将无法看到您的消息</li><li>他们将无法关注您</li><li>您<em>可以</em>取消屏蔽他们但您需要重新关注他们。</li></ul>";
+				$content = "<p>".__("Are you really sure you want to ")."<strong>$action $target</strong>?</p>";
+				$content .= __("<ul><li>You won't show up in their list of friends</li><li>They won't see your updates on their home page</li><li>They won't be able to follow you</li><li>You <em>can</em> unblock them but you will need to follow them again afterwards</li></ul>");
 			}
 			break;
 
 		case 'delete':
-			$content = '<p>你确定要删除这条微博？</p>';
-			$content .= "<ul><li>微博ID: <strong>$target</strong></li><li>删除后将无法恢复。</li></ul>";
+			$content = '<p>'.__('Are you really sure you want to delete your weibo?').'</p>';
+			$content .= "<ul><li>".__("Weibo ID: ")."<strong>$target</strong></li><li>".__("There is no way to undo this action.")."</li></ul>";
 			break;
 		
 		case 'delcmt':
-			$content = '<p>你确定要删除这条评论？</p>';
-			$content .= "<ul><li>评论ID: <strong>$target</strong></li><li>删除后将无法恢复。</li></ul>";
+			$content = '<p>'.__('Are you really sure you want to delete your comment?').'</p>';
+			$content .= "<ul><li>".__("Comment ID: ")."<strong>$target</strong></li><li>".__("There is no way to undo this action.")."</li></ul>";
 			break;
 
 		case 'spam':
-			$content	= "<p>您真的想要举报 <strong>$target</strong> 吗？</p>";
-			$content .= "<p>他们将不能关注您。</p>";
+			$content	= "<p>".__("Are you really sure you want to report ")."<strong>$target</strong>".__(" as a spammer?")." </p>";
+			$content .= "<p>".__("They will also be blocked from following you.")."</p>";
 			break;
 
 	}
 	$content .= "<form action='$action/$target' method='post'>
-						<input type='submit' value='确定' />
+						<input type='submit' value='".__("Yes please")."' />
 					</form>";
-	theme('Page', '您确定吗', $content);
+	theme('Page', __('Confirm'), $content);
 }
 
 function twitter_friends_page($query) {
@@ -846,7 +846,7 @@ function twitter_replies_page() {
 	$tl = twitter_standard_timeline($tl->statuses, 'mentions');
 	$content = theme('status_form');
 	$content .= theme('timeline', $tl);
-	theme('page', '提到我的', $content);
+	theme('page', __('Mentions'), $content);
 }
 
 function twitter_cmts_page($query) {
@@ -921,7 +921,7 @@ function twitter_directs_page($query) {
 		case 'create':
 			$to = $query[2];
 			$content = theme('directs_form', $to);
-			theme('page', '新私信', $content);
+			theme('page', __('Create DM'), $content);
 
 		case 'send':
 			twitter_ensure_post_action();
@@ -936,7 +936,7 @@ function twitter_directs_page($query) {
 			$tl = twitter_standard_timeline(twitter_process($request), 'directs_sent');
 			$content = theme_directs_menu();
 			$content .= theme('timeline', $tl);
-			theme('page', '已发送', $content);
+			theme('page', __('DM Sent'), $content);
 
 		case 'inbox':
 		default:
@@ -944,7 +944,7 @@ function twitter_directs_page($query) {
 			$tl = twitter_standard_timeline(twitter_process($request, $_GET), 'directs_inbox');
 			$content = theme_directs_menu();
 			$content .= theme('timeline', $tl);
-			theme('page', '收件箱', $content);
+			theme('page', __('DM Inbox'), $content);
 	}
 }
 
@@ -990,7 +990,7 @@ function twitter_search_page() {
 		}
 		$content .= theme('timeline', $tl);
 	}
-	theme('page', '搜索', $content);
+	theme('page', __('Search'), $content);
 }
 
 function twitter_search($search_query) {
@@ -1077,7 +1077,7 @@ function twitter_home_page() {
 	$tl = twitter_standard_timeline($tl->statuses, 'friends');
 	$content = theme('status_form');
 	$content .= theme('timeline', $tl);
-	theme('page', '首页', $content);
+	theme('page', __('Home'), $content);
 }
 
 function twitter_hashtag_page($query) {
@@ -1199,33 +1199,33 @@ function theme_user_header($user) {
 <td><b>{$name}</b>
 <small>";
 	if ($user->verified == true) {
-		$out .= '<br /><strong>微博认证</strong>';
+		$out .= '<br /><strong>'.__("Verified Account").'</strong>';
 	}
 	if ($user->protected == true) {
 		$out .= '<br /><strong>Private/Protected Tweets</strong>';
 	}
 	$link = $link ? "<br />Link: ".$link : "";
 	$out .= "
-<br />个人简介：{$user->description}
+<br />".__("Bio: ")."{$user->description}
 {$link}
-<br />所在位置：{$user->location}
-<br />于{$date_joined}注册，每天约{$tweets_per_day}条微博。
+<br />".__("Location: ")."{$user->location}
+<br />".__("Joined: ")."{$date_joined}".__(" (~")."{$tweets_per_day}".__(" weibos per day)")."
 </small>
 <br />
-{$user->statuses_count} 微博 |
-<a href='followers/{$user->screen_name}'>{$user->followers_count} 粉丝</a> ";
+{$user->statuses_count}".__(" weibos")." |
+<a href='followers/{$user->screen_name}'>{$user->followers_count}".__(" followers")."</a> ";
 
 	if ($user->following !== true) {
-		$out .= "| <a href='follow/{$user->screen_name}'>加关注</a>";
+		$out .= "| <a href='follow/{$user->screen_name}'>".__("Follow")."</a>";
 	} else {
-		$out .= " | <a href='unfollow/{$user->screen_name}'>取消关注</a>";
+		$out .= " | <a href='unfollow/{$user->screen_name}'>".__("Unfollow")."</a>";
 	}
 	
 	//We need to pass the User Name and the User ID.	The Name is presented in the UI, the ID is used in checking
 	//$out.= " | <a href='confirm/block/{$user->screen_name}/{$user->id}'>屏蔽 | 取消屏蔽</a>";
 	//$out .= " | <a href='confirm/spam/{$user->screen_name}/{$user->id}'>举报</a>";
-	$out.= " | <a href='friends/{$user->screen_name}'>{$user->friends_count} 关注</a>
-| <a href='favourites/{$user->screen_name}'>{$user->favourites_count} 收藏</a>
+	$out.= " | <a href='friends/{$user->screen_name}'>{$user->friends_count}".__(" friends")."</a>
+| <a href='favourites/{$user->screen_name}'>{$user->favourites_count}".__(" favourites")."</a>
 </td></table>";
 // | <a href='directs/create/{$user->screen_name}'>发私信</a>
 	return $out;
@@ -1244,10 +1244,14 @@ function theme_status_time_link($status, $is_link = true) {
 	$time = strtotime($status->created_at);
 	if ($time > 0) {
 		/*if (twitter_date('dmy') == twitter_date('dmy', $time)) {
-			$out = format_interval(time() - $time, 1). '前';
+			$out = format_interval(time() - $time, 1). __(" ago");
 		} else {*/
 		if (setting_fetch('timestamp') == 'yes') {
-			$out = twitter_date('n月d日 H:i:s', ($time + 60 * 60 * 8) );
+			if((get_locale() == "zh_CN") || (get_locale() == "zh_TW")){
+				$out = twitter_date('n月d日 H:i:s', ($time + 60 * 60 * 8) );
+			}else{
+				$out = twitter_date('M d H:i:s', ($time + 60 * 60 * 8) );
+			}
 		} else {
 			$out = format_interval(time() - $time, 1). __(" ago");
 		}
@@ -1711,7 +1715,7 @@ function theme_timeline($feed)
 				$text .= theme_status_pics($status->retweeted_status->pic_urls);
 			}
             if ($status->retweeted_status->deleted) {
-                $text = "原微博已被删除，试试 <a target='_blank' href='https://freeweibo.com/weibo/{$status->retweeted_status->mid}'>freeweibo</a> 吧。";
+                $text = __("Original weibo is deleted. try ")."<a target='_blank' href='https://freeweibo.com/weibo/{$status->retweeted_status->mid}'>".__("freeweibo</a>.");
             }
 			if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
 				$source = theme_status_from($status->source);
@@ -1784,11 +1788,11 @@ function theme_followers($feed, $hide_pagination = false) {
 			"</td><td class='avatartd'>".theme('avatar', $user->profile_image_url)."</td>",
 			"{$name} - {$user->location}<br />" .
 			"<small>{$user->description}<br />" .
-			"{$user->statuses_count} 条微博 | 关注 {$user->friends_count} 人 | 粉丝 {$user->followers_count} 人 | 每天约 {$tweets_per_day} 条微博</small>"
+			"{$user->statuses_count}".__(" weibos | ")."{$user->friends_count}".__(" friends | ")."{$user->followers_count}".__(" followers | ~")."{$tweets_per_day}".__(" tweets per day")."</small>"
 		);
 		}
 	}else{
-		return '<p>因为微博接口限制，无法显示的内容</p>';
+		return '<p>'.__("Weibo API limited, this content is not available.").'</p>';
 	}
 	$content = theme('table', array(), $rows, array('class' => 'followers'));
 	#if(FILE_IO) file_put_contents('/tmp/urls', $feed->previous_cursor.":". $feed->next_cursor."\n", FILE_APPEND);
@@ -1806,7 +1810,7 @@ function theme_full_name($user) {
 }
 
 function theme_no_tweets() {
-	return '<p>因为微博接口限制，没有可显示的微博</p>';
+	return '<p>'.__("Weibo API limited, can not display any weibo.").'</p>';
 }
 
 function theme_search_results($feed) {
