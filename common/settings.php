@@ -196,7 +196,7 @@ function settings_page($args) {
 	$content .= '<label>　<input type="checkbox" name="tophome" value="yes" '. (setting_fetch('tophome', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Home").'</label><br />';
 	$content .= '<label>　<input type="checkbox" name="topreplies" value="yes" '. (setting_fetch('topreplies', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Mentions").'</label><br />';
 	$content .= '<label>　<input type="checkbox" name="topcomments" value="yes" '. (setting_fetch('topcomments', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Comments").'</label><br />';
-	if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'mobile') || (setting_fetch('browser') == 'worksafe') || (setting_fetch('browser') == 'text') || (setting_fetch('browser') == 'naiping')) {
+	if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser', 'desktop') == 'desktop') || (setting_fetch('browser', 'desktop') == 'mobile') || (setting_fetch('browser', 'desktop') == 'worksafe') || (setting_fetch('browser', 'desktop') == 'text') || (setting_fetch('browser', 'desktop') == 'naiping')) {
 		$content .= '<span>';
 	}else{
 		$content .= '<span style="display:none;">';
@@ -211,7 +211,7 @@ function settings_page($args) {
 	$content .= '<label>　<input type="checkbox" name="toplogout" value="yes" '. (setting_fetch('toplogout', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Logout").'</label><br />';
 	$content .= '</span>';
 	
-	if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'mobile') || (setting_fetch('browser') == 'text') || (setting_fetch('browser') == 'naiping')) {
+	if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser', 'desktop') == 'desktop') || (setting_fetch('browser', 'desktop') == 'mobile') || (setting_fetch('browser', 'desktop') == 'text') || (setting_fetch('browser', 'desktop') == 'naiping')) {
 		$content .= '<span>';
 	}else{
 		$content .= '<span style="display:none;">';
@@ -235,9 +235,9 @@ function settings_page($args) {
 	$content .= '</span>';
 	
 	$content .= '<p><b>'.__("Status Settings").'</b></p>';
-	$content .= '<label>　<input type="checkbox" name="buttonintext" value="yes" '. (setting_fetch('buttonintext', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Show @/DM/RT/FAV/DEL As Text instead of images").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="buttonintext" value="yes" '. (setting_fetch('buttonintext') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Show @/DM/RT/FAV/DEL As Text instead of images").'</label><br />';
 	$content .= '<label>　<input type="checkbox" name="avataro" value="yes"'. (setting_fetch('avataro') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Do Not Show Avatar").'</label><br/>';
-	if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'text')) {
+	if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser', 'desktop') == 'text')) {
 		$content .= '<span style="display:none;">';
 	}else{
 		$content .= '<span>';

@@ -384,7 +384,7 @@ function twitter_parse_tags($input)
 	$out = $autolink->autolink($out);
 
 	//If this is worksafe mode - don't display any images
-	if (!in_array(setting_fetch('browser'), array('text', 'worksafe')))
+	if (!in_array(setting_fetch('browser', 'desktop'), array('text', 'worksafe')))
 	{
 		//Add in images
 		$out = twitter_embed_thumbnails($out);
@@ -476,7 +476,7 @@ function generate_thumbnail($query) {
 			if (!is_numeric($id)) $id = flickr_decode($id);
 			$url = "http://api.flickr.com/services/rest/?method=flickr.photos.getSizes&photo_id=$id&api_key=".FLICKR_API_KEY;
 			$flickr_xml = twitter_fetch($url);
-			if (setting_fetch('browser') == 'mobile') {
+			if (setting_fetch('browser', 'desktop') == 'mobile') {
 				$pattern = '#"(http://.*_t\.jpg)"#';
 			} else {
 				$pattern = '#"(http://.*_m\.jpg)"#';
@@ -1350,7 +1350,7 @@ function theme_status_pics($status)
 		$thumbnail_pic = $pic_urls->thumbnail_pic;
 		$square_pic = str_replace("thumbnail", "square", $thumbnail_pic);
 		$original_pic = str_replace("thumbnail", "large", $thumbnail_pic);
-		if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
+		if ((setting_fetch('piclink') == 'yes') || (setting_fetch('browser', 'desktop') == 'text')) {
 			$text .= "<a href='{$original_pic}' target=_blank>[".__("Picture")."]</a> ";
 		}else{
 			if (count($status) == 1){
@@ -1437,7 +1437,7 @@ function theme_status($status) {
 
 function theme_status_from($from)
 {
-	if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'touch') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'naiping')) {
+	if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser', 'desktop') == 'touch') || (setting_fetch('browser', 'desktop') == 'desktop') || (setting_fetch('browser', 'desktop') == 'naiping')) {
 		$from = $from ? __("from ")."{$from}" : '';
 	}else{
 		$from = $from ? __("from ").strip_tags($from) ."" : '';
@@ -1922,7 +1922,7 @@ function theme_action_icons($status) {
 
 function theme_action_icon($url, $image_url, $text) {
 	// alt attribute left off to reduce bandwidth by about 720 bytes per page
-	if (setting_fetch('buttonintext', 'yes') == 'yes') {
+	if (setting_fetch('buttonintext') == 'yes') {
 		if ($text == 'MAP')
 		{
 			return "<a href='$url' alt='$text' target='_blank'>$text</a>";
