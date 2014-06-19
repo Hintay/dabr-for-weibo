@@ -1113,91 +1113,6 @@ function theme_recomment_form($in_reply_to_id, $reply_id, $text = '') {
 	}
 }
 
-function theme_comments_status($status) {
-	if (setting_fetch('buttontime', 'yes') == 'yes') {//时间
-		$time_since = theme('status_time_link', $status, false);
-		$time_retweeted = theme('status_time_link', $status->retweeted_status, false);
-	}
-	$parsed = twitter_parse_tags($status->text);
-	$avatar = theme('avatar', $status->user->profile_image_url);
-	$actions = theme('action_icons', $status);
-	
-	if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
-		if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'touch') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'naiping')) {
-			$source = $status->source ? __("from ")."{$status->source}" : '';
-			$source_retweeted = $status->retweeted_status->source ? __("from ")."{$status->retweeted_status->source}" : '';
-		}else{
-			$source = $status->source ? __("from ").strip_tags($status->source)."" : '';
-			$source_retweeted = $status->retweeted_status->source ? __("from ").strip_tags($status->retweeted_status->source)."" : '';
-		}
-	}
-	
-	if ($status->thumbnail_pic){
-		if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-			$parsed .= "<br/> <a href='{$status->original_pic}' target=_blank>[".__("Picture")."]</a>";
-		}else{
-			$parsed .= "<br/> <a href='{$status->original_pic}' target=_blank><img src='{$status->thumbnail_pic}' /></a>";
-		}
-	}
-	
-	
-	$out = "<div class='timeline'>\n";
-	$out .= " <div class='tweet odd'>\n";
-	$out .= "	<span class='avatar'>$avatar</span>\n";
-	if($status->retweeted_status){
-		$retweeted_text = twitter_parse_tags($status->retweeted_status->text);
-		$avatar_retweeted = theme('avatar', $status->retweeted_status->user->profile_image_url);
-		$actions_retweeted = theme('action_icons', $status->retweeted_status);
-		if ($status->retweeted_status->thumbnail_pic){
-			if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-				$retweeted_text .= "<br/> <a href='{$status->retweeted_status->original_pic}' target=_blank>[".__("Picture")."]</a>";
-			}else{
-				$retweeted_text .= "<br/> <a href='{$status->retweeted_status->original_pic}' target=_blank><img src='{$status->retweeted_status->thumbnail_pic}' /></a>";
-			}
-		}
-	
-		$out .= "	<span class='status shift'><b><a href='user/{$status->user->screen_name}'>{$status->user->screen_name}</a></b> $actions $time_since <small>$source</small><br />$parsed </span>
-		<div class='retweeted'><span class='avatar'>$avatar_retweeted</span>
-		<span class='status shift'><b><a href='user/{$status->retweeted_status->user->screen_name}'>{$status->retweeted_status->user->screen_name}</a></b> $actions_retweeted $time_retweeted <small>$source_retweeted</small><br/>$retweeted_text</span></div>\n";
-	}else{
-		$out .= "	<span class='status shift'><b><a href='user/{$status->user->screen_name}'>{$status->user->screen_name}</a></b> $actions $time_since <small>$source</small><br />$parsed</span>\n";
-	}
-	$out .= " </div>\n";
-	$out .= "</div>\n";
-	if (user_is_current_user($status->user->screen_name)) {
-		$out .= "<form action='delete/{$status->id}' method='post'><input type='submit' value='Delete without confirmation' /></form>";
-	}
-	return $out;
-}
-
-function theme_status($status) {
-	$time_since = theme('status_time_link', $status);
-	$parsed = twitter_parse_tags($status->text);
-	$avatar = theme('avatar', $status->user->profile_image_url);
-
-	$out = theme('status_form', "@{$status->user->screen_name} ");
-	$out .= "<div class='timeline'>\n";
-	$out .= " <div class='tweet odd'>\n";
-	$out .= "	<span class='avatar'>$avatar</span>\n";
-	$out .= "	<span class='status shift'><b><a href='user/{$status->user->screen_name}'>{$status->user->screen_name}</a></b> $time_since <br />$parsed</span>\n";
-    
-    if ($status->retweeted_status) {
-        $source2 = $status->retweeted_status->source ? " from {$status->retweeted_status->source}" : '';
-        $text = twitter_parse_tags($status->retweeted_status->text);
-        if ($status->retweeted_status->deleted) {
-            $text = "Original weibo is deleted. try <a target='_blank' href='https://freeweibo.com/weibo/{$status->retweeted_status->mid}'>freeweibo</a>.";
-        }
-        $row = "原文<br/> <b> <a href='user/{$status->retweeted_status->user->screen_name}'>{$status->retweeted_status->user->screen_name}</a></b> <br />{$text} <small>$source2</small>" ;
-        $out.= $row; 
-    }
-    $out .= " </div>\n";
-	$out .= "</div>\n";
-	if (user_is_current_user($status->user->screen_name)) {
-		$out .= "<form action='delete/{$status->id}' method='post'><input type='submit' value='Delete without confirmation' /></form>";
-	}
-	return $out;
-}
-
 function theme_retweet($status) {
 	$text = "{$status->text}";
 	$length = function_exists('mb_strlen') ? mb_strlen($text,'UTF-8') : strlen($text);
@@ -1422,6 +1337,103 @@ function twitter_user_info($username = null) {
 	return $user;
 }
 
+function theme_status_pics($status)
+{
+	$text = "<br />";
+	foreach ($status as $pic_urls){
+		$thumbnail_pic = $pic_urls->thumbnail_pic;
+		$square_pic = str_replace("thumbnail", "square", $thumbnail_pic);
+		$original_pic = str_replace("thumbnail", "large", $thumbnail_pic);
+		if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
+			$text .= "<a href='{$original_pic}' target=_blank>[".__("Picture")."]</a> ";
+		}else{
+			if (count($status) == 1){
+				$text .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a> ";
+			}else{
+				$text .= "<a href='{$original_pic}' target=_blank><img src='{$square_pic}' /></a> ";
+			}
+		}
+	}
+	return $text;
+}
+
+function theme_comments_status($status) {//评论页状态
+	if (setting_fetch('buttontime', 'yes') == 'yes') {//时间
+		$time_since = theme('status_time_link', $status, false);
+		$time_retweeted = theme('status_time_link', $status->retweeted_status, false);
+	}
+	$parsed = twitter_parse_tags($status->text);
+	$avatar = theme('avatar', $status->user->profile_image_url);
+	$actions = theme('action_icons', $status);
+	
+	if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
+		if ((substr($_GET['q'],0,4) == 'user') || (setting_fetch('browser') == 'touch') || (setting_fetch('browser') == 'desktop') || (setting_fetch('browser') == 'naiping')) {
+			$source = $status->source ? __("from ")."{$status->source}" : '';
+			$source_retweeted = $status->retweeted_status->source ? __("from ")."{$status->retweeted_status->source}" : '';
+		}else{
+			$source = $status->source ? __("from ").strip_tags($status->source)."" : '';
+			$source_retweeted = $status->retweeted_status->source ? __("from ").strip_tags($status->retweeted_status->source)."" : '';
+		}
+	}
+	
+	if ($status->thumbnail_pic){
+		$parsed .= theme_status_pics($status->pic_urls);
+	}
+	
+	
+	$out = "<div class='timeline'>\n";
+	$out .= " <div class='tweet odd'>\n";
+	$out .= "	<span class='avatar'>$avatar</span>\n";
+	if($status->retweeted_status){
+		$retweeted_text = twitter_parse_tags($status->retweeted_status->text);
+		$avatar_retweeted = theme('avatar', $status->retweeted_status->user->profile_image_url);
+		$actions_retweeted = theme('action_icons', $status->retweeted_status);
+		if ($status->retweeted_status->thumbnail_pic){
+			$retweeted_text .= theme_status_pics($status->retweeted_status->pic_urls);
+		}
+	
+		$out .= "	<span class='status shift'><b><a href='user/{$status->user->screen_name}'>{$status->user->screen_name}</a></b> $actions $time_since <small>$source</small><br />$parsed </span>
+		<div class='retweeted'><span class='avatar'>$avatar_retweeted</span>
+		<span class='status shift'><b><a href='user/{$status->retweeted_status->user->screen_name}'>{$status->retweeted_status->user->screen_name}</a></b> $actions_retweeted $time_retweeted <small>$source_retweeted</small><br/>$retweeted_text</span></div>\n";
+	}else{
+		$out .= "	<span class='status shift'><b><a href='user/{$status->user->screen_name}'>{$status->user->screen_name}</a></b> $actions $time_since <small>$source</small><br />$parsed</span>\n";
+	}
+	$out .= " </div>\n";
+	$out .= "</div>\n";
+	if (user_is_current_user($status->user->screen_name)) {
+		$out .= "<form action='delete/{$status->id}' method='post'><input type='submit' value='Delete without confirmation' /></form>";
+	}
+	return $out;
+}
+
+function theme_status($status) {
+	$time_since = theme('status_time_link', $status);
+	$parsed = twitter_parse_tags($status->text);
+	$avatar = theme('avatar', $status->user->profile_image_url);
+
+	$out = theme('status_form', "@{$status->user->screen_name} ");
+	$out .= "<div class='timeline'>\n";
+	$out .= " <div class='tweet odd'>\n";
+	$out .= "	<span class='avatar'>$avatar</span>\n";
+	$out .= "	<span class='status shift'><b><a href='user/{$status->user->screen_name}'>{$status->user->screen_name}</a></b> $time_since <br />$parsed</span>\n";
+    
+    if ($status->retweeted_status) {
+        $source2 = $status->retweeted_status->source ? " from {$status->retweeted_status->source}" : '';
+        $text = twitter_parse_tags($status->retweeted_status->text);
+        if ($status->retweeted_status->deleted) {
+            $text = "Original weibo is deleted. try <a target='_blank' href='https://freeweibo.com/weibo/{$status->retweeted_status->mid}'>freeweibo</a>.";
+        }
+        $row = "原文<br/> <b> <a href='user/{$status->retweeted_status->user->screen_name}'>{$status->retweeted_status->user->screen_name}</a></b> <br />{$text} <small>$source2</small>" ;
+        $out.= $row; 
+    }
+    $out .= " </div>\n";
+	$out .= "</div>\n";
+	if (user_is_current_user($status->user->screen_name)) {
+		$out .= "<form action='delete/{$status->id}' method='post'><input type='submit' value='Delete without confirmation' /></form>";
+	}
+	return $out;
+}
+
 function theme_weibocomments($feed) //具体评论
 {
 	if (count($feed) == 0) return theme('no_tweets');
@@ -1544,16 +1556,7 @@ function theme_favourites($feed)
 			$srctext = twitter_parse_tags($status->status->retweeted_status->text);
 			
 			if ($status->status->retweeted_status->thumbnail_pic){//缩略图
-				$srctext .= "<br />";
-				foreach ($status->status->retweeted_status->pic_urls as $pic_urls){
-					$thumbnail_pic = $pic_urls->thumbnail_pic;
-					$original_pic = str_replace("thumbnail", "large", $thumbnail_pic);
-					if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-						$srctext .= "<a href='{$original_pic}' target=_blank>[".__("Picture")."]</a> ";
-					}else{
-						$srctext .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a> ";
-					}
-				}
+				$srctext .= theme_status_pics($status->status->retweeted_status->pic_urls);
 			}
 			
 			if (setting_fetch('buttontime', 'yes') == 'yes') {//时间
@@ -1583,16 +1586,7 @@ function theme_favourites($feed)
 			$text = twitter_parse_tags($status->status->text);
 			
 			if ($status->status->thumbnail_pic){//缩略图
-				$text .= "<br />";
-				foreach ($status->status->pic_urls as $pic_urls){
-					$thumbnail_pic = $pic_urls->thumbnail_pic;
-					$original_pic = str_replace("thumbnail", "large", $thumbnail_pic);
-					if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-						$text .= "<a href='{$original_pic}' target=_blank>[".__("Picture")."]</a> ";
-					}else{
-						$text .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a> ";
-					}
-				}
+				$text .= theme_status_pics($status->status->pic_urls);
 			}
 			
 			if (setting_fetch('buttontime', 'yes') == 'yes') {//时间
@@ -1679,40 +1673,13 @@ function theme_timeline($feed)
 			$replytext = twitter_parse_tags($status->reply_comment->text);
 			$retweetedtext = twitter_parse_tags($status->status->retweeted_status->text);
 			if ($status->status->thumbnail_pic){
-				$srctext .= "<br />";
-				foreach ($status->status->pic_urls as $pic_urls){
-					$thumbnail_pic = $pic_urls->thumbnail_pic;
-					$original_pic = str_replace("thumbnail", "large", $thumbnail_pic);
-					if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-						$srctext .= "<a href='{$original_pic}' target=_blank>[".__("Picture")."]</a>" ;
-					}else{
-						$srctext .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a> ";
-					}
-				}
+				$srctext .= theme_status_pics($status->status->pic_urls);
 			}
 			if ($status->reply_comment->thumbnail_pic){
-				$replytext .= "<br />";
-				foreach ($status->reply_comment->pic_urls as $pic_urls){
-					$thumbnail_pic = $pic_urls->thumbnail_pic;
-					$original_pic = str_replace("thumbnail", "large", $thumbnail_pic);
-					if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-						$replytext .= "<a href='{$original_pic}' target=_blank>[".__("Picture")."]</a> ";
-					}else{
-						$replytext .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a> ";
-					}
-				}
+				$replytext .= theme_status_pics($status->reply_comment->pic_urls);
 			}
 			if ($status->status->retweeted_status->thumbnail_pic){
-				$retweetedtext .= "<br />";
-				foreach ($status->status->retweeted_status->pic_urls as $pic_urls){
-					$thumbnail_pic = $pic_urls->thumbnail_pic;
-					$original_pic = str_replace("thumbnail", "large", $thumbnail_pic);
-					if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-						$retweetedtext .= "<a href='{$original_pic}' target=_blank>[".__("Picture")."]</a> ";
-					}else{
-						$retweetedtext .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a> ";
-					}
-				}
+				$retweetedtext .= theme_status_pics($status->status->retweeted_status->pic_urls);
 			}
 			
 			if (setting_fetch('buttontime', 'yes') == 'yes') {//时间
@@ -1779,16 +1746,7 @@ function theme_timeline($feed)
 			$reason = twitter_parse_tags($status->text);
 			$text = twitter_parse_tags($status->retweeted_status->text);
 			if ($status->retweeted_status->thumbnail_pic){
-				$text .= "<br />";
-				foreach ($status->retweeted_status->pic_urls as $pic_urls){
-					$thumbnail_pic = $pic_urls->thumbnail_pic;
-					$original_pic = str_replace("thumbnail", "large", $thumbnail_pic);
-					if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-						$text .= "<a href='{$original_pic}' target=_blank>[".__("Picture")."]</a> ";
-					}else{
-						$text .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a> ";
-					}
-				}
+				$text .= theme_status_pics($status->retweeted_status->pic_urls);
 			}
             if ($status->retweeted_status->deleted) {
                 $text = "原微博已被删除，试试 <a target='_blank' href='https://freeweibo.com/weibo/{$status->retweeted_status->mid}'>freeweibo</a> 吧。";
@@ -1810,16 +1768,7 @@ function theme_timeline($feed)
 		else{
 			$text = twitter_parse_tags($status->text);
 			if ($status->thumbnail_pic){
-				$text .= "<br />";
-				foreach ($status->pic_urls as $pic_urls){
-					$thumbnail_pic = $pic_urls->thumbnail_pic;
-					$original_pic = str_replace("thumbnail", "large", $thumbnail_pic);
-					if ((setting_fetch('piclink', 'yes') == 'yes') || (setting_fetch('browser') == 'text')) {
-						$text .= "<a href='{$original_pic}' target=_blank>[".__("Picture")."]</a> ";
-					}else{
-						$text .= "<a href='{$original_pic}' target=_blank><img src='{$thumbnail_pic}' /></a> ";
-					}
-				}
+				$text .= theme_status_pics($status->pic_urls);
 			}
 			if (setting_fetch('buttontime', 'yes') == 'yes') {//时间
 				$link = theme('status_time_link', $status, !$status->is_direct);
