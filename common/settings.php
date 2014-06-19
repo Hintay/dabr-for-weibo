@@ -114,6 +114,7 @@ function settings_page($args) {
 		$settings['fixedtagspost'] = $_POST['fixedtagspost'];
 		$settings['css'] = $_POST['css'];
 		$settings['tpp'] = $_POST['tpp'];
+		$settings['longtext'] = $_POST['longtext'];
 		
 		//$settings['linktrans'] = $_POST['linktrans'];
 		$settings['avataro'] = $_POST['avataro'];
@@ -166,6 +167,10 @@ function settings_page($args) {
 		'zh_CN' => 简体中文,
 		'en_US' => English,
 		'zh_TW' => 繁體中文,
+	);
+	$longtext = array(
+		'a' => __("Automatic Cut"),
+		'r' => __("Return Error"),
 	);
 	$colour_schemes = array();
 	foreach ($GLOBALS['colour_schemes'] as $id => $info) {
@@ -223,7 +228,7 @@ function settings_page($args) {
 	//$content .= '<label>　<input type="checkbox" name="blockings" value="yes" '. (setting_fetch('blockings') == 'yes' ? ' checked="checked" ' : '') .' /> '.("黑名单").'</label><br />';
 	//$content .= '<label>　<input type="checkbox" name="public" value="yes" '. (setting_fetch('public') == 'yes' ? ' checked="checked" ' : '') .' /> '.("随便看看").'</label><br />';
 	//$content .= '<label>　<input type="checkbox" name="trends" value="yes" '. (setting_fetch('trends') == 'yes' ? ' checked="checked" ' : '') .' /> '.("话题").'</label><br />';
-	$content .= '<label>　<input type="checkbox" name="about" value="yes" '. (setting_fetch('about') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("About").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="about" value="yes" '. (setting_fetch('about', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("About").'</label><br />';
 	$content .= '<label>　<input type="checkbox" name="ssettings" value="yes" '. (setting_fetch('ssettings', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Settings").'</label><br />';
 	$content .= '<label>　<input type="checkbox" name="slogout" value="yes" '. (setting_fetch('slogout', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Logout").'</label><br />';
 	$content .= '<label>　<input type="checkbox" name="srefresh" value="yes" '. (setting_fetch('srefresh', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Refresh").'</label>';
@@ -241,6 +246,7 @@ function settings_page($args) {
 	$content .= '</span>';
 	//$content .= '<label>　<input type="checkbox" name="reverse" value="yes" '. (setting_fetch('reverse') == 'yes' ? ' checked="checked" ' : '') .' /> 反转相关对话的顺序</label><br />';
 	$content .= '<label>　<input type="checkbox" name="timestamp" value="yes" '. (setting_fetch('timestamp') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Show the timestamp ") . twitter_date('H:i') . __(" instead of 25 sec ago") .'</label><br />';
+	if (function_exists('mb_strlen')) $content .= '<label>　'.__("When posting a 140+ chars weibo: ").'<select name="longtext">'.theme('options', $longtext, setting_fetch('longtext', 'r')).'</select></label><br />';
 	//$content .= '<label>　<input type="checkbox" name="hide_inline" value="yes" '. (setting_fetch('hide_inline') == 'yes' ? ' checked="checked" ' : '') .' /> 隐藏链接媒体文件 (例如TwitPic缩略图)</label><br />';
 	$content .= '<p>　'.__("Fixed Tag Pre").': <input type="text" id="fixedtagspre" name="fixedtagspre" value="'.setting_fetch('fixedtagspre').'" maxlength="70" style="width:40px;" /> '.__("Fixed Tag After Post").': <input type="text" id="fixedtagspost" name="fixedtagspost" value="'.setting_fetch('fixedtagspost').'" maxlength="70" style="width:40px;" /><br /><small>　'.__("Will automatically add the tags in your status.").'</small></p>';
 

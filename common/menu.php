@@ -150,7 +150,7 @@ function theme_menu_bottomtom($menu) {
 	if (user_is_authenticated()) {
 		$user = user_current_username();
 		array_unshift($links, "<b><a href='".BASE_URL."user/$user'>$user</a></b>");
-		if (setting_fetch('about') == 'yes') {
+		if (setting_fetch('about', 'yes') == 'yes') {
 			$links[] = "<a href='".BASE_URL."about'>".__("About")."</a>";
 		}
 		if (setting_fetch('ssettings', 'yes') == 'yes') {

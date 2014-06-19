@@ -767,7 +767,13 @@ function twitter_update() {
 	twitter_ensure_post_action();
 	$status = twitter_url_shorten(stripslashes(trim($_POST['status'])));
 	if ($status) {
-		$status = setting_fetch('fixedtagspre')." ".$status." ".setting_fetch('fixedtagspost');
+		$status = setting_fetch('fixedtagspre').$status.setting_fetch('fixedtagspost');
+		if (function_exists(mb_strlen) && (mb_strlen($status, 'utf-8') > 140)) {
+			if (setting_fetch('longtext', 'r') == 'a') {
+					$status = mb_substr($status, 0, 140, 'utf-8');
+			}
+		}
+
 		$request = 'statuses/update';
 		$post_data = array('source' => OAUTH_KEY, 'status' => $status);
 		
