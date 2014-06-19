@@ -110,17 +110,20 @@ function settings_page($args) {
 		//$settings['short'] = $_POST['short'];
 		//$settings['longurl'] = $_POST['longurl'];
 		//$settings['showthumbs'] = $_POST['showthumbs'];
-		$settings['fixedtagspre'] = $_POST['fixedtagspre'];
-		$settings['fixedtagspost'] = $_POST['fixedtagspost'];
+		//$settings['fixedtagspre'] = $_POST['fixedtagspre'];
+		//$settings['fixedtagspost'] = $_POST['fixedtagspost'];
 		$settings['css'] = $_POST['css'];
 		$settings['tpp'] = $_POST['tpp'];
 		$settings['longtext'] = $_POST['longtext'];
+		$settings['fixedtago'] = $_POST['fixedtago'];
+		$settings['fixedtagc'] = $_POST['fixedtagc'];
 		
 		//$settings['linktrans'] = $_POST['linktrans'];
 		$settings['avataro'] = $_POST['avataro'];
 		$settings['buttonintext'] = $_POST['buttonintext'];
 		//$settings['moreinreply'] = $_POST['moreinreply'];
 		$settings['piclink'] = $_POST['piclink'];
+		$settings['buttongeo'] = $_POST['buttongeo'];
 		
 		// Save a user's oauth details to a MySQL table
 		if (MYSQL_USERS == 'ON' && $newpass = $_POST['newpassword']) {
@@ -246,9 +249,11 @@ function settings_page($args) {
 	$content .= '</span>';
 	//$content .= '<label>　<input type="checkbox" name="reverse" value="yes" '. (setting_fetch('reverse') == 'yes' ? ' checked="checked" ' : '') .' /> 反转相关对话的顺序</label><br />';
 	$content .= '<label>　<input type="checkbox" name="timestamp" value="yes" '. (setting_fetch('timestamp') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Show the timestamp ") . twitter_date('H:i') . __(" instead of 25 sec ago") .'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="buttongeo" value="yes" '. (setting_fetch('buttongeo', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> ' .__("Enable Geotag").'</label><br />';
+	$content .= '<label>　<input type="checkbox" name="fixedtago" value="yes" '. (setting_fetch('fixedtago', 'no') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Enable Fixed Tag: ").'</label>#<input type="text" id="fixedtagc" name="fixedtagc" value="'.setting_fetch('fixedtagc').'" maxlength="70" style="width:40px;" />#<br />';
 	if (function_exists('mb_strlen')) $content .= '<label>　'.__("When posting a 140+ chars weibo: ").'<select name="longtext">'.theme('options', $longtext, setting_fetch('longtext', 'r')).'</select></label><br />';
 	//$content .= '<label>　<input type="checkbox" name="hide_inline" value="yes" '. (setting_fetch('hide_inline') == 'yes' ? ' checked="checked" ' : '') .' /> 隐藏链接媒体文件 (例如TwitPic缩略图)</label><br />';
-	$content .= '<p>　'.__("Fixed Tag Pre").': <input type="text" id="fixedtagspre" name="fixedtagspre" value="'.setting_fetch('fixedtagspre').'" maxlength="70" style="width:40px;" /> '.__("Fixed Tag After Post").': <input type="text" id="fixedtagspost" name="fixedtagspost" value="'.setting_fetch('fixedtagspost').'" maxlength="70" style="width:40px;" /><br /><small>　'.__("Will automatically add the tags in your status.").'</small></p>';
+	//$content .= '<p>　'.__("Fixed Tag Pre").': <input type="text" id="fixedtagspre" name="fixedtagspre" value="'.setting_fetch('fixedtagspre').'" maxlength="70" style="width:40px;" /> '.__("Fixed Tag After Post").': <input type="text" id="fixedtagspost" name="fixedtagspost" value="'.setting_fetch('fixedtagspost').'" maxlength="70" style="width:40px;" /><br /><small>　'.__("Will automatically add the tags in your status.").'</small></p>';
 
 	$content .= '<small>'.__("Choose what you want to display on the Status.").'</small><br />';
 	$content .= '<label>　<input type="checkbox" name="buttonrt" value="yes" '. (setting_fetch('buttonrt', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("RT").'</label>';

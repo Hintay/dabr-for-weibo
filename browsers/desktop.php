@@ -1,14 +1,12 @@
 <?php
 function desktop_theme_status_form($text = '', $in_reply_to_id = NULL) {
 	if (user_is_authenticated()) {
-		$output = '<form method="post" action="update">
-  <textarea id="status" name="status" rows="3" style="width:95%; max-width: 400px;">'.$text.'</textarea>
-  <div><input name="in_reply_to_id" value="'.$in_reply_to_id.'" type="hidden" /><input type="submit" value="'.__("Update").'" /> <span id="remaining">140</span>';
-  if (substr($_GET["q"], 0, 4) !== "user") {
-			$output .= ' <a href="'.BASE_URL.'upload">'.__('Upload Picture').'</a>';
-		} 
-  $output .= '<span id="geo" style="display: none; float: right;"><input onclick="goGeo()" type="checkbox" id="geoloc" name="location" /> <label for="geoloc" id="lblGeo"></label></span></div>
-  <script type="text/javascript">
+		$fixedtags = ((setting_fetch('fixedtago', 'no') == "yes") && ($text == '')) ? "#".setting_fetch('fixedtagc')."#" : null;
+		$output = '<form method="post" action="'.BASE_URL.'update"><textarea id="status" name="status" rows="3" style="width:100%; max-width: 400px;">'.$text.$fixedtags.'</textarea>';
+		if (setting_fetch('buttongeo') == 'yes') {
+			$output .= '
+<br /><span id="geo" style="display: inline;"><input onclick="goGeo()" type="checkbox" id="geoloc" name="location" /> <label for="geoloc" id="lblGeo"></label></span>
+<script type="text/javascript">
 started = false;
 chkbox = document.getElementById("geoloc");
 if (navigator.geolocation) {
@@ -22,18 +20,23 @@ function goGeo(node) {
 	if (started) return;
 	started = true;
 	geoStatus("'.__("Locating...").'");
-	navigator.geolocation.getCurrentPosition(geoSuccess, geoStatus);
+	navigator.geolocation.getCurrentPosition(geoSuccess, geoStatus, {enableHighAccuracy: true});
 }
 function geoStatus(msg) {
 	document.getElementById("geo").style.display = "inline";
 	document.getElementById("lblGeo").innerHTML = msg;
 }
 function geoSuccess(position) {
-	geoStatus("Tweet my <a href=\'http://maps.google.co.uk/m?q=" + position.coords.latitude + "," + position.coords.longitude + "\' target=\'blank\'>location</a>");
+	if(typeof position.address !== "undefined")
+		geoStatus("'.__("Add my ").'<a href=\'https://maps.google.com/maps?q=loc:" + position.coords.latitude + "," + position.coords.longitude + "\' target=\'blank\'>location</a>" + " (" + position.address.country + position.address.region + "'.__(" Province ").'" + position.address.city + "'.__(" City").', '.__("accuracy: ").'" + position.coords.accuracy + "m)");
+	else
+		geoStatus("'.__("Add my ").'<a href=\'https://maps.google.com/maps?q=loc:" + position.coords.latitude + "," + position.coords.longitude + "\' target=\'blank\'>'.__("location").'</a>" + " ('.__("accuracy: ").'" + position.coords.accuracy + "m)");
 	chkbox.value = position.coords.latitude + "," + position.coords.longitude;
 }
-  </script>
-</form>';
+</script>
+';
+        	}
+		$output .= '<div><input type="submit" value="'.__('Update').'" /> <span id="remaining">140</span>  <a href="'.BASE_URL.'upload">'.__('Upload Picture').'</a></div></form>';
 		$output .= js_counter('status');
 		return $output;
 	}

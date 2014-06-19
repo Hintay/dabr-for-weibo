@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Dabr for Weibo\n"
-"POT-Creation-Date: 2014-06-19 19:21+0800\n"
-"PO-Revision-Date: 2014-06-19 19:23+0800\n"
+"POT-Creation-Date: 2014-06-19 21:20+0800\n"
+"PO-Revision-Date: 2014-06-19 21:20+0800\n"
 "Last-Translator: Hintay <hintay@me.com>\n"
 "Language-Team: Hintay <hintay@me.com>\n"
 "Language: zh_CN\n"
@@ -15,34 +15,49 @@ msgstr ""
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: browsers/desktop.php:6
-msgid "Update"
-msgstr "更新"
-
-#: browsers/desktop.php:8 common/twitter.php:163 common/twitter.php:287
-msgid "Upload Picture"
-msgstr "传图"
-
-#: browsers/desktop.php:15
+#: browsers/desktop.php:14 common/twitter.php:1108
 msgid "Add my location"
 msgstr "插入位置"
 
-#: browsers/desktop.php:24
+#: browsers/desktop.php:23 common/twitter.php:1117
 msgid "Locating..."
 msgstr "定位中..."
 
+#: browsers/desktop.php:32 browsers/desktop.php:34 common/twitter.php:1126
+#: common/twitter.php:1128
+msgid "Add my "
+msgstr "插入我的"
+
+#: browsers/desktop.php:32 browsers/desktop.php:34 common/twitter.php:1126
+#: common/twitter.php:1128
+msgid "accuracy: "
+msgstr "精确度: "
+
+#: browsers/desktop.php:34 common/twitter.php:1128
+msgid "location"
+msgstr "位置"
+
+#: browsers/desktop.php:41 common/twitter.php:1135
+msgid "Update"
+msgstr "更新"
+
+#: browsers/desktop.php:41 common/twitter.php:163 common/twitter.php:287
+#: common/twitter.php:1135
+msgid "Upload Picture"
+msgstr "传图"
+
 #: browsers/touch.php:19 browsers/touch.php:26 common/menu.php:73
-#: common/menu.php:113 common/settings.php:196
+#: common/menu.php:113 common/settings.php:199
 msgid "Home"
 msgstr "首页"
 
 #: browsers/touch.php:20 common/menu.php:76 common/menu.php:116
-#: common/settings.php:197 common/settings.php:220 common/twitter.php:40
+#: common/settings.php:200 common/settings.php:223 common/twitter.php:40
 msgid "Mentions"
 msgstr "提到"
 
 #: browsers/touch.php:21 common/menu.php:79 common/menu.php:119
-#: common/settings.php:198 common/settings.php:221 common/twitter.php:46
+#: common/settings.php:201 common/settings.php:224 common/twitter.php:46
 #: common/twitter.php:862 common/twitter.php:872 common/twitter.php:881
 #: common/twitter.php:891 common/twitter.php:907
 msgid "Comments"
@@ -64,28 +79,28 @@ msgstr "搜索"
 msgid "Public"
 msgstr "广场"
 
-#: common/menu.php:91 common/menu.php:128 common/settings.php:207
-#: common/settings.php:224 common/twitter.php:107 common/twitter.php:1044
+#: common/menu.php:91 common/menu.php:128 common/settings.php:210
+#: common/settings.php:227 common/twitter.php:107 common/twitter.php:1044
 msgid "Favourites"
 msgstr "收藏"
 
-#: common/menu.php:94 common/menu.php:134 common/settings.php:208
-#: common/settings.php:226 common/twitter.php:112 common/twitter.php:750
+#: common/menu.php:94 common/menu.php:134 common/settings.php:211
+#: common/settings.php:229 common/twitter.php:112 common/twitter.php:750
 msgid "Followers"
 msgstr "粉丝"
 
-#: common/menu.php:97 common/menu.php:137 common/settings.php:209
-#: common/settings.php:227 common/twitter.php:117 common/twitter.php:737
+#: common/menu.php:97 common/menu.php:137 common/settings.php:212
+#: common/settings.php:230 common/twitter.php:117 common/twitter.php:737
 msgid "Friends"
 msgstr "关注"
 
 #: common/menu.php:100 common/menu.php:157 common/settings.php:18
-#: common/settings.php:232 common/settings.php:285
+#: common/settings.php:235 common/settings.php:290
 msgid "Settings"
 msgstr "设置"
 
-#: common/menu.php:103 common/menu.php:160 common/settings.php:211
-#: common/settings.php:233 index.php:32 index.php:39
+#: common/menu.php:103 common/menu.php:160 common/settings.php:214
+#: common/settings.php:236 index.php:32 index.php:39
 msgid "Logout"
 msgstr "登出"
 
@@ -101,11 +116,11 @@ msgstr "黑名单"
 msgid "Trends"
 msgstr "话题"
 
-#: common/menu.php:154 common/settings.php:231 index.php:27 index.php:44
+#: common/menu.php:154 common/settings.php:234 index.php:27 index.php:44
 msgid "About"
 msgstr "关于"
 
-#: common/menu.php:164 common/settings.php:234
+#: common/menu.php:164 common/settings.php:237
 msgid "Refresh"
 msgstr "刷新"
 
@@ -154,159 +169,155 @@ msgid ""
 "The cookie monster has cleared all settings, maybe need logging in again."
 msgstr "您清空了所有设置，可能需要重新登录。"
 
-#: common/settings.php:138
+#: common/settings.php:141
 msgid "Normal phone"
 msgstr "普通手机"
 
-#: common/settings.php:139
+#: common/settings.php:142
 msgid "Touch phone"
 msgstr "触屏手机"
 
-#: common/settings.php:140
+#: common/settings.php:143
 msgid "PC/Laptop"
 msgstr "台式电脑/笔记本"
 
-#: common/settings.php:141
+#: common/settings.php:144
 msgid "Text Only"
 msgstr "纯文本模式"
 
-#: common/settings.php:142
+#: common/settings.php:145
 msgid "BlackBerry (Pagination At Bottom)"
 msgstr "黑莓模式(翻页置最底)"
 
-#: common/settings.php:143
+#: common/settings.php:146
 msgid "Work Safe"
 msgstr "安全工作"
 
-#: common/settings.php:144
+#: common/settings.php:147
 msgid "Big Touch"
 msgstr "较大触摸"
 
-#: common/settings.php:148
+#: common/settings.php:151
 msgid "direct"
 msgstr "直接打开"
 
-#: common/settings.php:149
+#: common/settings.php:152
 msgid "via GWT"
 msgstr "通过 GWT 压缩"
 
-#: common/settings.php:172
+#: common/settings.php:175
 msgid "Automatic Cut"
 msgstr "自动截断"
 
-#: common/settings.php:173
+#: common/settings.php:176
 msgid "Return Error"
 msgstr "提示错误"
 
-#: common/settings.php:193
+#: common/settings.php:196
 msgid "Menu Settings"
 msgstr "个性化菜单选项"
 
-#: common/settings.php:194
+#: common/settings.php:197
 msgid "Choose what you want to display on the Top Bar."
 msgstr "选择你想放置在页首菜单的按钮"
 
-#: common/settings.php:195 common/twitter.php:1025
+#: common/settings.php:198 common/twitter.php:1025
 msgid "User"
 msgstr "用户"
 
-#: common/settings.php:219
+#: common/settings.php:222
 msgid "Choose what you want to display on the Bottom Bar."
 msgstr "选择你想放置在页尾菜单的按钮"
 
-#: common/settings.php:237
+#: common/settings.php:240
 msgid "Status Settings"
 msgstr "消息设置"
 
-#: common/settings.php:238
+#: common/settings.php:241
 msgid "Show @/DM/RT/FAV/DEL As Text instead of images"
 msgstr "将按钮显示为文字"
 
-#: common/settings.php:239
+#: common/settings.php:242
 msgid "Do Not Show Avatar"
 msgstr "不显示头像"
 
-#: common/settings.php:245
+#: common/settings.php:248
 msgid "Show Images As Link"
 msgstr "将微博图片显示为链接"
 
-#: common/settings.php:248
+#: common/settings.php:251
 msgid "Show the timestamp "
 msgstr "显示时间戳 "
 
-#: common/settings.php:248
+#: common/settings.php:251
 msgid " instead of 25 sec ago"
 msgstr " 而不是 25秒前"
 
-#: common/settings.php:249
+#: common/settings.php:252
+msgid "Enable Geotag"
+msgstr "启用Geotag（地理坐标）"
+
+#: common/settings.php:253
+msgid "Enable Fixed Tag: "
+msgstr "使用固定标签："
+
+#: common/settings.php:254
 msgid "When posting a 140+ chars weibo: "
 msgstr "当消息超过140字时："
 
-#: common/settings.php:251
-msgid "Fixed Tag Pre"
-msgstr "固定标签"
-
-#: common/settings.php:251
-msgid "Fixed Tag After Post"
-msgstr "消息内容"
-
-#: common/settings.php:251
-msgid "Will automatically add the tags in your status."
-msgstr "将自动添加标签在您的消息中"
-
-#: common/settings.php:253
+#: common/settings.php:258
 msgid "Choose what you want to display on the Status."
 msgstr "选择你想放置在消息上的元素"
 
-#: common/settings.php:254 common/twitter.php:1886
+#: common/settings.php:259 common/twitter.php:1925
 msgid "RT"
 msgstr "转发"
 
-#: common/settings.php:255 common/twitter.php:1889
+#: common/settings.php:260 common/twitter.php:1928
 msgid "CM"
 msgstr "评论"
 
-#: common/settings.php:258 common/twitter.php:1882
+#: common/settings.php:263 common/twitter.php:1921
 msgid "FAV"
 msgstr "收藏"
 
-#: common/settings.php:259
+#: common/settings.php:264
 msgid "DEL"
 msgstr "删除"
 
-#: common/settings.php:260
+#: common/settings.php:265
 msgid "Time"
 msgstr "时间"
 
-#: common/settings.php:261
+#: common/settings.php:266
 msgid "From"
 msgstr "客户端"
 
-#: common/settings.php:265
+#: common/settings.php:270
 msgid "Global Settings"
 msgstr "全局设置"
 
-#: common/settings.php:266
+#: common/settings.php:271
 msgid "Colour scheme: "
 msgstr "色彩方案："
 
-#: common/settings.php:267
+#: common/settings.php:272
 msgid "Mode: "
 msgstr "模式："
 
-#: common/settings.php:268
+#: common/settings.php:273
 msgid "Language: "
 msgstr "语言："
 
-#: common/settings.php:270
+#: common/settings.php:275
 msgid "Tweets Per Page: "
 msgstr "每页消息数："
 
-#: common/settings.php:271
+#: common/settings.php:276
 msgid "External links go:"
 msgstr "外部链接："
 
-#: common/settings.php:271
+#: common/settings.php:276
 msgid ""
 "Google Web Transcoder (GWT) converts third-party sites into small, speedy "
 "pages suitable for older phones and people with less bandwidth."
@@ -314,23 +325,23 @@ msgstr ""
 "Google 网页转换器(GWT)可以将第三方网页转换成更小更适合手机的页面，并且节省流"
 "量。"
 
-#: common/settings.php:277
+#: common/settings.php:282
 msgid "Custom CSS: "
 msgstr "自定义 CSS："
 
-#: common/settings.php:283
+#: common/settings.php:288
 msgid "Save"
 msgstr "保存"
 
-#: common/settings.php:283
+#: common/settings.php:288
 msgid "Visit "
 msgstr "如果设置出错，请"
 
-#: common/settings.php:283
+#: common/settings.php:288
 msgid "Reset"
 msgstr "重置"
 
-#: common/settings.php:283
+#: common/settings.php:288
 msgid " if things go horribly wrong - it will clear all settings."
 msgstr "所有设置，但您可能需要重新登录"
 
@@ -378,11 +389,11 @@ msgstr "秒"
 msgid "0 sec"
 msgstr "0秒"
 
-#: common/twitter.php:557 common/twitter.php:1112 common/twitter.php:1651
+#: common/twitter.php:557 common/twitter.php:1151 common/twitter.php:1690
 msgid "Repost"
 msgstr "转发"
 
-#: common/twitter.php:567 common/twitter.php:1103
+#: common/twitter.php:567 common/twitter.php:1142
 msgid "Comment"
 msgstr "评论"
 
@@ -398,62 +409,76 @@ msgstr "发出的评论"
 msgid "Mention Me"
 msgstr "提到我的评论"
 
-#: common/twitter.php:1110
+#: common/twitter.php:1126
+msgid " Province "
+msgstr "省"
+
+#: common/twitter.php:1126
+msgid " City"
+msgstr "市"
+
+#: common/twitter.php:1149
 msgid "Repost Comment"
 msgstr "转发评论"
 
-#: common/twitter.php:1118
+#: common/twitter.php:1157
 msgid "Reply"
 msgstr "回复"
 
-#: common/twitter.php:1215
+#: common/twitter.php:1254
 msgid " ago"
 msgstr "前"
 
-#: common/twitter.php:1256
+#: common/twitter.php:1295
 msgid " Also retweeted by "
 msgstr " "
 
-#: common/twitter.php:1256
+#: common/twitter.php:1295
 msgid " ||"
 msgstr " 也转发了 ||"
 
-#: common/twitter.php:1354
+#: common/twitter.php:1393
 msgid "Picture"
 msgstr "图片"
 
-#: common/twitter.php:1441 common/twitter.php:1443 common/twitter.php:1500
+#: common/twitter.php:1480 common/twitter.php:1482 common/twitter.php:1539
 msgid "from "
 msgstr "来自"
 
-#: common/twitter.php:1515 common/twitter.php:1716 common/twitter.php:1821
+#: common/twitter.php:1554 common/twitter.php:1755 common/twitter.php:1860
 msgid "Older"
 msgstr "更旧的"
 
-#: common/twitter.php:1546
+#: common/twitter.php:1585
 msgid "Favourite date: "
 msgstr "收藏日期："
 
-#: common/twitter.php:1646
+#: common/twitter.php:1685
 msgid "Original:"
 msgstr "原博："
 
-#: common/twitter.php:1822
+#: common/twitter.php:1861
 msgid "Newer"
 msgstr "更新的"
 
-#: common/twitter.php:1832
+#: common/twitter.php:1871
 msgid "Prev"
 msgstr "上一页"
 
-#: common/twitter.php:1833
+#: common/twitter.php:1872
 msgid "Next"
 msgstr "下一页"
 
-#: common/twitter.php:1880
+#: common/twitter.php:1919
 msgid "UNFAV"
 msgstr "取消收藏"
 
-#: common/twitter.php:1892
+#: common/twitter.php:1931
 msgid "RE"
 msgstr "回复"
+
+#~ msgid "Fixed Tag After Post"
+#~ msgstr "消息内容"
+
+#~ msgid "Will automatically add the tags in your status."
+#~ msgstr "将自动添加标签在您的消息中"

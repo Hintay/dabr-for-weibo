@@ -767,7 +767,6 @@ function twitter_update() {
 	twitter_ensure_post_action();
 	$status = twitter_url_shorten(stripslashes(trim($_POST['status'])));
 	if ($status) {
-		$status = setting_fetch('fixedtagspre').$status.setting_fetch('fixedtagspost');
 		if (function_exists(mb_strlen) && (mb_strlen($status, 'utf-8') > 140)) {
 			if (setting_fetch('longtext', 'r') == 'a') {
 					$status = mb_substr($status, 0, 140, 'utf-8');
@@ -777,16 +776,17 @@ function twitter_update() {
 		$request = 'statuses/update';
 		$post_data = array('source' => OAUTH_KEY, 'status' => $status);
 		
-		// Geolocation parameters
-		list($lat, $long) = explode(',', $_POST['location']);
-		$geo = 'N';
-		if (is_numeric($lat) && is_numeric($long)) {
-			$geo = 'Y';
-			$post_data['lat'] = $lat;
-			$post_data['long'] = $long;
-		// $post_data['display_coordinates'] = 'false';
+		if (setting_fetch('buttongeo', 'yes') == 'yes') {
+			// Geolocation parameters
+			list($lat, $long) = explode(',', $_POST['location']);
+			$geo = 'N';
+			if (is_numeric($lat) && is_numeric($long)) {
+				$geo = 'Y';
+				$post_data['lat'] = $lat;
+				$post_data['long'] = $long;
+			}
+			setcookie_year('geo', $geo);
 		}
-		setcookie_year('geo', $geo);
 		$b = twitter_process($request, $post_data, "post");
 	}
 	twitter_refresh($_POST['from'] ? $_POST['from'] : '');
@@ -1094,7 +1094,44 @@ function twitter_hashtag_page($query) {
 
 function theme_status_form($text = '') {
 	if (user_is_authenticated()) {
-		return "<form method='post' action='update'><input name='status' value='{$text}' maxlength='140' /> <input type='submit' value='Update' /></form>";
+		//$output = "<form method='post' action='update'><input name='status' value='{$text}' maxlength='140' /> <input type='submit' value='".__("Update")."' /> <a href='".BASE_URL."upload'>".__('Upload Picture')."</a></form>";
+		$fixedtags = ((setting_fetch('fixedtago', 'no') == "yes") && ($text == '')) ? "#".setting_fetch('fixedtagc')."#" : null;
+		$output = '<form method="post" action="'.BASE_URL.'update"><textarea id="status" name="status" rows="3" style="width:100%; max-width: 400px;">'.$text.$fixedtags.'</textarea>';
+		if (setting_fetch('buttongeo') == 'yes') {
+			$output .= '
+<br /><span id="geo" style="display: inline;"><input onclick="goGeo()" type="checkbox" id="geoloc" name="location" /> <label for="geoloc" id="lblGeo"></label></span>
+<script type="text/javascript">
+started = false;
+chkbox = document.getElementById("geoloc");
+if (navigator.geolocation) {
+	geoStatus("'.__("Add my location").'");
+	if ("'.$_COOKIE['geo'].'"=="Y") {
+		chkbox.checked = true;
+		goGeo();
+	}
+}
+function goGeo(node) {
+	if (started) return;
+	started = true;
+	geoStatus("'.__("Locating...").'");
+	navigator.geolocation.getCurrentPosition(geoSuccess, geoStatus, {enableHighAccuracy: true});
+}
+function geoStatus(msg) {
+	document.getElementById("geo").style.display = "inline";
+	document.getElementById("lblGeo").innerHTML = msg;
+}
+function geoSuccess(position) {
+	if(typeof position.address !== "undefined")
+		geoStatus("'.__("Add my ").'<a href=\'https://maps.google.com/maps?q=loc:" + position.coords.latitude + "," + position.coords.longitude + "\' target=\'blank\'>location</a>" + " (" + position.address.country + position.address.region + "'.__(" Province ").'" + position.address.city + "'.__(" City").', '.__("accuracy: ").'" + position.coords.accuracy + "m)");
+	else
+		geoStatus("'.__("Add my ").'<a href=\'https://maps.google.com/maps?q=loc:" + position.coords.latitude + "," + position.coords.longitude + "\' target=\'blank\'>'.__("location").'</a>" + " ('.__("accuracy: ").'" + position.coords.accuracy + "m)");
+	chkbox.value = position.coords.latitude + "," + position.coords.longitude;
+}
+</script>
+';
+        	}
+		$output .= '<div><input type="submit" value="'.__('Update').'" /> <a href="'.BASE_URL.'upload">'.__('Upload Picture').'</a></div></form>';
+		return $output;
 	}
 }
 
