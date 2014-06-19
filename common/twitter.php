@@ -1916,12 +1916,19 @@ function theme_action_icons($status) {
 
 function theme_action_icon($url, $image_url, $text) {
 	// alt attribute left off to reduce bandwidth by about 720 bytes per page
-	if ($text == 'MAP')
-	{
-		return "<a href='$url' alt='$text' target='_blank'><img src='$image_url' /></a>";
+	if (setting_fetch('buttonintext', 'yes') == 'yes') {
+		if ($text == 'MAP')
+		{
+			return "<a href='$url' alt='$text' target='_blank'>$text</a>";
+		}
+		return "<a href='$url'>$text</a>";
+	} else {
+		if ($text == 'MAP')
+		{
+			return "<a href='$url' alt='$text' target='_blank'><img src='$image_url' alt='$text' /></a>";
+		}
+		return "<a href='$url'><img src='".BASE_URL.$image_url."' alt='$text' /></a>";
 	}
-
-	return "<a href='$url'><img src='$image_url' alt='$text' /></a>";
 }
 
 function pluralise($word, $count, $show = FALSE) {
