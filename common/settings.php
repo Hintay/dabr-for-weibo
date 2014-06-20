@@ -124,6 +124,7 @@ function settings_page($args) {
 		//$settings['moreinreply'] = $_POST['moreinreply'];
 		$settings['piclink'] = $_POST['piclink'];
 		$settings['buttongeo'] = $_POST['buttongeo'];
+		$settings['unread'] = $_POST['unread'];
 		
 		// Save a user's oauth details to a MySQL table
 		if (MYSQL_USERS == 'ON' && $newpass = $_POST['newpassword']) {
@@ -268,6 +269,7 @@ function settings_page($args) {
 	//$content .= '<p><label>　<input type="checkbox" name="moreinreply" value="yes" '. (setting_fetch('moreinreply') == 'yes' ? ' checked="checked" ' : '') .' /> '.("回复时显示对方的消息").'</label></p><hr>';
 	
 	$content .= '<p><b>'.__("Global Settings").'</b></p>';
+	$content .= '<label>　<input type="checkbox" name="unread" value="yes" '. (setting_fetch('unread', 'yes') == 'yes' ? ' checked="checked" ' : '') .' /> '.__("Enable Unread Count Remind").'</label><br />';
 	$content .= '<label>　'.__("Colour scheme: ").'<select name="colours">'.theme('options', $colour_schemes, setting_fetch('colours', 1)).'</select></label><br />';	
 	$content .= '<label>　'.__("Mode: ").'<select name="browser">'.theme('options', $modes, $GLOBALS['current_theme']).'</select></label><br />';
 	$content .= '<label>　'.__("Language: ").'<select name="locale">'.theme('options', $locale, setting_fetch('locale', 'zh_CN')).'</select></label><br />';

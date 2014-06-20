@@ -149,6 +149,9 @@ function googleAnalyticsGetImageUrl() {
 
 function theme_page($title, $content) {
 	$body = theme('menu_top');
+	if (setting_fetch('unread', 'yes') == 'yes') {
+		$body .= weibo_unread();
+	}
 	$body .= $content;
 	$body .= theme('menu_bottom');
 	$body .= theme('google_analytics');
@@ -231,6 +234,7 @@ function theme_css() {
   .retweeted {position:relative;margin-left: 20px; padding-left: 5px;}
   .retweeted_tl {position:relative; margin: 5px; padding-left: 5px;}
   .avatartd {width:0;}
+  .unread {padding: 6px;background:#{$c->odd}}
   ".setting_fetch('css')."
 </style>";
 }
