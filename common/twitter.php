@@ -1663,7 +1663,7 @@ function theme_timeline($feed)
 			//按钮
 			$actions = theme('action_icons', $status);
 			$actions2 = theme('action_icons', $status->status);
-			$actions_reply = theme('action_icons_reply', $status);
+			$actions_reply = theme('action_icons', $status);
 			$actions_retweeted = theme('action_icons', $status->status->retweeted_status);
 			
 			//头像
@@ -1873,31 +1873,6 @@ function theme_cursor($prev, $next) {
 	return '<p>'.implode(' | ', $links).'</p>';
 }
 
-function theme_action_icons_reply($status) {
-	$from = $status->reply_comment->user->screen_name;
-	$retweeted_by = $status->retweeted_by->user->screen_name;
-	$retweeted_id = $status->retweeted_by->id;
-	$geo = $status->geo;
-	$actions = array();
-
-	if (!$status->is_direct) {
-		
-	if ($status->reply_comment) {
-		$actions[] = theme('action_icon', "recomment/".number_format($status->status->id,0,'','')."/".number_format($status->reply_comment->id,0,'',''), 'images/comments.gif', 'CMS');
-	}
-
-	if (setting_fetch('buttondel', 'yes') == 'yes') {
-		if (user_is_current_user($from)) {
-			$actions[] = theme('action_icon', "confirm/delcmt/".number_format($status->reply_comment->id,0,'',''), 'images/trash.gif', 'DEL');
-		}
-	}
-	} else {
-		$actions[] = theme('action_icon', "directs/delete/".number_format($status->id,0,'',''), 'images/trash.gif', 'DEL');
-	}
-
-	return implode(' ', $actions);
-}
-
 function theme_action_icons($status,$is_status = false) {
 	$from = $status->from->screen_name;
 	$from2 = $status->user->screen_name;
@@ -1913,7 +1888,9 @@ function theme_action_icons($status,$is_status = false) {
 	}*/
 	if (!$status->is_direct) {
 		
-	if (!$status->status) {
+	if ($status->reply_comment) {
+		$actions[] = theme('action_icon', "recomment/".number_format($status->status->id,0,'','')."/".number_format($status->reply_comment->id,0,'',''), 'images/comments.gif', 'CMS');
+	}elseif (!$status->status) {
 		if (setting_fetch('buttonfav', 'yes') == 'yes') {
 			if ($status->favorited == '1') {
 				$actions[] = theme('action_icon', "unfavourite/".number_format($status->id,0,'',''), 'images/star.png', __("UNFAV"));
