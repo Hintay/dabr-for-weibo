@@ -8,11 +8,6 @@ menu_register(array(
 		'callback' => 'twitter_home_page',
 		'accesskey' => '0',
 	),
-	'status' => array(
-		'hidden' => true,
-		'security' => true,
-		'callback' => 'twitter_status_page',
-	),
 	'update' => array(
 		'hidden' => true,
 		'security' => true,
@@ -520,17 +515,6 @@ function format_interval($timestamp, $granularity = 2) {
 	return $output ? $output : __("0 sec");
 }
 
-function twitter_status_page($query) {
-	$id = (string) $query[1];
-	if (is_numeric($id)) {
-		$request = "statuses/show";
-		$status = twitter_process($request, array('id'=>$id));
-		$content = theme('status', $status);
-		
-		theme('page', "Status $id", $content);
-	}
-}
-
 function twitter_thread_timeline($thread_id) {
 	$request = "http://search.twitter.com/search/thread/{$thread_id}";
 	$tl = twitter_standard_timeline(twitter_fetch($request), 'thread');
@@ -544,10 +528,12 @@ function twitter_retweet_page($query) {
 		if ($query[2] == "0") {
 			$status = twitter_process($request, array('id'=>$id));
 			$content = theme('comments_status', $status);
+			$content .= theme_status_menu($status);
 			$content .= theme_retweet_form($id);
 		}else{
 			$status = twitter_process($request, array('id'=>$id));
 			$content = theme('comments_status', $status);
+			$content .= theme_status_menu($status);
 			$content .= theme_retweet_form($id);
 			$request = "statuses/repost_timeline";
 			$tl = twitter_process($request, array("id"=>$id, "max_id"=>$_GET['max_id']));
@@ -891,16 +877,19 @@ function twitter_cmts_page($query) {
         theme('page', __("Comments"), $content);
 
     default:
-	$request = "comments/show";
+	$request = "statuses/show";
     if ($query[2] == "0") {
-        $request = "statuses/show";
 		$status = twitter_process($request, array('id'=>$action));
 		$content = theme('comments_status', $status);
+		$content .= theme_status_menu($status);
         $content .= theme_comment_form($action);
     } else {
-        $tl = twitter_process($request, array("id"=>$action, "page"=>1+$_GET['page']));
-        $content = theme('comments_status', $tl->comments[0]->status);
+        $tl = twitter_process($request, array("id"=>$action));
+        $content = theme('comments_status', $tl);
+		$content .= theme_status_menu($tl);
         $content .= theme_comment_form($action);
+		$request = "comments/show";
+		$tl = twitter_process($request, array("id"=>$action, "max_id"=>$_GET['max_id']));
         $tl = twitter_standard_timeline($tl->comments, 'cmts');
         $content .= theme('weibocomments', $tl);
     }
@@ -946,6 +935,15 @@ function twitter_directs_page($query) {
 			$content .= theme('timeline', $tl);
 			theme('page', __('DM Inbox'), $content);
 	}
+}
+
+function theme_status_menu($status) {
+	if (substr($_GET["q"], 0, 4) == "cmts") {
+		$output = '<p><a href="repost/'.number_format($status->id,0,'','').'/'.number_format($status->reposts_count).'">'.__("Repost").'</a> '.($status->reposts_count).' | '.__("Comment").' '.($status->comments_count).'</p>';
+	}else{
+		$output = '<p>'.__("Repost").' '.($status->reposts_count).' | <a href="cmts/'.number_format($status->id,0,'','').'/'.number_format($status->comments_count).'">'.__("Comment").'</a> '.($status->comments_count).'</p>';
+	}
+	return $output;
 }
 
 function theme_directs_menu() {
@@ -1145,7 +1143,7 @@ function theme_retweet_form($status) {
 	$length = function_exists('mb_strlen') ? mb_strlen($text,'UTF-8') : strlen($text);
 	$from = substr($_SERVER['HTTP_REFERER'], strlen(BASE_URL));
 	$content.= __("Repost Comment")."<br /><form action='twitter-retweet/{$status}' method='post'>
-<textarea name='status' cols='50' rows='3' id='status'></textarea>
+<textarea name='status' cols='50' rows='3' id='status'></textarea><br />
 <input type='hidden' name='from' value='$from' /><input type='submit' value='".__("Repost")."'></form>";
 	return $content;
 }
@@ -1259,7 +1257,7 @@ function theme_status_time_link($status, $is_link = true) {
 		$out = $status->created_at;
 	}
 	if ($is_link)
-		$out = "<a href='status/".number_format($status->id,0,'','')."' class='time'>$out</a>";
+		$out = "<a href='cmts/".number_format($status->id,0,'','')."/".number_format($status->comments_count)."' class='time'>$out</a>";
     else 
         $out = "<span class='time'>$out</span>";
 	return $out;
@@ -1411,7 +1409,7 @@ function theme_comments_status($status) {//评论页状态
 	}
 	$parsed = twitter_parse_tags($status->text);
 	$avatar = theme('avatar', $status->user->profile_image_url);
-	$actions = theme('action_icons', $status);
+	$actions = theme('action_icons', $status, true);
 	
 	if (setting_fetch('buttonfrom', 'yes') == 'yes') {//客户端
 		$source = theme_status_from($status->source);
@@ -1900,7 +1898,7 @@ function theme_action_icons_reply($status) {
 	return implode(' ', $actions);
 }
 
-function theme_action_icons($status) {
+function theme_action_icons($status,$is_status = false) {
 	$from = $status->from->screen_name;
 	$from2 = $status->user->screen_name;
 	$retweeted_by = $status->retweeted_by->user->screen_name;
@@ -1923,11 +1921,13 @@ function theme_action_icons($status) {
 				$actions[] = theme('action_icon', "favourite/".number_format($status->id,0,'',''), 'images/star_grey.png', __("FAV"));
 			}
 		}
-		if (setting_fetch('buttonrt', 'yes') == 'yes') {
-			$actions[] = theme('action_icon', "repost/".number_format($status->id,0,'','')."/".number_format($status->reposts_count), 'images/retweet.png', __("RT"))."<span class='time'>{$status->reposts_count}</span>";
-		}
-		if (setting_fetch('buttonco', 'yes') == 'yes') {
-			$actions[] = theme('action_icon', "cmts/".number_format($status->id,0,'','')."/".number_format($status->comments_count), 'images/list.png', __("CM"))."<span class='time'>{$status->comments_count}</span> ";
+		if ($is_status == false){
+			if (setting_fetch('buttonrt', 'yes') == 'yes') {
+				$actions[] = theme('action_icon', "repost/".number_format($status->id,0,'','')."/".number_format($status->reposts_count), 'images/retweet.png', __("RT"))."<span class='time'>{$status->reposts_count}</span>";
+			}
+			if (setting_fetch('buttonco', 'yes') == 'yes') {
+				$actions[] = theme('action_icon', "cmts/".number_format($status->id,0,'','')."/".number_format($status->comments_count), 'images/list.png', __("CM"))."<span class='time'>{$status->comments_count}</span> ";
+			}
 		}
 	} else {
 		$actions[] = theme('action_icon', "recomment/".number_format($status->status->id,0,'','')."/".number_format($status->id,0,'',''), 'images/comments.gif', __("RE"));
