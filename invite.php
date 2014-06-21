@@ -1,12 +1,13 @@
 <?php
 require('config.php');
+require('languages/languages.php');
 
 header('Content-type: text/html; charset=utf-8');
 
 if (isset($_POST['p']) && isset($_POST['u'])) {
 
 	if (INVITE == 0) {
-		exit('目前为开放模式，无需邀请');
+		exit(__('Now In Open Mode, No Need To Invite'));
 	}
 
 	if ($_POST['p'] == INVITE_CODE) {
@@ -15,24 +16,24 @@ if (isset($_POST['p']) && isset($_POST['u'])) {
 		if (is_writable('invited')) {
 
 			if (!$handle = fopen('invited', 'a')) {
-				exit('不能打开受邀用户列表');
+				exit(__('Cannot Open the Invited List'));
 			}
 
 			if (fwrite($handle, $user) == FALSE) {
-				echo '不能写入到受邀用户列表';
+				echo __('Cannot Write to the Invited List');
 			} else {
-				echo '已将 '.trim($user).' 加入到受邀用户列表';
+				echo __('The User ').trim($user).__(' Has Been Added to the Invited List');
 			}
 
 			fclose($handle);
 		} else {
-			echo '受邀用户列表不可写';
+			echo __('Invited List is Not Writable');
 		}
 		
 		exit;
 	} else {
-        exit('邀请密码错误');
+        exit(__('Invite Code Error'));
     }
 }
 
-?><!doctype html><meta charset="utf-8" /><title>添加受邀用户</title><form action="invite.php" method="POST"><label>用户名 <input name="u" /></label> <label>邀请码 <input name="p" /></label> <input type="submit" /></form>
+?><!doctype html><meta charset="utf-8" /><title><?php echo __("Add invited user") ?></title><form action="invite.php" method="POST"><label><? echo __("Username")?> <input name="u" /></label> <label><? echo __("Invite Code")?> <input name="p" /></label> <input type="submit" /></form>

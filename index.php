@@ -36,7 +36,7 @@ menu_register(array (
 function logout_page() {
 	user_logout();
 	$content = theme('logged_out');
-	theme('page', __("Logout"), $content);
+	theme('page', __("Logged out"), $content);
 }
 
 function about_page() {
