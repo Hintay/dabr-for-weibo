@@ -541,21 +541,24 @@ function twitter_thread_timeline($thread_id) {
 function weibo_unread() {
 	$request = "remind/unread_count";
 	$status = twitter_process($request, array('unread_message'=>0));
-	$output = "<div class='unread'>";
-	if($status->cmt !== 0){
-		$output .= "<a href='cmts'>".__("You have ").($status->cmt).__(" unread comment")."</a> ";
+	if($status->cmt !== 0 && $status->mention_status !== 0 && $status->mention_cmt !== 0 && $status->follower !== 0){
+		$output = "<div class='unread'>";
+		if($status->cmt !== 0){
+			$output .= "<a href='cmts'>".__("You have ").($status->cmt).__(" unread comment")."</a> ";
+		}
+		if($status->mention_status !== 0){
+			$output .= "<a href='mentions'>".__("You have ").($status->mention_status).__(" unread mention weibo")."</a> ";
+		}
+		if($status->mention_cmt !== 0){
+			$output .= "<a href='cmts/mentions'>".__("You have ").($status->mention_cmt).__(" unread mention comment")."</a> ";
+		}
+		if($status->follower !== 0){
+			$output .= "<a href='cmts/followers'>".__("You have ").($status->follower).__(" new follower")."</a> ";
+		}
+		$output .= "</div>";
 	}
-	if($status->mention_status !== 0){
-		$output .= "<a href='mentions'>".__("You have ").($status->mention_status).__(" unread mention weibo")."</a> ";
-	}
-	if($status->mention_cmt !== 0){
-		$output .= "<a href='cmts/mentions'>".__("You have ").($status->mention_cmt).__(" unread mention comment")."</a> ";
-	}
-	if($status->follower !== 0){
-		$output .= "<a href='cmts/followers'>".__("You have ").($status->follower).__(" new follower")."</a> ";
-	}
-	$output .= "</div>";
 	return $output;
+}
 }
 
 function twitter_retweet_page($query) {
