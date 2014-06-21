@@ -27,6 +27,8 @@ define('OAUTH_SECRET', 'putyourinfohere');
 //已有高级接口设定，1为启用。高级接口需要您自己向新浪申请
 //高级微博读取接口statuses/timeline_batch，用于读取非登录用户本人的其他用户时间线
 define('API_TLBATCH', 0);
+//高级提醒写入接口remind/set_count，用于对当前登录用户某一种消息未读数进行清零
+define('API_RMSC', 0);
 
 //Google Analytics 跟踪 ID，类似于UA-19890535-X
 define('GA_ACCOUNT', 'putyourinfohere');

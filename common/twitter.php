@@ -560,6 +560,13 @@ function weibo_unread() {
 	return $output;
 }
 
+function weibo_setcount($type) {
+	if(API_RMSC == 1){
+		$request = "remind/set_count";
+		$status = twitter_process($request, array('type'=>$type), 'post');
+	}
+}
+
 function twitter_retweet_page($query) {
 	$id = (string) $query[1];
 	$request = "statuses/show";
@@ -767,6 +774,9 @@ function twitter_followers_page($query) {
 	if (!$user) {
 		user_ensure_authenticated();
 		$user = $GLOBALS['user']['screen_name'];
+		if(!$_GET['cursor']){
+			weibo_setcount("follower");
+		}
 	}
 	$cursor = isset($_GET['cursor']) ? ($_GET['cursor']) : -1;
 	$request =  "friendships/followers";
@@ -865,6 +875,9 @@ function twitter_public_page() {
 }
 
 function twitter_replies_page() {
+	if(!$_GET['max_id']){
+		weibo_setcount("mention_status");
+	}
 	$count = setting_fetch('tpp', 20);
 	$request = 'statuses/mentions';
 	$tl = twitter_process($request, array('count'=>$count,"max_id"=>$_GET['max_id']));
@@ -888,6 +901,9 @@ function twitter_cmts_page($query) {
 
 	case '':
 	case 'to_me':
+		if(!$_GET['max_id']){
+			weibo_setcount("cmt");
+		}
 	$count = setting_fetch('tpp', 20)+4;
 	$request = 'comments/to_me';
         $tl = twitter_process($request, array('count'=>$count,'max_id'=>$_GET['max_id']));
@@ -897,6 +913,9 @@ function twitter_cmts_page($query) {
         theme('page', __("Comments"), $content);
 		
 	case 'mentions':
+		if(!$_GET['max_id']){
+			weibo_setcount("mention_cmt");
+		}
 	$count = setting_fetch('tpp', 20)+4;
 	$request = 'comments/mentions';
         $tl = twitter_process($request, array('count'=>$count,'max_id'=>$_GET['max_id']));
@@ -1053,7 +1072,7 @@ function twitter_user_page($query) {
 		$content .= theme('user_header', $user);
 		
 		if (isset($user->status)) {
-			if(API_TLBATCH){//时间线高级接口
+			if(API_TLBATCH == 1){//时间线高级接口
 				$request = "statuses/timeline_batch";
 				$postdata = array("screen_names"=>$screen_name);
 			}else{

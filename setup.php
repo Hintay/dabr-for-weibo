@@ -101,7 +101,7 @@ switch($step) {
 		<tr><th scope="row"><label for="t_ivt">仅受邀用户可登录</label></th><td><select name="t_ivt"><option value="1">开启</option><option selected="selected" value="0">停用</option></select></td><td>请根据您的需要选择</td></tr>
 		<tr><th scope="row"><label for="t_psw">设置邀请码</label></th><td><input name="t_psw" id="t_psw" type="text" value="weibo" size="35" /></td><td>仅当「仅受邀用户可登录」开启时生效，用于「 <a href="invite.php">invite.php</a> 」</td></tr>
 		<tr><th scope="row"><label for="t_gac">Google Analytics 跟踪 ID</label></th><td><input name="t_gac" id="t_gac" type="text" value="" size="35" /></td><td>如「UA-19890535-X」，不需要请留空（填写后请放入ga.php至dabr的目录）</td></tr>
-		<tr><th scope="row"><label for="t_tlb">请选择您已申请到的高级接口</label></th><td><input type="checkbox" name="t_tlb" value="1" />statuses/timeline_batch <a href="#" title="用于查在他人用户页面查看时间线">[?]</a></td><td>因为微博限制，部分功能需要申请高级接口才可使用</td></tr></table>';
+		<tr><th scope="row"><label for="t_tlb">请选择您已申请到的高级接口</label></th><td><input type="checkbox" name="t_tlb" value="1" />statuses/timeline_batch <a href="#" title="用于查在他人用户页面查看时间线">[?]</a><br/><input type="checkbox" name="t_rsc" value="1" />remind/set_count <a href="#" title="用于对当前登录用户某一种消息未读数进行清零">[?]</a></td><td>因为微博限制，部分功能需要申请高级接口才可使用</td></tr></table>';
 
 		if ($notice !== '') {
 			$content .= '<p class="step"><a href="setup.php" class="button">出错了！</a></p>';
@@ -132,6 +132,7 @@ switch($step) {
 		$t_gac = trim($_POST['t_gac']);
 		$t_api = !empty($_POST['t_api']) ? trim($_POST['t_api']) : 'http://api.weibo.com';
 		$t_tlb = !empty($_POST['t_tlb']) ? trim($_POST['t_tlb']) : '0';
+		$t_rsc = !empty($_POST['t_rsc']) ? trim($_POST['t_rsc']) : '0';
 
 		if ($notice == '') {
 			$config = file(ABSPATH . 'config.sample.php');
@@ -168,6 +169,9 @@ switch($step) {
 						break;
 					case '_TLBA'://高级时间线
 						fwrite($handle, str_replace('0', $t_tlb, $line));
+						break;
+					case '_RMSC'://高级提醒写入接口
+						fwrite($handle, str_replace('0', $t_rsc, $line));
 						break;
 					default:
 						fwrite($handle, $line);
