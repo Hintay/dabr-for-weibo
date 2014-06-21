@@ -371,6 +371,23 @@ class Dabr_Autolink extends Twitter_Autolink {
 	}
 }
 
+function weibo_shorturl_expand($input)
+{
+	$urlpara = parse_url($input);
+	if ($urlpara[host] == 't.cn'){
+		$request = "short_url/expand";
+		$status = twitter_process($request, array('url_short'=>$input));
+		if($status->urls[0]->result == 1){
+			$output = ($status->urls[0]->url_long);
+		}else{
+			$output = $input;
+		}
+	}else{
+		$output = $input;
+	}
+	return $output;
+}
+
 function twitter_parse_tags($input)
 {
 	$out = $input;
@@ -1870,7 +1887,25 @@ function theme_external_link($url, $content = null) {
 		if (strlen($url) <= 8) return "";
 	if (!$content) 
 	{
-		return "<a href='$url' target='_blank'>".long_url($url)."</a>";
+		switch (setting_fetch('linktrans', 'd')) {
+			case 'o'://短连接
+				$text = $url;
+				break;
+			case 'f'://长域名
+				$url = weibo_shorturl_expand($url);
+				$text = $url;
+				break;
+			case 'd'://显示域名
+				$url = weibo_shorturl_expand($url);
+				$urlpara = parse_url($url);
+				$text = "[{$urlpara[host]}]";
+				break;
+			case 'l'://显示链接
+				$text = "[link]";
+				break;
+		}
+		//return "<a href='$url' target='_blank'>".long_url($url)."</a>";
+		return "<a href='$url' target='_blank'>$text</a>";
 	}
 	else
 	{

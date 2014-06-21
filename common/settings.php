@@ -125,6 +125,7 @@ function settings_page($args) {
 		$settings['piclink'] = $_POST['piclink'];
 		$settings['buttongeo'] = $_POST['buttongeo'];
 		$settings['unread'] = $_POST['unread'];
+		$settings['linktrans'] = $_POST['linktrans'];
 		
 		// Save a user's oauth details to a MySQL table
 		if (MYSQL_USERS == 'ON' && $newpass = $_POST['newpassword']) {
@@ -175,6 +176,12 @@ function settings_page($args) {
 	$longtext = array(
 		'a' => __("Automatic Cut"),
 		'r' => __("Return Error"),
+	);
+	$linktrans = array(
+		'o' => __("Short URL"),
+		'f' => __("Full URL"),
+		'd' => __("Domain Only"),
+		'l' => "[link]",
 	);
 	$colour_schemes = array();
 	foreach ($GLOBALS['colour_schemes'] as $id => $info) {
@@ -274,8 +281,9 @@ function settings_page($args) {
 	$content .= '<label>　'.__("Mode: ").'<select name="browser">'.theme('options', $modes, $GLOBALS['current_theme']).'</select></label><br />';
 	$content .= '<label>　'.__("Language: ").'<select name="locale">'.theme('options', $locale, setting_fetch('locale', 'zh_CN')).'</select></label><br />';
 	
-	$content .= '<label>　'.__("Tweets Per Page: ").'<input type="text" id="tpp" name="tpp" value="'.setting_fetch('tpp', 20).'" maxlength="3" style="width:20px;" /> (15-200)</label><br />';	
-	$content .= '<label>　'.__("External links go:").'<select name="gwt">'.theme('options', $gwt, setting_fetch('gwt', $GLOBALS['current_theme'] == 'text' ? 'on' : 'off')).'</select><br /><small>　'.__("Google Web Transcoder (GWT) converts third-party sites into small, speedy pages suitable for older phones and people with less bandwidth.").'</small></label><p />';
+	$content .= '<label>　'.__("Tweets Per Page: ").'<input type="text" id="tpp" name="tpp" value="'.setting_fetch('tpp', 20).'" maxlength="3" style="width:20px;" /> (15-200)</label><p />';	
+	$content .= '<label>　'.__("Showing URL: ").'<select name="linktrans">'.theme('options', $linktrans, setting_fetch('linktrans', 'd')).'</select></label><br /><small>　　'.__("Note: ").'"'.__("Domain Only").'" '.__("means change").' http://weibo.com/hintay '.__("to").' [weibo.com]</small><br />';
+	$content .= '<label>　'.__("External links go:").'<select name="gwt">'.theme('options', $gwt, setting_fetch('gwt', $GLOBALS['current_theme'] == 'text' ? 'on' : 'off')).'</select><br /><small>　　'.__("Google Web Transcoder (GWT) converts third-party sites into small, speedy pages suitable for older phones and people with less bandwidth.").'</small></label><p />';
 	//$content .= '<p><label>现在UTC时间为 ' . gmdate('H:i') . '， 设置一个差值 <input type="text" name="utc_offset" value="'. $utc_offset .'" size="3" /> 使时间显示为 ' . twitter_date('H:i') . '.<br />如果时间显示错误请调整该值。</label></p><hr />';
 	//$content .= '<p><label><input type="checkbox" name="linktrans" value="yes" '. (setting_fetch('linktrans') == 'yes' ? ' checked="checked" ' : '') .' /> '.("显示链接地址为 [link]").'</label></p><hr />';
 	//$content .= '<p>'.("短链接").':<br /><select name="short">'.theme('options', $short, setting_fetch('short', 'is.gd')).'</select></p><hr />';
