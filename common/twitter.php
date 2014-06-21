@@ -1034,8 +1034,13 @@ function twitter_user_page($query) {
 		$content .= theme('user_header', $user);
 		
 		if (isset($user->status)) {
-			$request = "statuses/user_timeline";
-			$postdata = array("screen_name"=>$screen_name);
+			if(API_TLBATCH){//时间线高级接口
+				$request = "statuses/timeline_batch";
+				$postdata = array("screen_names"=>$screen_name);
+			}else{
+				$request = "statuses/user_timeline";
+				$postdata = array("screen_name"=>$screen_name);
+			}
 			$tl = twitter_process($request, array_merge($postdata,$_GET));
 			$tl = twitter_standard_timeline($tl->statuses, 'user');
 			$content .= theme('timeline', $tl);
@@ -1771,9 +1776,12 @@ function theme_timeline($feed)
 		$rows[] = $row;
 	}
 	$content = theme('table', array(), $rows, array('class' => 'timeline'));
-	//$content .= theme('pagination');
-	$links[] = "<a href='{$_GET['q']}?max_id=".number_format($max_id,0,'','')."' accesskey='9'>".__("Older")."</a> 9";
-	$content .= '<p class="pagination">'.implode(' | ', $links).'</p>';
+	if (substr($_GET['q'],0,4) == 'user'){
+		$content .= theme('pagination');
+	}else{
+		$links[] = "<a href='{$_GET['q']}?max_id=".number_format($max_id,0,'','')."' accesskey='9'>".__("Older")."</a> 9";
+		$content .= '<p class="pagination">'.implode(' | ', $links).'</p>';
+	}
 	return $content;
 }
 
