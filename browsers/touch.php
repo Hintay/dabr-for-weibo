@@ -10,7 +10,10 @@ function touch_theme_avatar($url, $force_large = true) {
 
 function touch_theme_page($title, $content) {
 	$page = ($_GET['page'] == 0 ? null : " - Page ".$_GET['page'])." - ";
-	echo '<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width; initial-scale=1.0;" /><link href="'.BASE_URL.'favicon.ico" rel="shortcut icon" type="image/x-icon" /><title>'.$title.$page.DABR_TITLE.'</title><base href="'.BASE_URL.'" />'.theme('css').'</head><body id="thepage">'.theme('menu_top').$content.theme('menu_bottom').'</body></html>';
+	if (setting_fetch('unread', 'yes') == 'yes' && user_is_authenticated()) {
+		$unread = weibo_unread();
+	}
+	echo '<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width; initial-scale=1.0;" /><link href="'.BASE_URL.'favicon.ico" rel="shortcut icon" type="image/x-icon" /><title>'.$title.$page.DABR_TITLE.'</title><base href="'.BASE_URL.'" />'.theme('css').'</head><body id="thepage">'.theme('menu_top').$unread.$content.theme('menu_bottom').'</body></html>';
 	exit();
 }
 

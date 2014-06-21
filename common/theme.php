@@ -149,7 +149,7 @@ function googleAnalyticsGetImageUrl() {
 
 function theme_page($title, $content) {
 	$body = theme('menu_top');
-	if (setting_fetch('unread', 'yes') == 'yes') {
+	if (setting_fetch('unread', 'yes') == 'yes' && user_is_authenticated()) {
 		$body .= weibo_unread();
 	}
 	$body .= $content;
