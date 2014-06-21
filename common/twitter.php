@@ -559,7 +559,6 @@ function weibo_unread() {
 	}
 	return $output;
 }
-}
 
 function twitter_retweet_page($query) {
 	$id = (string) $query[1];
