@@ -236,6 +236,9 @@ function theme_css() {
   .avatartd {width:0;}
   .unread {padding: 6px;background:#{$c->odd}}
   .friendship{float:right;}
+  .online_stat {border-radius: 2px;border-style: solid;border-width: 1px;display: inline-block;height: 7px;overflow: hidden;width: 7px;}
+  .online_stat.online {background-color: #8fdc00;border-color: #48c000;}
+  .online_stat.offline {background-color: #d4d4d4;border-color: #b8b8b8;}
   ".setting_fetch('css')."
 </style>";
 }

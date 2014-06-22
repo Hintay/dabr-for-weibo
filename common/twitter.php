@@ -1855,6 +1855,15 @@ function weibo_friendship_check($status){
 	return $follow;
 }
 
+function weibo_online_status($status){
+	if($status->online_status == 1){
+		$online = '<i class="online_stat online"></i>';
+	}else{
+		$online = '<i class="online_stat offline"></i>';
+	}
+	return $online;
+}
+
 function theme_followers($feed, $hide_pagination = false) {
 	$rows = array();
 	if (count($feed) == 0 || $feed == '[]') return '<p>No users to display.</p>';
@@ -1873,9 +1882,10 @@ function theme_followers($feed, $hide_pagination = false) {
 		$name = theme('full_name', $user);
 		$tweets_per_day = twitter_tweets_per_day($user);
 		$follow = weibo_friendship_check($user);
+		$online = weibo_online_status($status);
 		$rows[] = array(
 			"</td><td class='avatartd'>".theme('avatar', $user->profile_image_url)."</td>",
-			"{$name} - {$user->location} <span class='friendship'>{$follow}</span><br />" .
+			"{$name} - {$user->location} {$online}<span class='friendship'>{$follow}</span><br />" .
 			"<small>{$user->description}<br />" .
 			"{$user->statuses_count}".__(" weibos | ")."{$user->friends_count}".__(" friends | ")."{$user->followers_count}".__(" followers | ~")."{$tweets_per_day}".__(" tweets per day")."</small>"
 		);
