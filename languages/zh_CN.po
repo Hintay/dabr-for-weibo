@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Dabr for Weibo\n"
-"POT-Creation-Date: 2014-06-21 18:54+0800\n"
-"PO-Revision-Date: 2014-06-21 18:54+0800\n"
+"POT-Creation-Date: 2014-06-22 20:46+0800\n"
+"PO-Revision-Date: 2014-06-22 20:47+0800\n"
 "Last-Translator: Hintay <hintay@me.com>\n"
 "Language-Team: Hintay <hintay@me.com>\n"
 "Language: zh_CN\n"
@@ -15,60 +15,60 @@ msgstr ""
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: browsers/desktop.php:13 common/twitter.php:1152
+#: browsers/desktop.php:13 common/twitter.php:1168
 msgid "Add my location"
 msgstr "插入位置"
 
-#: browsers/desktop.php:22 common/twitter.php:1161
+#: browsers/desktop.php:22 common/twitter.php:1177
 msgid "Locating..."
 msgstr "定位中..."
 
-#: browsers/desktop.php:31 browsers/desktop.php:33 common/twitter.php:1170
-#: common/twitter.php:1172
+#: browsers/desktop.php:31 browsers/desktop.php:33 common/twitter.php:1186
+#: common/twitter.php:1188
 msgid "Add my "
 msgstr "插入我的"
 
-#: browsers/desktop.php:31 common/twitter.php:1170
+#: browsers/desktop.php:31 common/twitter.php:1186
 msgid " Province "
 msgstr "省"
 
-#: browsers/desktop.php:31 common/twitter.php:1170
+#: browsers/desktop.php:31 common/twitter.php:1186
 msgid " City"
 msgstr "市"
 
-#: browsers/desktop.php:31 browsers/desktop.php:33 common/twitter.php:1170
-#: common/twitter.php:1172
+#: browsers/desktop.php:31 browsers/desktop.php:33 common/twitter.php:1186
+#: common/twitter.php:1188
 msgid "accuracy: "
 msgstr "精确度: "
 
-#: browsers/desktop.php:33 common/twitter.php:1172
+#: browsers/desktop.php:33 common/twitter.php:1188
 msgid "location"
 msgstr "位置"
 
-#: browsers/desktop.php:39 common/twitter.php:1178
+#: browsers/desktop.php:39 common/twitter.php:1194
 msgid "Update"
 msgstr "更新"
 
 #: browsers/desktop.php:39 common/twitter.php:158 common/twitter.php:282
-#: common/twitter.php:1178
+#: common/twitter.php:1194
 msgid "Upload Picture"
 msgstr "传图"
 
 #: browsers/touch.php:22 browsers/touch.php:29 common/menu.php:73
-#: common/menu.php:113 common/settings.php:207 common/twitter.php:1125
+#: common/menu.php:113 common/settings.php:207 common/twitter.php:1141
 msgid "Home"
 msgstr "首页"
 
 #: browsers/touch.php:23 common/menu.php:76 common/menu.php:116
 #: common/settings.php:208 common/settings.php:231 common/twitter.php:35
-#: common/twitter.php:877
+#: common/twitter.php:887
 msgid "Mentions"
 msgstr "提到"
 
 #: browsers/touch.php:24 common/menu.php:79 common/menu.php:119
 #: common/settings.php:209 common/settings.php:232 common/twitter.php:41
-#: common/twitter.php:890 common/twitter.php:900 common/twitter.php:909
-#: common/twitter.php:919 common/twitter.php:938
+#: common/twitter.php:900 common/twitter.php:913 common/twitter.php:925
+#: common/twitter.php:935 common/twitter.php:954
 msgid "Comments"
 msgstr "评论"
 
@@ -80,7 +80,7 @@ msgstr "更多"
 msgid "Directs"
 msgstr "私信"
 
-#: common/menu.php:85 common/menu.php:125 common/twitter.php:1033
+#: common/menu.php:85 common/menu.php:125 common/twitter.php:1049
 msgid "Search"
 msgstr "搜索"
 
@@ -89,17 +89,17 @@ msgid "Public"
 msgstr "广场"
 
 #: common/menu.php:91 common/menu.php:128 common/settings.php:218
-#: common/settings.php:235 common/twitter.php:102 common/twitter.php:1089
+#: common/settings.php:235 common/twitter.php:102 common/twitter.php:1105
 msgid "Favourites"
 msgstr "收藏"
 
 #: common/menu.php:94 common/menu.php:134 common/settings.php:219
-#: common/settings.php:237 common/twitter.php:107 common/twitter.php:778
+#: common/settings.php:237 common/twitter.php:107 common/twitter.php:785
 msgid "Followers"
 msgstr "粉丝"
 
 #: common/menu.php:97 common/menu.php:137 common/settings.php:220
-#: common/settings.php:238 common/twitter.php:112 common/twitter.php:765
+#: common/settings.php:238 common/twitter.php:112 common/twitter.php:769
 msgid "Friends"
 msgstr "关注"
 
@@ -242,7 +242,7 @@ msgstr "个性化菜单选项"
 msgid "Choose what you want to display on the Top Bar."
 msgstr "选择你想放置在页首菜单的按钮"
 
-#: common/settings.php:206 common/twitter.php:1070
+#: common/settings.php:206 common/twitter.php:1086
 msgid "User"
 msgstr "用户"
 
@@ -290,15 +290,15 @@ msgstr "当消息超过140字时："
 msgid "Choose what you want to display on the Status."
 msgstr "选择你想放置在消息上的元素"
 
-#: common/settings.php:267 common/twitter.php:1971
+#: common/settings.php:267 common/twitter.php:2022
 msgid "RT"
 msgstr "转发"
 
-#: common/settings.php:268 common/twitter.php:1974
+#: common/settings.php:268 common/twitter.php:2025
 msgid "CM"
 msgstr "评论"
 
-#: common/settings.php:271 common/twitter.php:1966
+#: common/settings.php:271 common/twitter.php:2017
 msgid "FAV"
 msgstr "收藏"
 
@@ -450,50 +450,50 @@ msgstr "秒"
 msgid "0 sec"
 msgstr "0秒"
 
-#: common/twitter.php:546 common/twitter.php:549 common/twitter.php:552
-#: common/twitter.php:555
+#: common/twitter.php:547 common/twitter.php:550 common/twitter.php:553
+#: common/twitter.php:556
 msgid "You have "
 msgstr "您有"
 
-#: common/twitter.php:546
+#: common/twitter.php:547
 msgid " unread comment"
 msgstr "条新评论"
 
-#: common/twitter.php:549
+#: common/twitter.php:550
 msgid " unread mention weibo"
 msgstr "条新提到我的微博"
 
-#: common/twitter.php:552
+#: common/twitter.php:553
 msgid " unread mention comment"
 msgstr "条新提到我的评论"
 
-#: common/twitter.php:555
+#: common/twitter.php:556
 msgid " new follower"
 msgstr "个新粉丝"
 
-#: common/twitter.php:585 common/twitter.php:984 common/twitter.php:986
-#: common/twitter.php:1194 common/twitter.php:1737
+#: common/twitter.php:589 common/twitter.php:1000 common/twitter.php:1002
+#: common/twitter.php:1210 common/twitter.php:1753
 msgid "Repost"
 msgstr "转发"
 
-#: common/twitter.php:595 common/twitter.php:984 common/twitter.php:986
-#: common/twitter.php:1185
+#: common/twitter.php:599 common/twitter.php:1000 common/twitter.php:1002
+#: common/twitter.php:1201
 msgid "Comment"
 msgstr "评论"
 
-#: common/twitter.php:609 common/twitter.php:1200
+#: common/twitter.php:613 common/twitter.php:1216
 msgid "Reply"
 msgstr "回复"
 
-#: common/twitter.php:723 common/twitter.php:728
+#: common/twitter.php:727 common/twitter.php:732
 msgid "Are you really sure you want to "
 msgstr "您确定要 "
 
-#: common/twitter.php:723
+#: common/twitter.php:727
 msgid "Unblock "
 msgstr "取消屏蔽 "
 
-#: common/twitter.php:724
+#: common/twitter.php:728
 msgid ""
 "<ul><li>They will see your updates on their home page if they follow you "
 "again.</li><li>You <em>can</em> block them again if you want.</li></ul>"
@@ -501,7 +501,7 @@ msgstr ""
 "<ul><li>如果对方重新关注你，那么你的消息会显示在他们的首页上。</li><li>您<em>"
 "可以</em>随时重新屏蔽对方。</li></ul>"
 
-#: common/twitter.php:729
+#: common/twitter.php:733
 msgid ""
 "<ul><li>You won't show up in their list of friends</li><li>They won't see "
 "your updates on their home page</li><li>They won't be able to follow you</"
@@ -512,203 +512,219 @@ msgstr ""
 "li><li>他们将无法关注您</li><li>您<em>可以</em>取消屏蔽他们但您需要重新关注他"
 "们</li></ul>"
 
-#: common/twitter.php:734
+#: common/twitter.php:738
 msgid "Are you really sure you want to delete your weibo?"
 msgstr "你确定要删除这条微博？"
 
-#: common/twitter.php:735
+#: common/twitter.php:739
 msgid "Weibo ID: "
 msgstr "微博ID："
 
-#: common/twitter.php:735 common/twitter.php:740
+#: common/twitter.php:739 common/twitter.php:744
 msgid "There is no way to undo this action."
 msgstr "删除后将无法恢复。"
 
-#: common/twitter.php:739
+#: common/twitter.php:743
 msgid "Are you really sure you want to delete your comment?"
 msgstr "你确定要删除这条评论？"
 
-#: common/twitter.php:740
+#: common/twitter.php:744
 msgid "Comment ID: "
 msgstr "评论ID："
 
-#: common/twitter.php:744
+#: common/twitter.php:748
 msgid "Are you really sure you want to report "
 msgstr "您真的想要举报 "
 
-#: common/twitter.php:744
+#: common/twitter.php:748
 msgid " as a spammer?"
 msgstr "吗？"
 
-#: common/twitter.php:745
+#: common/twitter.php:749
 msgid "They will also be blocked from following you."
 msgstr "他们将不能关注您。"
 
-#: common/twitter.php:750
+#: common/twitter.php:754
 msgid "Yes please"
 msgstr "确定"
 
-#: common/twitter.php:752
+#: common/twitter.php:756
 msgid "Confirm"
 msgstr "您确定吗"
 
-#: common/twitter.php:955
+#: common/twitter.php:971
 msgid "Create DM"
 msgstr "新私信"
 
-#: common/twitter.php:970
+#: common/twitter.php:986
 msgid "DM Sent"
 msgstr "已发送"
 
-#: common/twitter.php:978
+#: common/twitter.php:994
 msgid "DM Inbox"
 msgstr "收件箱"
 
-#: common/twitter.php:996
+#: common/twitter.php:1012
 msgid "To Me"
 msgstr "收到的评论"
 
-#: common/twitter.php:996
+#: common/twitter.php:1012
 msgid "By Me"
 msgstr "发出的评论"
 
-#: common/twitter.php:996
+#: common/twitter.php:1012
 msgid "Mention Me"
 msgstr "提到我的评论"
 
-#: common/twitter.php:1192
+#: common/twitter.php:1208
 msgid "Repost Comment"
 msgstr "转发评论"
 
-#: common/twitter.php:1247
+#: common/twitter.php:1263
 msgid "Verified Account"
 msgstr "微博认证"
 
-#: common/twitter.php:1254
+#: common/twitter.php:1270
 msgid "Bio: "
 msgstr "个人简介："
 
-#: common/twitter.php:1256
+#: common/twitter.php:1272
 msgid "Location: "
 msgstr "所在位置："
 
-#: common/twitter.php:1257
+#: common/twitter.php:1273
 msgid "Joined: "
 msgstr "于"
 
-#: common/twitter.php:1257
+#: common/twitter.php:1273
 msgid " (~"
 msgstr "注册，每天约"
 
-#: common/twitter.php:1257
+#: common/twitter.php:1273
 msgid " weibos per day)"
 msgstr "条微博。"
 
-#: common/twitter.php:1260
+#: common/twitter.php:1276
 msgid " weibos"
 msgstr " 条微博"
 
-#: common/twitter.php:1261
+#: common/twitter.php:1277
 msgid " followers"
 msgstr " 个粉丝"
 
-#: common/twitter.php:1264
+#: common/twitter.php:1280 common/twitter.php:1853
 msgid "Follow"
 msgstr "加关注"
 
-#: common/twitter.php:1266
+#: common/twitter.php:1282 common/twitter.php:1848 common/twitter.php:1850
 msgid "Unfollow"
 msgstr "取消关注"
 
-#: common/twitter.php:1272
+#: common/twitter.php:1288
 msgid " friends"
 msgstr " 个关注"
 
-#: common/twitter.php:1273
+#: common/twitter.php:1289
 msgid " favourites"
 msgstr " 条收藏"
 
-#: common/twitter.php:1301
+#: common/twitter.php:1317
 msgid " ago"
 msgstr "前"
 
-#: common/twitter.php:1342
+#: common/twitter.php:1358
 msgid " Also retweeted by "
 msgstr " "
 
-#: common/twitter.php:1342
+#: common/twitter.php:1358
 msgid " ||"
 msgstr " 也转发了 ||"
 
-#: common/twitter.php:1440
+#: common/twitter.php:1456
 msgid "Picture"
 msgstr "图片"
 
-#: common/twitter.php:1527 common/twitter.php:1529 common/twitter.php:1586
+#: common/twitter.php:1543 common/twitter.php:1545 common/twitter.php:1602
 msgid "from "
 msgstr "来自"
 
-#: common/twitter.php:1601 common/twitter.php:1804 common/twitter.php:1928
+#: common/twitter.php:1617 common/twitter.php:1820 common/twitter.php:1979
 msgid "Older"
 msgstr "更旧的"
 
-#: common/twitter.php:1632
+#: common/twitter.php:1648
 msgid "Favourite date: "
 msgstr "收藏日期："
 
-#: common/twitter.php:1732
+#: common/twitter.php:1748
 msgid "Original:"
 msgstr "原博："
 
-#: common/twitter.php:1763
+#: common/twitter.php:1779
 msgid "Original weibo is deleted. try "
 msgstr "原微博已被删除，试试 "
 
-#: common/twitter.php:1763
+#: common/twitter.php:1779
 msgid "freeweibo</a>."
 msgstr "freeweibo</a> 吧。"
 
-#: common/twitter.php:1839
+#: common/twitter.php:1837
+msgid "He"
+msgstr "他"
+
+#: common/twitter.php:1840
+msgid "She"
+msgstr "她"
+
+#: common/twitter.php:1843
+msgid "It"
+msgstr "TA"
+
+#: common/twitter.php:1848
+msgid " and you are following each other"
+msgstr "和您互相关注"
+
+#: common/twitter.php:1890
 msgid " weibos | "
 msgstr " 条微博 | 关注 "
 
-#: common/twitter.php:1839
+#: common/twitter.php:1890
 msgid " friends | "
 msgstr " 人 | 粉丝 "
 
-#: common/twitter.php:1839
+#: common/twitter.php:1890
 msgid " followers | ~"
 msgstr " 人 | 每天约 "
 
-#: common/twitter.php:1839
+#: common/twitter.php:1890
 msgid " tweets per day"
 msgstr " 条微博"
 
-#: common/twitter.php:1843
+#: common/twitter.php:1894
 msgid "Weibo API limited, this content is not available."
 msgstr "因微博接口限制，无法显示该内容"
 
-#: common/twitter.php:1861
+#: common/twitter.php:1912
 msgid "Weibo API limited, can not display any weibo."
 msgstr "因为微博接口限制，没有可显示的微博"
 
-#: common/twitter.php:1929
+#: common/twitter.php:1980
 msgid "Newer"
 msgstr "更新的"
 
-#: common/twitter.php:1939
+#: common/twitter.php:1990
 msgid "Prev"
 msgstr "上一页"
 
-#: common/twitter.php:1940
+#: common/twitter.php:1991
 msgid "Next"
 msgstr "下一页"
 
-#: common/twitter.php:1964
+#: common/twitter.php:2015
 msgid "UNFAV"
 msgstr "取消收藏"
 
-#: common/twitter.php:1978
+#: common/twitter.php:2029
 msgid "RE"
 msgstr "回复"
 

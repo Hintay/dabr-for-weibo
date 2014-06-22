@@ -1831,6 +1831,30 @@ function twitter_is_reply($status) {
 	return preg_match("#@$user#i", $status->text);
 }
 
+function weibo_friendship_check($status){
+	switch ($status->gender) {
+		case 'm':
+			$gender = __("He");
+			break;
+		case 'f':
+			$gender = __("She");
+			break;
+		case 'n':
+			$gender = __("It");
+			break;
+	}
+	if($status->following == 1){
+		if($status->follow_me == 1){
+			$follow = "<small><b>{$gender}".__(" and you are following each other")."</b></small> <a href='unfollow/{$status->screen_name}'>".__("Unfollow")."</a>";
+		}else{
+			$follow = "<a href='unfollow/{$status->screen_name}'>".__("Unfollow")."</a>";
+		}
+	}else{
+		$follow = "<a href='follow/{$status->screen_name}'>".__("Follow")."</a>";
+	}
+	return $follow;
+}
+
 function theme_followers($feed, $hide_pagination = false) {
 	$rows = array();
 	if (count($feed) == 0 || $feed == '[]') return '<p>No users to display.</p>';
@@ -1848,9 +1872,10 @@ function theme_followers($feed, $hide_pagination = false) {
 		}*/
 		$name = theme('full_name', $user);
 		$tweets_per_day = twitter_tweets_per_day($user);
+		$follow = weibo_friendship_check($user);
 		$rows[] = array(
 			"</td><td class='avatartd'>".theme('avatar', $user->profile_image_url)."</td>",
-			"{$name} - {$user->location}<br />" .
+			"{$name} - {$user->location} <span class='friendship'>{$follow}</span><br />" .
 			"<small>{$user->description}<br />" .
 			"{$user->statuses_count}".__(" weibos | ")."{$user->friends_count}".__(" friends | ")."{$user->followers_count}".__(" followers | ~")."{$tweets_per_day}".__(" tweets per day")."</small>"
 		);

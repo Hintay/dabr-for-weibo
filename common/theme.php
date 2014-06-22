@@ -235,6 +235,7 @@ function theme_css() {
   .retweeted_tl {position:relative; margin: 5px; padding-left: 5px;}
   .avatartd {width:0;}
   .unread {padding: 6px;background:#{$c->odd}}
+  .friendship{float:right;}
   ".setting_fetch('css')."
 </style>";
 }
