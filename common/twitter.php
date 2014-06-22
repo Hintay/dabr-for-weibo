@@ -1256,8 +1256,9 @@ function theme_user_header($user) {
 	$raw_date_joined = strtotime($user->created_at);
 	$date_joined = date('Y-m-d', $raw_date_joined);
 	$tweets_per_day = twitter_tweets_per_day($user, 1);
+	$online = weibo_online_status($user);
 	$out = "<table><tr><td class='avatartd'>".theme('external_link', $full_avatar, theme('avatar', $user->profile_image_url, 1))."</td>
-<td><b>{$name}</b>
+<td><b>{$name}</b> {$online}
 <small>";
 	if ($user->verified == true) {
 		$out .= '<br /><strong>'.__("Verified Account").'</strong>';
@@ -1265,7 +1266,7 @@ function theme_user_header($user) {
 	if ($user->protected == true) {
 		$out .= '<br /><strong>Private/Protected Tweets</strong>';
 	}
-	$link = $link ? "<br />Link: ".$link : "";
+	$link = $link ? "<br />".__("Link: ").$link : "";
 	$out .= "
 <br />".__("Bio: ")."{$user->description}
 {$link}
@@ -1882,7 +1883,7 @@ function theme_followers($feed, $hide_pagination = false) {
 		$name = theme('full_name', $user);
 		$tweets_per_day = twitter_tweets_per_day($user);
 		$follow = weibo_friendship_check($user);
-		$online = weibo_online_status($status);
+		$online = weibo_online_status($user);
 		$rows[] = array(
 			"</td><td class='avatartd'>".theme('avatar', $user->profile_image_url)."</td>",
 			"{$name} - {$user->location} {$online}<span class='friendship'>{$follow}</span><br />" .
